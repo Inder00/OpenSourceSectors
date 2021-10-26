@@ -32,7 +32,7 @@ public class PlayerChangeSectorListener implements Listener {
 
 # Contribution ❤️
 The most powerful feature of open source projects is developers community❤️. Everyone is welcome and will be written below 🔥.
-
+- [oskarPLL 🥰](https://github.com/oskarPLL)
 # TODO 📓
 - Make a Easy-To-Use API to write compatible plugins with OpenSourceSectors. 📖
 - Support for newer MC versions. 🚩
