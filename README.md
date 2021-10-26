@@ -36,5 +36,6 @@ The most powerful feature of open source projects is developers community❤️.
 # TODO 📓
 - Make a Easy-To-Use API to write compatible plugins with OpenSourceSectors. 📖
 - Support for newer MC versions. 🚩
+- Use Google Protobuf instead of default netty buffer. 🔖
 
 **Thanks for your support.❤️**
