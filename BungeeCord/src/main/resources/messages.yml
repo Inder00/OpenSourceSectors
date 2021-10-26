@@ -1,0 +1,94 @@
+########################################################
+#               OpenSource Sectors                     #
+#    https://github.com/Inder00/OpenSourceSectors      #
+#     License: GNU General Public License v3.0         #
+########################################################
+
+# Messages are based on player preferred locale selected in their settings
+# List of available languages - https://minecraft-archive.fandom.com/wiki/Languages
+
+# Default locale code which will be used if some messages are missing
+default_locale: en_us
+
+# List of locale aliases ( target: source )
+locale_alises:
+  en_7s: en_us
+  en_au: en_us
+  en_ca: en_us
+  en_gb: en_us
+  en_nz: en_us
+  en_ud: en_us
+  en_ws: en_us
+  en_za: en_us
+  enp: en_us
+  de_at: de_de
+  de_ch: de_de
+  brb: nl_nl
+  es_ar: es_es
+  es_cl: es_es
+  es_mx: es_es
+  es_uy: es_es
+  es_ve: es_es
+  pt_br: pt_pt
+
+# List of messages
+messages:
+
+  # English (US) (also applied to above aliases)
+  en_us:
+
+    # Distance message to the sector border (Shown on action bar)
+    # %d - Representing the amount of blocks to the border
+    border_distance: "&7Remaining distance to the sector border: &e%d"
+
+    # Message displayed when target server is offline
+    sector_offline: "&cThe server you tried to reach is offline."
+
+    # Message displayed when failed connect player across servers
+    # %s - Cause
+    failed_connect: "&cYou have failed connect to target server due to %s. Try again later..."
+
+    # Message displayed when player tries to change sector within cooldown
+    sector_change_cooldown: "&cYou cannot change sector that quickly. Try again later..."
+
+  # Polish
+  pl_pl:
+    border_distance: "&7Do granicy sektora pozostało: &e%d"
+    sector_offline: "&cSerwer, do którego próbowałeś dotrzeć, jest offline."
+    failed_connect: "&cNie udało się połączyć do serwera docelowego (%s). Spróbuj ponownie później..."
+
+  # Arabic (اللغة العربية)
+  ar_sa:
+    border_distance: "&e%d &المسافة المتبقية لحد الحدود7"
+    sector_offline: "الخادم الذي حاولت الوصول إليه غير متصلc&"
+    failed_connect: "...لقد فشلت في الاتصال الي الهدف حاول في وقت لاحقe&"
+
+  # Russian (Русский)
+  ru_ru:
+    border_distance: "&7Расстояние до границы сектора: &e%d"
+    sector_offline: "&cСервер недоступен."
+    failed_connect: "&cНевозможно подключится к серверу. Причина: %s. Попробуйте позже..."
+
+  # German (Deutsch)
+  de_de:
+    border_distance: "&7Die verbleibende Distanz zur Grenze dieses Sektors ist: &e%d"
+    sector_offline: "&cDer ausgewählte Server ist offline."
+    failed_connect: "&cDie Verbindung zum gewählten Server ist fehlgeschlagen aufgrund von %s. Versuche es später erneut..."
+
+  # Brabantian (Braobans)
+  nl_nl:
+    border_distance: "&7Resterende afstand tot sectorgrens: &e%d"
+    sector_offline: "&cDe server die je probeert te bereiken is offline."
+    failed_connect: "&cVerbinding met de server is mislukt vanwege %s. Probeer het later opnieuw..."
+
+  # Spanish (Español)
+  es_es:
+    border_distance: "&7Distancia al límite del área de juego: &e%d"
+    sector_offline: "&cEl servidor con el que has intentado establecer conexión no está disponible."
+    failed_connect: "&cNo has podido establecer conexión con el servidor destino debido a %s. Vuelve a intentarlo más tarde..."
+
+  # Portuguese (Português)
+  pt_pt:
+    border_distance: "&7Distância restante até a área do jogo: &e%d"
+    sector_offline: "&cO servidor que você tentou entrar está offline."
+    failed_connect: "&cVocê falhou ao entrar no servidor devido à %s. Tente novamente mais tarde..."

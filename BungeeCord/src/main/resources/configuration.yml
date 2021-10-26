@@ -1,0 +1,147 @@
+########################################################
+#               OpenSource Sectors                     #
+#    https://github.com/Inder00/OpenSourceSectors      #
+#     License: GNU General Public License v3.0         #
+########################################################
+
+# Number of blocks before border where building and other stuff is blocked
+# Also at this distance a notification will appear on actionbar
+protection_distance: 20
+
+# Cooldown in seconds before player will be able to switch between sectors
+sector_change_cooldown: 20
+
+# Master server configuration (master server is using to configure all endpoints servers and some technical things...)
+masterserver:
+
+  # Hostname/IP of master server (recommended using private ip address space - not available from public network)
+  hostname: "127.0.0.1"
+
+  # Port of master server
+  port: 8180
+
+  # Type password to the master server or leave that field blank (recommended to set if master server is available from public network - length its limited to 255 characters)
+  password: ""
+
+# List of sectors
+sectors:
+
+  # Spawn
+  spawn:
+
+    # BungeeCord server name
+    name: "spawn"
+
+    # World name
+    world: "world"
+
+    # sector location
+    minX: -500
+    minZ: -500
+    maxX: 500
+    maxZ: 500
+
+    # Internal server (known also as server-2-server is used to sending data across servers)
+    internalserver:
+
+      # Hostname/IP (recommended using private ip address spaces - not available from public network)
+      hostname: "127.0.0.1"
+
+      # Port
+      port: 8190
+
+  # Server #1
+  s1:
+
+    # BungeeCord server name
+    name: "sector_01"
+
+    # World name
+    world: "world"
+
+    # sector location
+    minX: -500
+    minZ: 500
+    maxX: 500
+    maxZ: 1500
+
+    # Internal server (known also as server-2-server is used to sending data across servers)
+    internalserver:
+
+      # Hostname/IP (recommended using private ip address spaces - not available from public network)
+      hostname: "127.0.0.1"
+
+      # Port
+      port: 8191
+
+  # Server #2
+  s2:
+
+    # BungeeCord server name
+    name: "sector_02"
+
+    # World name
+    world: "world"
+
+    # sector location
+    minX: -500
+    minZ: -500
+    maxX: -1500
+    maxZ: 500
+
+    # Internal server (known also as server-2-server is used to sending data across servers)
+    internalserver:
+
+      # Hostname/IP (recommended using private ip address spaces - not available from public network)
+      hostname: "127.0.0.1"
+
+      # Port
+      port: 8192
+
+  # Server #3
+  s3:
+
+    # BungeeCord server name
+    name: "sector_03"
+
+    # World name
+    world: "world"
+
+    # sector location
+    minX: 500
+    minZ: -500
+    maxX: -500
+    maxZ: -1500
+
+    # Internal server (known also as server-2-server is used to sending data across servers)
+    internalserver:
+
+      # Hostname/IP (recommended using private ip address spaces - not available from public network)
+      hostname: "127.0.0.1"
+
+      # Port
+      port: 8193
+
+  # Server #4
+  s4:
+
+    # BungeeCord server name
+    name: "sector_04"
+
+    # World name
+    world: "world"
+
+    # sector location
+    minX: 500
+    minZ: 500
+    maxX: 1500
+    maxZ: -500
+
+    # Internal server (known also as server-2-server is used to sending data across servers)
+    internalserver:
+
+      # Hostname/IP (recommended using private ip address spaces - not available from public network)
+      hostname: "127.0.0.1"
+
+      # Port
+      port: 8194

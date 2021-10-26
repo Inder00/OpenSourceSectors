@@ -1,0 +1,5 @@
+name: OpenSourceSectors
+main: pl.inder00.opensource.sectors.Sectors
+version: ${commit_hash}-${commit_version}
+author: Inder00
+website: https://github.com/Inder00/OpenSourceSectors

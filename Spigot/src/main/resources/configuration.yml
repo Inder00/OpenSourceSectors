@@ -1,0 +1,20 @@
+########################################################
+#               OpenSource Sectors                     #
+#    https://github.com/Inder00/OpenSourceSectors      #
+#     License: GNU General Public License v3.0         #
+########################################################
+
+# Server id provided in BungeeCord plugin configuration
+serverId: "sector_01"
+
+# Master server configuration (Provided in BungeeCord plugin)
+masterserver:
+
+  # Hostname/IP of master server (recommended using private ip address spaces - not available from public network)
+  hostname: "127.0.0.1"
+
+  # Port of master server
+  port: 8180
+
+  # Type password to the master server or leave that field blank
+  password: ""
