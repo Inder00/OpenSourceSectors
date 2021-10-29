@@ -1,12 +1,9 @@
 package pl.inder00.opensource.sectors.communication;
 
-import com.google.protobuf.Message;
-import io.netty.buffer.ByteBuf;
 import pl.inder00.opensource.sectors.Sectors;
 import pl.inder00.opensource.sectors.basic.manager.SectorManager;
 import pl.inder00.opensource.sectors.protobuf.ProtobufConfigurationData;
 import pl.inder00.opensource.sectors.protobuf.ProtobufGeneric;
-import pl.inder00.opensource.sectors.protocol.buffer.ByteBufExtension;
 import pl.inder00.opensource.sectors.protocol.packet.IPacket;
 
 public class ConfigurationPacket implements IPacket<ProtobufConfigurationData.ConfiguractionPacket> {
