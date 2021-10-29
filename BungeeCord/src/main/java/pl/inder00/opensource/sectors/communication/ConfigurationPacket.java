@@ -26,10 +26,10 @@ public class ConfigurationPacket implements IPacket<ProtobufGeneric.EmptyMessage
     }
 
     @Override
-    public ProtobufConfigurationData.ConfiguractionPacket execute(ProtobufGeneric.EmptyMessage emptyMessage) throws Throwable {
+    public ProtobufConfigurationData.ConfigurationPacket execute(ProtobufGeneric.EmptyMessage emptyMessage) throws Throwable {
 
         // builder
-        ProtobufConfigurationData.ConfiguractionPacket.Builder configurationPacketOutput = ProtobufConfigurationData.ConfiguractionPacket.newBuilder();
+        ProtobufConfigurationData.ConfigurationPacket.Builder configurationPacketOutput = ProtobufConfigurationData.ConfigurationPacket.newBuilder();
 
         // write data
         configurationPacketOutput.setVersion(this.plugin.getDescription().getVersion());
@@ -39,7 +39,7 @@ public class ConfigurationPacket implements IPacket<ProtobufGeneric.EmptyMessage
 
         // aliases configuration
         this.plugin.messagesConfiguration.localeAliases.forEach((key, val) -> {
-            configurationPacketOutput.addAlises(ProtobufConfigurationData.ConfigurationAlias.newBuilder()
+            configurationPacketOutput.addAliases(ProtobufConfigurationData.ConfigurationAlias.newBuilder()
                     .setTarget(key)
                     .setSource(val)
                     .build());

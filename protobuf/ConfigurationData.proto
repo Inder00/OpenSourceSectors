@@ -5,13 +5,13 @@ import "ProtoGeneric.proto";
 option java_outer_classname = "ProtobufConfigurationData";
 
 // player uuids
-message ConfiguractionPacket {
+message ConfigurationPacket {
   required string version = 1;
   required uint32 protectionDistance = 2;
   required uint32 changeSectorCooldown = 3;
   required string defaultLanguage = 4;
   repeated ConfigurationMessage messages = 5;
-  repeated ConfigurationAlias alises = 6;
+  repeated ConfigurationAlias aliases = 6;
   repeated ProtoSector sectors = 7;
 }
 

@@ -63,10 +63,10 @@ public class MasterServerClient extends DefaultSectorClient {
                                 try {
 
                                     // parse response
-                                    ProtobufConfigurationData.ConfiguractionPacket configuractionPacket = ProtobufConfigurationData.ConfiguractionPacket.parseFrom(ByteString.copyFrom(response.getData()));
+                                    ProtobufConfigurationData.ConfigurationPacket configurationPacket = ProtobufConfigurationData.ConfigurationPacket.parseFrom(ByteString.copyFrom(response.getData()));
 
                                     // compare version
-                                    if(!this.plugin.getDescription().getVersion().equals(configuractionPacket.getVersion())){
+                                    if(!this.plugin.getDescription().getVersion().equals(configurationPacket.getVersion())){
 
                                         // log
                                         this.plugin.getLogger().log(Level.SEVERE, "Plugin version mismatch. Stopping server.");
@@ -77,7 +77,7 @@ public class MasterServerClient extends DefaultSectorClient {
                                     }
 
                                     // load sectors
-                                    for(ProtobufGeneric.ProtoSector protoSector : configuractionPacket.getSectorsList()){
+                                    for(ProtobufGeneric.ProtoSector protoSector : configurationPacket.getSectorsList()){
 
                                         // sector uuid
                                         UUID uniqueId = ProtobufUtils.deserialize(protoSector.getUniqueId());
@@ -98,7 +98,7 @@ public class MasterServerClient extends DefaultSectorClient {
                                             }
 
                                             // create socket implementation
-                                            ISector sector = new SectorImpl(this.plugin, uniqueId, null, world, protoSector.getMinX(), protoSector.getMinZ(), protoSector.getMaxX(), protoSector.getMaxZ(), configuractionPacket.getProtectionDistance(), configuractionPacket.getChangeSectorCooldown());
+                                            ISector sector = new SectorImpl(this.plugin, uniqueId, null, world, protoSector.getMinX(), protoSector.getMinZ(), protoSector.getMaxX(), protoSector.getMaxZ(), configurationPacket.getProtectionDistance(), configurationPacket.getChangeSectorCooldown());
 
                                             // create sector endpoint
                                             SectorManager.setCurrentSectorEndpoint(new DefaultSectorServer(protoSector.getInternalHostname(), protoSector.getInternalPort(), this.password));
@@ -109,7 +109,7 @@ public class MasterServerClient extends DefaultSectorClient {
                                         } else {
 
                                             // create socket implementation
-                                            ISector sector = new SectorImpl(this.plugin, uniqueId, new DefaultSectorClient(protoSector.getInternalHostname(), protoSector.getInternalPort(), this.password), null, protoSector.getMinX() - 3, protoSector.getMinZ() - 3, protoSector.getMaxX() + 3, protoSector.getMaxZ() + 3, configuractionPacket.getProtectionDistance(), configuractionPacket.getChangeSectorCooldown());
+                                            ISector sector = new SectorImpl(this.plugin, uniqueId, new DefaultSectorClient(protoSector.getInternalHostname(), protoSector.getInternalPort(), this.password), null, protoSector.getMinX() - 3, protoSector.getMinZ() - 3, protoSector.getMaxX() + 3, protoSector.getMaxZ() + 3, configurationPacket.getProtectionDistance(), configurationPacket.getChangeSectorCooldown());
 
                                             // connect to sector endpoint
                                             sector.getEndpoint().connect()
@@ -138,20 +138,20 @@ public class MasterServerClient extends DefaultSectorClient {
                                     }
 
                                     // default language
-                                    this.plugin.languageProvider = new I18nFactory(configuractionPacket.getDefaultLanguage());
+                                    this.plugin.languageProvider = new I18nFactory(configurationPacket.getDefaultLanguage());
 
                                     // aliases
-                                    for(ProtobufConfigurationData.ConfigurationAlias langMap : configuractionPacket.getAlisesList()){
+                                    for(ProtobufConfigurationData.ConfigurationAlias langMap : configurationPacket.getAliasesList()){
                                         this.plugin.languageProvider.addLocaleAlias(langMap.getSource(), langMap.getTarget());
                                     }
 
                                     // message
-                                    for(ProtobufConfigurationData.ConfigurationMessage msgMap : configuractionPacket.getMessagesList()){
+                                    for(ProtobufConfigurationData.ConfigurationMessage msgMap : configurationPacket.getMessagesList()){
                                         this.plugin.languageProvider.addLocalizedMessage(msgMap.getKey(), msgMap.getValue());
                                     }
 
                                     // log
-                                    this.plugin.getLogger().info(String.format("Loaded %d/%d sectors.", SectorManager.getSectorsCount(), configuractionPacket.getSectorsCount()));
+                                    this.plugin.getLogger().info(String.format("Loaded %d/%d sectors.", SectorManager.getSectorsCount(), configurationPacket.getSectorsCount()));
 
                                     // check local sector is loaded
                                     if (SectorManager.getCurrentSector() != null) {
