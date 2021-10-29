@@ -21,6 +21,7 @@ public class PluginConfiguration {
 
     /**
      * Implementation
+     *
      * @param configurationFile Configuration java file
      */
     public PluginConfiguration(File configurationFile) {
@@ -33,7 +34,7 @@ public class PluginConfiguration {
     /**
      * Load configuration from file
      */
-    public void loadConfiguration(){
+    public void loadConfiguration() {
         this.sectorId = this.yamlConfiguration.getString("serverId");
         this.masterHostname = this.yamlConfiguration.getString("masterserver.hostname");
         this.masterPort = this.yamlConfiguration.getInt("masterserver.port");

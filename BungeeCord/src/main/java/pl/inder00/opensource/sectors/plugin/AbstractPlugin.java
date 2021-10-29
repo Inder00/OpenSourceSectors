@@ -10,8 +10,9 @@ public abstract class AbstractPlugin extends Plugin {
 
     /**
      * Save resource locally
+     *
      * @param resourcePath Resource path
-     * @param replace boolean
+     * @param replace      boolean
      */
     public void saveResource(String resourcePath, boolean replace) {
         if (resourcePath == null || resourcePath.equals("")) {

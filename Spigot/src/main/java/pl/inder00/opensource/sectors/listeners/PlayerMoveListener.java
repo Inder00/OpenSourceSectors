@@ -29,10 +29,10 @@ public class PlayerMoveListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onMove(PlayerMoveEvent event){
+    public void onMove(PlayerMoveEvent event) {
 
         // event checks
-        if(event.isCancelled()) return;
+        if (event.isCancelled()) return;
 
         // event values
         Player player = event.getPlayer();
@@ -40,41 +40,42 @@ public class PlayerMoveListener implements Listener {
         Location locationTo = event.getTo();
 
         // check does player moved
-        if (locationFrom.getBlockX() == locationTo.getBlockX() && locationFrom.getBlockZ() == locationTo.getBlockZ()) return;
+        if (locationFrom.getBlockX() == locationTo.getBlockX() && locationFrom.getBlockZ() == locationTo.getBlockZ())
+            return;
 
         // check does current sector exists
         ISector currentSector = SectorManager.getCurrentSector();
-        if(currentSector != null && currentSector.getWorld() == locationTo.getWorld()){
+        if (currentSector != null && currentSector.getWorld() == locationTo.getWorld()) {
 
             // check is player inside protected area
-            if( !(locationTo.getX() >= currentSector.getMinX() + currentSector.getProtectionDistance() && locationTo.getX() <= currentSector.getMaxX() - currentSector.getProtectionDistance() && locationTo.getZ() >= currentSector.getMinZ() + currentSector.getProtectionDistance() && locationTo.getZ() <=  currentSector.getMaxZ() - currentSector.getProtectionDistance()) ){
+            if (!(locationTo.getX() >= currentSector.getMinX() + currentSector.getProtectionDistance() && locationTo.getX() <= currentSector.getMaxX() - currentSector.getProtectionDistance() && locationTo.getZ() >= currentSector.getMinZ() + currentSector.getProtectionDistance() && locationTo.getZ() <= currentSector.getMaxZ() - currentSector.getProtectionDistance())) {
 
                 // sector user
-                ISectorUser sectorUser = SectorUserManager.getUserByPlayerUniqueId( player.getUniqueId() );
+                ISectorUser sectorUser = SectorUserManager.getUserByPlayerUniqueId(player.getUniqueId());
 
                 // distance to the sector
-                int distanceToSector = currentSector.getDistanceToBorder( locationTo );
+                int distanceToSector = currentSector.getDistanceToBorder(locationTo);
 
                 // send actionbar
                 ActionbarUtils.sendActionbar(player, ChatColor.translateAlternateColorCodes('&', String.format(this.sectors.languageProvider.getLocalizedMessage(sectorUser.getLocale(), "border.distance"), distanceToSector)));
 
                 // check is player outside sector area
-                if( !(locationTo.getX() >= currentSector.getMinX() - 2 && locationTo.getX() <= currentSector.getMaxX() + 2 && locationTo.getZ() >= currentSector.getMinZ() - 2 && locationTo.getZ() <= currentSector.getMaxZ() + 2) ){
+                if (!(locationTo.getX() >= currentSector.getMinX() - 2 && locationTo.getX() <= currentSector.getMaxX() + 2 && locationTo.getZ() >= currentSector.getMinZ() - 2 && locationTo.getZ() <= currentSector.getMaxZ() + 2)) {
 
                     // get sector at location
-                    ISector targetSector = SectorManager.getSectorAtLocation( locationTo );
-                    if(targetSector != null && targetSector != currentSector){
+                    ISector targetSector = SectorManager.getSectorAtLocation(locationTo);
+                    if (targetSector != null && targetSector != currentSector) {
 
                         // check does target server is online
-                        if( sectorUser.getTargetSector() == null && targetSector.getEndpoint() != null && targetSector.getEndpoint().getRSocket() != null && !targetSector.getEndpoint().getRSocket().isDisposed() ){
+                        if (sectorUser.getTargetSector() == null && targetSector.getEndpoint() != null && targetSector.getEndpoint().getRSocket() != null && !targetSector.getEndpoint().getRSocket().isDisposed()) {
 
                             // send player to target sector
                             targetSector.send(this.sectors.masterServer, sectorUser, player);
 
-                        } else if(sectorUser.getTargetSector() == null) {
+                        } else if (sectorUser.getTargetSector() == null) {
 
                             // send message
-                            player.sendMessage( ChatColor.translateAlternateColorCodes('&', this.sectors.languageProvider.getLocalizedMessage(sectorUser.getLocale(), "sector.offline")) );
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.sectors.languageProvider.getLocalizedMessage(sectorUser.getLocale(), "sector.offline")));
 
                         }
 

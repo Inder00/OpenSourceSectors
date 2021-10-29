@@ -5,6 +5,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 import pl.inder00.opensource.sectors.basic.ISector;
+import pl.inder00.opensource.sectors.basic.manager.SectorManager;
 
 public class PlayerChangeSectorEvent extends PlayerEvent implements Cancellable {
 
@@ -24,11 +25,30 @@ public class PlayerChangeSectorEvent extends PlayerEvent implements Cancellable 
     }
 
     /**
+     * Event handler list
+     *
+     * @return HandlerList
+     */
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    /**
      * Returning a reference of target sector
+     *
      * @return ISector
      */
-    public ISector getSector() {
+    public ISector getNewSector() {
         return sector;
+    }
+
+    /**
+     * Returning a reference of current sector
+     *
+     * @return ISector
+     */
+    public ISector getOldSector() {
+        return SectorManager.getCurrentSector();
     }
 
     @Override
@@ -43,14 +63,6 @@ public class PlayerChangeSectorEvent extends PlayerEvent implements Cancellable 
 
     @Override
     public HandlerList getHandlers() {
-        return handlers;
-    }
-
-    /**
-     * Event handler list
-     * @return HandlerList
-     */
-    public static HandlerList getHandlerList() {
         return handlers;
     }
 

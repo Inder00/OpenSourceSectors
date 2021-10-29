@@ -21,6 +21,7 @@ public enum EPacket {
 
     /**
      * Get packet id
+     *
      * @return short
      */
     public short getPacketId() {

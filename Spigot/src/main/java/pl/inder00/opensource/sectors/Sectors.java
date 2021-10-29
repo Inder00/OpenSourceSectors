@@ -1,6 +1,5 @@
 package pl.inder00.opensource.sectors;
 
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.inder00.opensource.sectors.basic.manager.SectorManager;
 import pl.inder00.opensource.sectors.communication.PositionDataPacket;
@@ -19,27 +18,25 @@ import java.util.UUID;
 public class Sectors extends JavaPlugin {
 
     /**
-     * Configuration file
-     */
-    private File configurationFile;
-    private PluginConfiguration pluginConfiguration;
-
-    /**
      * Language provider
      */
     public I18n languageProvider;
-
     /**
      * Master server
      */
     public MasterServerClient masterServer;
+    /**
+     * Configuration file
+     */
+    private File configurationFile;
+    private PluginConfiguration pluginConfiguration;
 
     @Override
     public void onEnable() {
 
         // Save default configuration locally
         this.configurationFile = new File(this.getDataFolder(), "configuration.yml");
-        if(!this.configurationFile.exists()){
+        if (!this.configurationFile.exists()) {
             this.saveResource("configuration.yml", true);
         }
 
@@ -48,10 +45,10 @@ public class Sectors extends JavaPlugin {
         this.pluginConfiguration.loadConfiguration();
 
         // Update current sector unique id
-        SectorManager.setCurrentSectorUniqueId( UUID.nameUUIDFromBytes(this.pluginConfiguration.sectorId.getBytes(StandardCharsets.UTF_8)) );
+        SectorManager.setCurrentSectorUniqueId(UUID.nameUUIDFromBytes(this.pluginConfiguration.sectorId.getBytes(StandardCharsets.UTF_8)));
 
         // Connect to master server and send request for configuration
-        this.masterServer = new MasterServerClient(this,this.pluginConfiguration.masterHostname, this.pluginConfiguration.masterPort, this.pluginConfiguration.masterPassword != null ? (this.pluginConfiguration.masterPassword.length() > 0 ? this.pluginConfiguration.masterPassword : null) : null);
+        this.masterServer = new MasterServerClient(this, this.pluginConfiguration.masterHostname, this.pluginConfiguration.masterPort, this.pluginConfiguration.masterPassword != null ? (this.pluginConfiguration.masterPassword.length() > 0 ? this.pluginConfiguration.masterPassword : null) : null);
         this.masterServer.connectToMasterServer();
 
         // register endpoints packets

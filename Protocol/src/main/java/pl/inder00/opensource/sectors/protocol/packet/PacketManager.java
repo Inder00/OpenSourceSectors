@@ -7,32 +7,35 @@ public class PacketManager {
     /**
      * List of packets
      */
-    private static ConcurrentHashMap<Short, IPacket> packetList = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<Short, IPacket> packetList = new ConcurrentHashMap<Short, IPacket>();
 
     /**
      * Register packet
-     * @param id Packet id
+     *
+     * @param id     Packet id
      * @param packet Packet
      */
-    public static void registerPacket( short id, IPacket packet ){
+    public static void registerPacket(short id, IPacket packet) {
         packetList.put(id, packet);
     }
 
     /**
      * Register packet
+     *
      * @param ePacket Packet id enum
-     * @param packet Packet
+     * @param packet  Packet
      */
-    public static void registerPacket( EPacket ePacket, IPacket packet ){
-        registerPacket(ePacket.getPacketId(),packet);
+    public static void registerPacket(EPacket ePacket, IPacket packet) {
+        registerPacket(ePacket.getPacketId(), packet);
     }
 
     /**
      * Gets packet by the id
+     *
      * @param id
      * @return
      */
-    public static IPacket getPacketById( short id ){
-        return packetList.get( id );
+    public static IPacket getPacketById(short id) {
+        return packetList.get(id);
     }
 }

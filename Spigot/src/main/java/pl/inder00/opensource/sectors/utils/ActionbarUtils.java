@@ -18,13 +18,15 @@ public class ActionbarUtils {
     static {
         try {
             sendMessageMethod = Player.Spigot.class.getMethod("sendMessage", ChatMessageType.class, BaseComponent.class);
-        } catch (Throwable ignore){}
+        } catch (Throwable ignore) {
+        }
     }
 
     /**
      * Sends actionbar packet to player
+     *
      * @param player Player
-     * @param text Text
+     * @param text   Text
      */
     public static void sendActionbar(Player player, String text) {
         try {
@@ -33,17 +35,17 @@ public class ActionbarUtils {
             String nmsVersion = Reflection.getServerVersion();
 
             // process
-            if(sendMessageMethod != null){
-                sendMessageMethod.invoke( player.spigot(), ChatMessageType.ACTION_BAR, new TextComponent(text) );
+            if (sendMessageMethod != null) {
+                sendMessageMethod.invoke(player.spigot(), ChatMessageType.ACTION_BAR, new TextComponent(text));
             } else {
-                if(nmsVersion.equalsIgnoreCase("v1_8_R1")) {
+                if (nmsVersion.equalsIgnoreCase("v1_8_R1")) {
                     Reflection.sendPacket(player, Reflection.getClass("net.minecraft.server", "PacketPlayOutChat").getConstructor(Reflection.getClass("net.minecraft.server", "IChatBaseComponent"), byte.class).newInstance(Reflection.getClass("net.minecraft.server", "ChatSerializer").getMethod("a", String.class).invoke(null, "{text:\"" + text + "\"}"), (byte) 2), "net.minecraft.server");
                 } else {
                     Reflection.sendPacket(player, Reflection.getClass("net.minecraft.server", "PacketPlayOutChat").getConstructor(Reflection.getClass("net.minecraft.server", "IChatBaseComponent"), byte.class).newInstance(Reflection.getClass("net.minecraft.server", "ChatComponentText").getConstructor(new Class<?>[]{String.class}).newInstance(text), (byte) 2), "net.minecraft.server");
                 }
             }
 
-        } catch (Throwable e){
+        } catch (Throwable e) {
 
             // throw error
             e.printStackTrace();

@@ -21,9 +21,9 @@ public class SectorUserImpl implements ISectorUser {
     /**
      * Implementation
      */
-    public SectorUserImpl(Player player){
+    public SectorUserImpl(Player player) {
         this.uniqueId = player.getUniqueId();
-        this.locale = I18nUtils.getPlayerLocale( player );
+        this.locale = I18nUtils.getPlayerLocale(player);
     }
 
     @Override

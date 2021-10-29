@@ -12,25 +12,25 @@ import pl.inder00.opensource.sectors.utils.SpigotPayloadUtils;
 
 public class PlayerQuitListener implements Listener {
 
-    @EventHandler( priority = EventPriority.MONITOR )
-    public void onQuit(PlayerQuitEvent event){
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onQuit(PlayerQuitEvent event) {
 
         // values
         Player player = event.getPlayer();
 
         // remove join time time
-        SectorUserManager.deleteJoinTimeUser( player.getUniqueId() );
+        SectorUserManager.deleteJoinTimeUser(player.getUniqueId());
 
         // sector user
-        ISectorUser sectorUser = SectorUserManager.getUserByPlayerUniqueIdIfPresent( player.getUniqueId() );
-        if(sectorUser != null){
+        ISectorUser sectorUser = SectorUserManager.getUserByPlayerUniqueIdIfPresent(player.getUniqueId());
+        if (sectorUser != null) {
 
             // check does player is changing their sector
             ISector targetSector = sectorUser.getTargetSector();
-            if(targetSector != null){
+            if (targetSector != null) {
 
                 // send transfer data to target server
-                targetSector.getEndpoint().getRSocket().fireAndForget(SpigotPayloadUtils.createTransferDataPayload(player,sectorUser.getTargetLocation())).subscribe();
+                targetSector.getEndpoint().getRSocket().fireAndForget(SpigotPayloadUtils.createTransferDataPayload(player, sectorUser.getTargetLocation())).subscribe();
 
             }
 

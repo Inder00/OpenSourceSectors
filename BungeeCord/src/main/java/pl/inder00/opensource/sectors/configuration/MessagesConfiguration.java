@@ -28,9 +28,10 @@ public class MessagesConfiguration {
 
     /**
      * Implementation
+     *
      * @param configurationFile Configuration java file
      */
-    public MessagesConfiguration(Plugin plugin,  File configurationFile) {
+    public MessagesConfiguration(Plugin plugin, File configurationFile) {
 
         // set plugin
         this.plugin = plugin;
@@ -53,18 +54,18 @@ public class MessagesConfiguration {
         this.defaultLocale = this.yamlConfiguration.getString("default_locale", "en_us").toLowerCase();
 
         // locale aliases
-        for( String targetLocale : this.yamlConfiguration.getSection("locale_alises").getKeys() ){
+        for (String targetLocale : this.yamlConfiguration.getSection("locale_alises").getKeys()) {
 
             try {
 
                 // source locale
                 String sourceLocale = this.yamlConfiguration.getString("locale_alises." + targetLocale);
-                if(sourceLocale == null) throw new ConfigurationException("Source locale is not set");
+                if (sourceLocale == null) throw new ConfigurationException("Source locale is not set");
 
                 // append to list
-                localeAliases.put( targetLocale.toLowerCase(), sourceLocale.toLowerCase() );
+                localeAliases.put(targetLocale.toLowerCase(), sourceLocale.toLowerCase());
 
-            } catch (Throwable e){
+            } catch (Throwable e) {
 
                 // log
                 this.plugin.getLogger().log(Level.SEVERE, String.format("Failed to load \"%s\" locale alias (%s).", targetLocale, e.getMessage()));
@@ -77,23 +78,24 @@ public class MessagesConfiguration {
         }
 
         // locales
-        for( String locale : this.yamlConfiguration.getSection("messages").getKeys() ){
+        for (String locale : this.yamlConfiguration.getSection("messages").getKeys()) {
 
             try {
 
                 // localized messages
-                for( String messageKey : this.yamlConfiguration.getSection("messages." + locale).getKeys() ){
+                for (String messageKey : this.yamlConfiguration.getSection("messages." + locale).getKeys()) {
 
                     // message
                     String message = this.yamlConfiguration.getString("messages." + locale + "." + messageKey);
-                    if(message == null) throw new ConfigurationException(String.format("Message is not set in \"%s\" key", messageKey));
+                    if (message == null)
+                        throw new ConfigurationException(String.format("Message is not set in \"%s\" key", messageKey));
 
                     // append  to list
-                    messagesList.put( locale.toLowerCase() + "." + messageKey.toLowerCase().replaceAll("_", "."), message );
+                    messagesList.put(locale.toLowerCase() + "." + messageKey.toLowerCase().replaceAll("_", "."), message);
 
                 }
 
-            } catch (Throwable e){
+            } catch (Throwable e) {
 
                 // log
                 this.plugin.getLogger().log(Level.SEVERE, String.format("Failed to load \"%s\" locale messages (%s).", locale, e.getMessage()));

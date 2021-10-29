@@ -15,22 +15,26 @@ public class I18nUtils {
     static {
         try {
             playerLocaleMethod = Player.class.getMethod("getLocale");
-        } catch (Throwable e){
-            try { spigotLocaleMethod = Player.Spigot.class.getMethod("getLocale"); } catch (NoSuchMethodException ignore) {}
+        } catch (Throwable e) {
+            try {
+                spigotLocaleMethod = Player.Spigot.class.getMethod("getLocale");
+            } catch (NoSuchMethodException ignore) {
+            }
         }
     }
 
     /**
      * Gets player locale
+     *
      * @param player Player
      * @return String
      */
-    public static String getPlayerLocale( Player player ){
+    public static String getPlayerLocale(Player player) {
         try {
-            if( playerLocaleMethod != null ) {
-                return (String) playerLocaleMethod.invoke( player );
+            if (playerLocaleMethod != null) {
+                return (String) playerLocaleMethod.invoke(player);
             } else {
-                return (String) spigotLocaleMethod.invoke( player.spigot() );
+                return (String) spigotLocaleMethod.invoke(player.spigot());
             }
         } catch (Throwable e) {
             e.printStackTrace();
