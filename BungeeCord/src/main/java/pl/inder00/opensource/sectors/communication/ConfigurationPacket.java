@@ -6,7 +6,7 @@ import pl.inder00.opensource.sectors.protobuf.ProtobufConfigurationData;
 import pl.inder00.opensource.sectors.protobuf.ProtobufGeneric;
 import pl.inder00.opensource.sectors.protocol.packet.IPacket;
 
-public class ConfigurationPacket implements IPacket<ProtobufConfigurationData.ConfiguractionPacket> {
+public class ConfigurationPacket implements IPacket<ProtobufConfigurationData.ConfigurationPacket> {
 
     /**
      * Data
@@ -21,15 +21,15 @@ public class ConfigurationPacket implements IPacket<ProtobufConfigurationData.Co
     }
 
     @Override
-    public ProtobufConfigurationData.ConfiguractionPacket.Builder getBuilder() {
-        return ProtobufConfigurationData.ConfiguractionPacket.newBuilder();
+    public ProtobufConfigurationData.ConfigurationPacket.Builder getBuilder() {
+        return ProtobufConfigurationData.ConfigurationPacket.newBuilder();
     }
 
     @Override
-    public ProtobufConfigurationData.ConfiguractionPacket execute(ProtobufConfigurationData.ConfiguractionPacket configuractionPacket) throws Throwable {
+    public ProtobufConfigurationData.ConfigurationPacket execute(ProtobufConfigurationData.ConfigurationPacket configurationPacket) throws Throwable {
 
         // builder
-        ProtobufConfigurationData.ConfiguractionPacket.Builder configurationPacketOutput = ProtobufConfigurationData.ConfiguractionPacket.newBuilder();
+        ProtobufConfigurationData.ConfigurationPacket.Builder configurationPacketOutput = ProtobufConfigurationData.ConfigurationPacket.newBuilder();
 
         // write data
         configurationPacketOutput.setVersion(this.plugin.getDescription().getVersion());
@@ -39,7 +39,7 @@ public class ConfigurationPacket implements IPacket<ProtobufConfigurationData.Co
 
         // aliases configuration
         this.plugin.messagesConfiguration.localeAliases.forEach((key, val) -> {
-            configurationPacketOutput.addAlises(ProtobufConfigurationData.ConfigurationAlias.newBuilder()
+            configurationPacketOutput.addAliases(ProtobufConfigurationData.ConfigurationAlias.newBuilder()
                     .setTarget(key)
                     .setSource(val)
                     .build());
