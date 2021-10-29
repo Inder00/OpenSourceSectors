@@ -14,7 +14,7 @@ public class I18nFactory implements I18n {
     /**
      * Implementation
      */
-    public I18nFactory(String defaultLanguage){
+    public I18nFactory(String defaultLanguage) {
         this.defaultLanguage = defaultLanguage;
         this.aliases = new ConcurrentHashMap<>();
         this.messages = new ConcurrentHashMap<>();
@@ -27,11 +27,11 @@ public class I18nFactory implements I18n {
 
     @Override
     public void addLocalizedMessage(String code, String message) {
-        this.messages.put( code, message );
+        this.messages.put(code, message);
     }
 
     @Override
     public void addLocaleAlias(String localeSource, String localeTarget) {
-        this.aliases.put( localeTarget, localeSource );
+        this.aliases.put(localeTarget, localeSource);
     }
 }

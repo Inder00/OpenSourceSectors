@@ -1,7 +1,7 @@
 name: Build
-on: [push, pull_request, workflow_dispatch]
+on: [ push, pull_request, workflow_dispatch ]
 env:
-  VERSION: "1.0.0"
+  VERSION: "1.0.1"
 jobs:
   java_8:
     name: 🔥 Build [Java 8]
@@ -9,204 +9,229 @@ jobs:
     env:
       JAVA_VERSION: 8
     steps:
-  
-    - uses: actions/checkout@v2
-    
-    - name: ❤️ Set up Java ${{ env.JAVA_VERSION }}
-      uses: actions/setup-java@v2
-      with:
-        java-version: ${{ env.JAVA_VERSION }}
-        distribution: 'adopt'
-        architecture: x64
-        
-    - name: 🍎 Cache the Maven packages to speed up build
-      uses: actions/cache@v1
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2      
-        
-    - name: 😎 Create artifact directory
-      run: mkdir ${{ GITHUB.WORKSPACE }}/DownloadArtifact
-        
-    - name: 💻 Build Protocol
-      run: |
-        cd Protocol
-        mvn clean install -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e
-        mvn -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e package --file pom.xml
-      
-    - name: 💻 Build BungeeCord
-      run: |
-        cd BungeeCord
-        mvn clean install -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e
-        mvn -Dcompile.output=${{ GITHUB.WORKSPACE }}/DownloadArtifact -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e package --file pom.xml
-      
-    - name: 💻 Build Spigot
-      run: |
-        cd Spigot
-        mvn clean install -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e
-        mvn -Dcompile.output=${{ GITHUB.WORKSPACE }}/DownloadArtifact -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e package --file pom.xml
-      
-    - name: 🖤 Create artifact
-      uses: 'actions/upload-artifact@v2'
-      with:
-        name: "OpenSourceSectors_v${{ env.VERSION }}-${{ github.sha }}-JDK${{ env.JAVA_VERSION }}"
-        path: '${{ GITHUB.WORKSPACE }}/DownloadArtifact/*'
-        retention-days: 7
-        if-no-files-found: error
-      
+
+      - uses: actions/checkout@v2
+
+      - name: ❤️ Set up Java ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'adopt'
+          architecture: x64
+
+      - name: 🍎 Cache the Maven packages to speed up build
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: 😎 Create artifact directory
+        run: mkdir ${{ GITHUB.WORKSPACE }}/DownloadArtifact
+
+      - name: 🚩Install Protobuf compiler
+        uses: arduino/setup-protoc@v1
+
+      - name: 🥰 Compile protobuf files
+        run: protoc -I=protobuf/ --java_out=Protocol/src/main/java/ protobuf/*.proto
+
+
+      - name: 💻 Build Protocol
+        run: |
+          cd Protocol
+          mvn clean install -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e
+          mvn -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e package --file pom.xml
+
+      - name: 💻 Build BungeeCord
+        run: |
+          cd BungeeCord
+          mvn clean install -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e
+          mvn -Dcompile.output=${{ GITHUB.WORKSPACE }}/DownloadArtifact -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e package --file pom.xml
+
+      - name: 💻 Build Spigot
+        run: |
+          cd Spigot
+          mvn clean install -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e
+          mvn -Dcompile.output=${{ GITHUB.WORKSPACE }}/DownloadArtifact -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e package --file pom.xml
+
+      - name: 🖤 Create artifact
+        uses: 'actions/upload-artifact@v2'
+        with:
+          name: "OpenSourceSectors_v${{ env.VERSION }}-${{ github.sha }}-JDK${{ env.JAVA_VERSION }}"
+          path: '${{ GITHUB.WORKSPACE }}/DownloadArtifact/*'
+          retention-days: 7
+          if-no-files-found: error
+
   java_11:
     name: 🔥 Build [Java 11]
     runs-on: ubuntu-latest
     env:
       JAVA_VERSION: 11
     steps:
-  
-    - uses: actions/checkout@v2
-    
-    - name: ❤️ Set up Java ${{ env.JAVA_VERSION }}
-      uses: actions/setup-java@v2
-      with:
-        java-version: ${{ env.JAVA_VERSION }}
-        distribution: 'adopt'
-        architecture: x64
-        
-    - name: 🍎 Cache the Maven packages to speed up build
-      uses: actions/cache@v1
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2      
-        
-    - name: 😎 Create artifact directory
-      run: mkdir ${{ GITHUB.WORKSPACE }}/DownloadArtifact
-        
-    - name: 💻 Build Protocol
-      run: |
-        cd Protocol
-        mvn clean install -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e
-        mvn -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e package --file pom.xml
-      
-    - name: 💻 Build BungeeCord
-      run: |
-        cd BungeeCord
-        mvn clean install -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e
-        mvn -Dcompile.output=${{ GITHUB.WORKSPACE }}/DownloadArtifact -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e package --file pom.xml
-      
-    - name: 💻 Build Spigot
-      run: |
-        cd Spigot
-        mvn clean install -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e
-        mvn -Dcompile.output=${{ GITHUB.WORKSPACE }}/DownloadArtifact -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e package --file pom.xml
-      
-    - name: 🖤 Create artifact
-      uses: 'actions/upload-artifact@v2'
-      with:
-        name: "OpenSourceSectors_v${{ env.VERSION }}-${{ github.sha }}-JDK${{ env.JAVA_VERSION }}"
-        path: '${{ GITHUB.WORKSPACE }}/DownloadArtifact/*'
-        retention-days: 7
-        if-no-files-found: error
-      
+
+      - uses: actions/checkout@v2
+
+      - name: ❤️ Set up Java ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'adopt'
+          architecture: x64
+
+      - name: 🍎 Cache the Maven packages to speed up build
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: 😎 Create artifact directory
+        run: mkdir ${{ GITHUB.WORKSPACE }}/DownloadArtifact
+
+      - name: 🚩Install Protobuf compiler
+        uses: arduino/setup-protoc@v1
+
+      - name: 🥰 Compile protobuf files
+        run: protoc -I=protobuf/ --java_out=Protocol/src/main/java/ protobuf/*.proto
+
+      - name: 💻 Build Protocol
+        run: |
+          cd Protocol
+          mvn clean install -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e
+          mvn -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e package --file pom.xml
+
+      - name: 💻 Build BungeeCord
+        run: |
+          cd BungeeCord
+          mvn clean install -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e
+          mvn -Dcompile.output=${{ GITHUB.WORKSPACE }}/DownloadArtifact -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e package --file pom.xml
+
+      - name: 💻 Build Spigot
+        run: |
+          cd Spigot
+          mvn clean install -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e
+          mvn -Dcompile.output=${{ GITHUB.WORKSPACE }}/DownloadArtifact -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e package --file pom.xml
+
+      - name: 🖤 Create artifact
+        uses: 'actions/upload-artifact@v2'
+        with:
+          name: "OpenSourceSectors_v${{ env.VERSION }}-${{ github.sha }}-JDK${{ env.JAVA_VERSION }}"
+          path: '${{ GITHUB.WORKSPACE }}/DownloadArtifact/*'
+          retention-days: 7
+          if-no-files-found: error
+
   java_16:
     name: 🔥 Build [Java 16]
     runs-on: ubuntu-latest
     env:
       JAVA_VERSION: 16
     steps:
-  
-    - uses: actions/checkout@v2
-    
-    - name: ❤️ Set up Java ${{ env.JAVA_VERSION }}
-      uses: actions/setup-java@v2
-      with:
-        java-version: ${{ env.JAVA_VERSION }}
-        distribution: 'adopt'
-        architecture: x64
-        
-    - name: 🍎 Cache the Maven packages to speed up build
-      uses: actions/cache@v1
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2      
-        
-    - name: 😎 Create artifact directory
-      run: mkdir ${{ GITHUB.WORKSPACE }}/DownloadArtifact
-        
-    - name: 💻 Build Protocol
-      run: |
-        cd Protocol
-        mvn clean install -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e
-        mvn -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e package --file pom.xml
-      
-    - name: 💻 Build BungeeCord
-      run: |
-        cd BungeeCord
-        mvn clean install -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e
-        mvn -Dcompile.output=${{ GITHUB.WORKSPACE }}/DownloadArtifact -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e package --file pom.xml
-      
-    - name: 💻 Build Spigot
-      run: |
-        cd Spigot
-        mvn clean install -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e
-        mvn -Dcompile.output=${{ GITHUB.WORKSPACE }}/DownloadArtifact -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e package --file pom.xml
-      
-    - name: 🖤 Create artifact
-      uses: 'actions/upload-artifact@v2'
-      with:
-        name: "v${{ env.VERSION }}-${{ github.sha }}-JDK${{ env.JAVA_VERSION }}"
-        path: '${{ GITHUB.WORKSPACE }}/DownloadArtifact/*'
-        retention-days: 7
-        if-no-files-found: error
-        
+
+      - uses: actions/checkout@v2
+
+      - name: ❤️ Set up Java ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'adopt'
+          architecture: x64
+
+      - name: 🍎 Cache the Maven packages to speed up build
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: 😎 Create artifact directory
+        run: mkdir ${{ GITHUB.WORKSPACE }}/DownloadArtifact
+
+      - name: 🚩Install Protobuf compiler
+        uses: arduino/setup-protoc@v1
+
+      - name: 🥰 Compile protobuf files
+        run: protoc -I=protobuf/ --java_out=Protocol/src/main/java/ protobuf/*.proto
+
+      - name: 💻 Build Protocol
+        run: |
+          cd Protocol
+          mvn clean install -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e
+          mvn -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e package --file pom.xml
+
+      - name: 💻 Build BungeeCord
+        run: |
+          cd BungeeCord
+          mvn clean install -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e
+          mvn -Dcompile.output=${{ GITHUB.WORKSPACE }}/DownloadArtifact -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e package --file pom.xml
+
+      - name: 💻 Build Spigot
+        run: |
+          cd Spigot
+          mvn clean install -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e
+          mvn -Dcompile.output=${{ GITHUB.WORKSPACE }}/DownloadArtifact -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e package --file pom.xml
+
+      - name: 🖤 Create artifact
+        uses: 'actions/upload-artifact@v2'
+        with:
+          name: "v${{ env.VERSION }}-${{ github.sha }}-JDK${{ env.JAVA_VERSION }}"
+          path: '${{ GITHUB.WORKSPACE }}/DownloadArtifact/*'
+          retention-days: 7
+          if-no-files-found: error
+
   java_17:
     name: 🔥 Build [Java 17]
     runs-on: ubuntu-latest
     env:
       JAVA_VERSION: 17
     steps:
-  
-    - uses: actions/checkout@v2
-    
-    - name: ❤️ Set up Java ${{ env.JAVA_VERSION }}
-      uses: actions/setup-java@v2
-      with:
-        java-version: ${{ env.JAVA_VERSION }}
-        distribution: 'adopt'
-        architecture: x64
-        
-    - name: 🍎 Cache the Maven packages to speed up build
-      uses: actions/cache@v1
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2      
-        
-    - name: 😎 Create artifact directory
-      run: mkdir ${{ GITHUB.WORKSPACE }}/DownloadArtifact
-        
-    - name: 💻 Build Protocol
-      run: |
-        cd Protocol
-        mvn clean install -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e
-        mvn -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e package --file pom.xml
-      
-    - name: 💻 Build BungeeCord
-      run: |
-        cd BungeeCord
-        mvn clean install -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e
-        mvn -Dcompile.output=${{ GITHUB.WORKSPACE }}/DownloadArtifact -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e package --file pom.xml
-      
-    - name: 💻 Build Spigot
-      run: |
-        cd Spigot
-        mvn clean install -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e
-        mvn -Dcompile.output=${{ GITHUB.WORKSPACE }}/DownloadArtifact -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e package --file pom.xml
-      
-    - name: 🖤 Create artifact
-      uses: 'actions/upload-artifact@v2'
-      with:
-        name: "OpenSourceSectors_v${{ env.VERSION }}-${{ github.sha }}-JDK${{ env.JAVA_VERSION }}"
-        path: '${{ GITHUB.WORKSPACE }}/DownloadArtifact/*'
-        retention-days: 7
-        if-no-files-found: error
+
+      - uses: actions/checkout@v2
+
+      - name: ❤️ Set up Java ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'adopt'
+          architecture: x64
+
+      - name: 🍎 Cache the Maven packages to speed up build
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: 😎 Create artifact directory
+        run: mkdir ${{ GITHUB.WORKSPACE }}/DownloadArtifact
+
+      - name: 🚩Install Protobuf compiler
+        uses: arduino/setup-protoc@v1
+
+      - name: 🥰 Compile protobuf files
+        run: protoc -I=protobuf/ --java_out=Protocol/src/main/java/ protobuf/*.proto
+
+      - name: 💻 Build Protocol
+        run: |
+          cd Protocol
+          mvn clean install -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e
+          mvn -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e package --file pom.xml
+
+      - name: 💻 Build BungeeCord
+        run: |
+          cd BungeeCord
+          mvn clean install -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e
+          mvn -Dcompile.output=${{ GITHUB.WORKSPACE }}/DownloadArtifact -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e package --file pom.xml
+
+      - name: 💻 Build Spigot
+        run: |
+          cd Spigot
+          mvn clean install -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e
+          mvn -Dcompile.output=${{ GITHUB.WORKSPACE }}/DownloadArtifact -Dcompile.java_version=${{ env.JAVA_VERSION }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e package --file pom.xml
+
+      - name: 🖤 Create artifact
+        uses: 'actions/upload-artifact@v2'
+        with:
+          name: "OpenSourceSectors_v${{ env.VERSION }}-${{ github.sha }}-JDK${{ env.JAVA_VERSION }}"
+          path: '${{ GITHUB.WORKSPACE }}/DownloadArtifact/*'
+          retention-days: 7
+          if-no-files-found: error

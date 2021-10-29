@@ -16,18 +16,16 @@ import java.util.logging.Level;
 
 public class Sectors extends AbstractPlugin {
 
+    public PluginConfiguration pluginConfiguration;
+    public MessagesConfiguration messagesConfiguration;
     /**
      * Configuration file
      */
     private File configurationFile;
-    public PluginConfiguration pluginConfiguration;
-
     /**
      * Messages file
      */
     private File messagesFile;
-    public MessagesConfiguration messagesConfiguration;
-
     /**
      * Master server
      */
@@ -41,13 +39,13 @@ public class Sectors extends AbstractPlugin {
 
             // Save default plugin configuration locally
             this.configurationFile = new File(this.getDataFolder(), "configuration.yml");
-            if(!this.configurationFile.exists()){
+            if (!this.configurationFile.exists()) {
                 this.saveResource("configuration.yml", true);
             }
 
             // Save default messages configuration locally
             this.messagesFile = new File(this.getDataFolder(), "messages.yml");
-            if(!this.messagesFile.exists()){
+            if (!this.messagesFile.exists()) {
                 this.saveResource("messages.yml", true);
             }
 
@@ -82,7 +80,7 @@ public class Sectors extends AbstractPlugin {
             PacketManager.registerPacket(EPacket.CONFIGURATION_REQUEST, new ConfigurationPacket(this));
             PacketManager.registerPacket(EPacket.SERVER_CHANGE, new ChangeServerPacket(this));
 
-        } catch (Throwable e){
+        } catch (Throwable e) {
 
             // log
             this.getLogger().log(Level.SEVERE, "An error occurred during enabling plugin.", e);

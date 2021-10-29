@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>pl.inder00.opensource.sectors.bungeecord</groupId>
@@ -43,6 +43,13 @@
                                     <shadedPattern>io.rsocket.netty</shadedPattern>
                                     <includes>
                                         <include>io.netty.**</include>
+                                    </includes>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.google.protobuf</pattern>
+                                    <shadedPattern>io.rsocket.protobuf</shadedPattern>
+                                    <includes>
+                                        <include>com.google.protobuf.**</include>
                                     </includes>
                                 </relocation>
                             </relocations>
@@ -89,7 +96,7 @@
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
-            <version>1.8-SNAPSHOT</version>
+            <version>1.16-R0.4</version>
         </dependency>
         <dependency>
             <groupId>pl.inder00.opensource.sectors.protocol</groupId>

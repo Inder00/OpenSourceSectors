@@ -1,7 +1,8 @@
 package pl.inder00.opensource.sectors.protocol.handlers;
 
+import com.google.protobuf.ByteString;
+import com.google.protobuf.Message;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.rsocket.Payload;
 import io.rsocket.RSocket;
 import io.rsocket.util.ByteBufPayload;
@@ -34,20 +35,23 @@ public class DefaultServerHandler implements RSocket {
         try {
 
             // packet id
-            if( bufferIn.readableBytes() < 2 ) throw new PacketException("Unable to decode packet id");
+            if (bufferIn.readableBytes() < 2) throw new PacketException("Unable to decode packet id");
             short packetId = bufferIn.readShort();
 
             // packet
-            IPacket packet = PacketManager.getPacketById( packetId );
-            if(packet == null) throw new PacketException("Invalid packet id");
+            IPacket packet = PacketManager.getPacketById(packetId);
+            if (packet == null) throw new PacketException("Invalid packet id");
+
+            // create protobuf message
+            Message protobufMessage = packet.getBuilder().mergeFrom(ByteString.copyFrom(bufferIn.nioBuffer())).build();
 
             // execute packet
-            packet.execute( bufferIn, null );
+            packet.execute(protobufMessage);
 
             // return output
             return Mono.empty();
 
-        } catch (Throwable e){
+        } catch (Throwable e) {
 
             // throw error
             e.printStackTrace();
@@ -72,24 +76,24 @@ public class DefaultServerHandler implements RSocket {
 
         try {
 
-            // output buffer
-            ByteBuf bufferOut = Unpooled.buffer( 16 );
-
             // packet id
-            if( bufferIn.readableBytes() < 2 ) throw new PacketException("Unable to decode packet id");
+            if (bufferIn.readableBytes() < 2) throw new PacketException("Unable to decode packet id");
             short packetId = bufferIn.readShort();
 
             // packet
-            IPacket packet = PacketManager.getPacketById( packetId );
-            if(packet == null) throw new PacketException("Invalid packet id");
+            IPacket packet = PacketManager.getPacketById(packetId);
+            if (packet == null) throw new PacketException("Invalid packet id");
+
+            // create protobuf message
+            Message protobufMessage = packet.getBuilder().mergeFrom(ByteString.copyFrom(bufferIn.nioBuffer())).build();
 
             // execute packet
-            packet.execute( bufferIn, bufferOut );
+            Message outputData = packet.execute(protobufMessage);
 
             // return output
-            return Mono.just(ByteBufPayload.create(bufferOut));
+            return Mono.just(ByteBufPayload.create(outputData.toByteArray()));
 
-        } catch (Throwable e){
+        } catch (Throwable e) {
 
             // throw error
             e.printStackTrace();

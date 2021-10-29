@@ -25,13 +25,13 @@ public class DefaultSectorServer implements ISectorServer {
      * Server data
      */
     private RSocketServer socketServer;
-    private List<RSocket> connectionList = new ArrayList<>();
+    private List<RSocket> connectionList = new ArrayList<RSocket>();
 
     /**
      * Implementation
      */
     public DefaultSectorServer(String hostname, int port) {
-        this(hostname,port,null);
+        this(hostname, port, null);
     }
 
     /**
@@ -53,7 +53,7 @@ public class DefaultSectorServer implements ISectorServer {
 
     @Override
     public Mono<CloseableChannel> bind() {
-        return this.socketServer.bind(TcpServerTransport.create(this.hostname,this.port));
+        return this.socketServer.bind(TcpServerTransport.create(this.hostname, this.port));
     }
 
     @Override

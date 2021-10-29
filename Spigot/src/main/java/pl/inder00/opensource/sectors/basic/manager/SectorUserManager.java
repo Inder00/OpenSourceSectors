@@ -30,10 +30,11 @@ public class SectorUserManager {
 
     /**
      * Gets sector uset by player uuid
+     *
      * @param uuid Player unique id
      * @return Implementation of ISectorUser
      */
-    public static ISectorUser getUserByPlayerUniqueId( UUID uuid ){
+    public static ISectorUser getUserByPlayerUniqueId(UUID uuid) {
         try {
             return sectorUserCache.get(uuid);
         } catch (ExecutionException e) {
@@ -43,53 +44,59 @@ public class SectorUserManager {
 
     /**
      * Gets sector uset by player uuid
+     *
      * @param uuid Player unique id
      * @return Implementation of ISectorUser
      */
-    public static ISectorUser getUserByPlayerUniqueIdIfPresent( UUID uuid ){
+    public static ISectorUser getUserByPlayerUniqueIdIfPresent(UUID uuid) {
         return sectorUserCache.getIfPresent(uuid);
     }
 
     /**
      * Deleting sector user from cache
+     *
      * @param sectorUser Implementation of ISectorUser
      */
-    public static void deleteSectorUser( ISectorUser sectorUser ){
-        sectorUserCache.invalidate( sectorUser.getUniqueId() );
+    public static void deleteSectorUser(ISectorUser sectorUser) {
+        sectorUserCache.invalidate(sectorUser.getUniqueId());
     }
 
     /**
      * Deletes sector user from cache
+     *
      * @param uniqueId UUID
      */
-    public static void deleteSectorUser( UUID uniqueId ){
-        sectorUserCache.invalidate( uniqueId );
+    public static void deleteSectorUser(UUID uniqueId) {
+        sectorUserCache.invalidate(uniqueId);
     }
 
     /**
      * Gets player's join time unix time
+     *
      * @param uniqueId Player unique id
      * @return long
      */
-    public static long getUserJoinTime( UUID uniqueId ){
-        return userJoinTimeCache.get( uniqueId );
+    public static long getUserJoinTime(UUID uniqueId) {
+        return userJoinTimeCache.get(uniqueId);
     }
 
     /**
      * Adds player's join time unix time
+     *
      * @param uniqueId Player unique id
-     * @param unix Unix time
+     * @param unix     Unix time
      */
-    public static void setUserJoinTime( UUID uniqueId, long unix ){
-        userJoinTimeCache.put( uniqueId, unix );
+    public static void setUserJoinTime(UUID uniqueId, long unix) {
+        userJoinTimeCache.put(uniqueId, unix);
     }
 
     /**
      * Deletes user join time unix
+     *
      * @param uniqueId Player unique id
      */
-    public static void deleteJoinTimeUser( UUID uniqueId ){
-        userJoinTimeCache.remove( uniqueId );
+    public static void deleteJoinTimeUser(UUID uniqueId) {
+        userJoinTimeCache.remove(uniqueId);
     }
 
 }

@@ -35,9 +35,10 @@ public class PluginConfiguration {
 
     /**
      * Implementation
+     *
      * @param configurationFile Configuration java file
      */
-    public PluginConfiguration(Plugin plugin,  File configurationFile) {
+    public PluginConfiguration(Plugin plugin, File configurationFile) {
 
         // set plugin
         this.plugin = plugin;
@@ -64,7 +65,7 @@ public class PluginConfiguration {
         this.masterPassword = this.yamlConfiguration.getString("masterserver.password", "");
 
         // sectors
-        for(String key : this.yamlConfiguration.getSection("sectors").getKeys()){
+        for (String key : this.yamlConfiguration.getSection("sectors").getKeys()) {
 
             try {
 
@@ -79,31 +80,35 @@ public class PluginConfiguration {
                 int internalPort = this.yamlConfiguration.getInt("sectors." + key + ".internalserver.port");
 
                 // check configuration
-                if(serverName == null) throw new ConfigurationException("Server name is not set");
-                if(worldName == null) throw new ConfigurationException("World name is not set");
-                if(internalHostname == null) throw new ConfigurationException("Internal server hostname name is not set");
-                if(internalPort <= 0 || internalPort >= 65536) throw new ConfigurationException("Internal server port is invalid");
-                if(minX == maxX) throw new ConfigurationException("Field \"minX\" is same like \"maxX\"");
-                if(minZ == maxZ) throw new ConfigurationException("Field \"minZ\" is same like \"maxZ\"");
+                if (serverName == null) throw new ConfigurationException("Server name is not set");
+                if (worldName == null) throw new ConfigurationException("World name is not set");
+                if (internalHostname == null)
+                    throw new ConfigurationException("Internal server hostname name is not set");
+                if (internalPort <= 0 || internalPort >= 65536)
+                    throw new ConfigurationException("Internal server port is invalid");
+                if (minX == maxX) throw new ConfigurationException("Field \"minX\" is same like \"maxX\"");
+                if (minZ == maxZ) throw new ConfigurationException("Field \"minZ\" is same like \"maxZ\"");
 
                 // check for config mismatches
-                ServerInfo serverInfo = ProxyServer.getInstance().getServerInfo( serverName );
-                if( serverInfo == null ) throw new ConfigurationException("Server name is invalid");
+                ServerInfo serverInfo = ProxyServer.getInstance().getServerInfo(serverName);
+                if (serverInfo == null) throw new ConfigurationException("Server name is invalid");
 
                 // check for config collisions
-                if(SectorManager.getSectorByServerInfo(serverInfo) != null) throw new ConfigurationException("Server name in sector is already using by other sector");
-                if(SectorManager.getSectorByInternalServer(internalHostname,internalPort) != null) throw new ConfigurationException("Internal server configuration is colliding with other sector");
+                if (SectorManager.getSectorByServerInfo(serverInfo) != null)
+                    throw new ConfigurationException("Server name in sector is already using by other sector");
+                if (SectorManager.getSectorByInternalServer(internalHostname, internalPort) != null)
+                    throw new ConfigurationException("Internal server configuration is colliding with other sector");
 
                 // create sector implementation
-                ISector sector = new SectorImpl(UUID.nameUUIDFromBytes(serverName.getBytes(StandardCharsets.UTF_8)),serverInfo,internalHostname,internalPort,worldName,minX,minZ,maxX,maxZ);
+                ISector sector = new SectorImpl(UUID.nameUUIDFromBytes(serverName.getBytes(StandardCharsets.UTF_8)), serverInfo, internalHostname, internalPort, worldName, minX, minZ, maxX, maxZ);
 
                 // add sector to manager
-                SectorManager.addSectorToList( sector );
+                SectorManager.addSectorToList(sector);
 
                 // log
                 this.plugin.getLogger().log(Level.INFO, String.format("Successfully registered \"%s\" (%s) sector.", key, serverName));
 
-            } catch (Throwable e){
+            } catch (Throwable e) {
 
                 // log
                 this.plugin.getLogger().log(Level.SEVERE, String.format("Failed to register \"%s\" sector (%s).", key, e.getMessage()));

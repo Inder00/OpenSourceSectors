@@ -27,24 +27,24 @@ public class PlayerTeleportListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onTeleport(PlayerTeleportEvent event){
+    public void onTeleport(PlayerTeleportEvent event) {
 
         // check event is cancelled
-        if(event.isCancelled()) return;
+        if (event.isCancelled()) return;
 
         // values
         Player player = event.getPlayer();
         Location teleportLocation = event.getTo();
 
         // check respawn location is not in current sector
-        if( SectorManager.getCurrentSector() != null && !SectorManager.getCurrentSector().isInLocation(teleportLocation)){
+        if (SectorManager.getCurrentSector() != null && !SectorManager.getCurrentSector().isInLocation(teleportLocation)) {
 
             // sector user
-            ISectorUser sectorUser = SectorUserManager.getUserByPlayerUniqueId( player.getUniqueId() );
+            ISectorUser sectorUser = SectorUserManager.getUserByPlayerUniqueId(player.getUniqueId());
 
             // get sector at respawn location
-            ISector targetSector = SectorManager.getSectorAtLocation( teleportLocation );
-            if(targetSector != null && sectorUser.getTargetSector() == null){
+            ISector targetSector = SectorManager.getSectorAtLocation(teleportLocation);
+            if (targetSector != null && sectorUser.getTargetSector() == null) {
 
                 // send player to target sector
                 targetSector.send(this.sectors.masterServer, sectorUser, player, teleportLocation);

@@ -1,215 +1,80 @@
 package pl.inder00.opensource.sectors.basic.impl;
 
 import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
-import pl.inder00.opensource.sectors.basic.ITransferData;
+import pl.inder00.opensource.sectors.basic.manager.SectorManager;
 import pl.inder00.opensource.sectors.basic.manager.TransferDataManager;
+import pl.inder00.opensource.sectors.protobuf.ProtobufTransferData;
+import pl.inder00.opensource.sectors.protocol.IProtobufData;
+import pl.inder00.opensource.sectors.utils.ProtobufUtils;
 
 import java.util.Collection;
-import java.util.UUID;
 
-public class TransferDataImpl implements ITransferData {
+public class TransferDataImpl implements IProtobufData<ProtobufTransferData.TransferPacket, Player> {
 
     /**
      * Data
      */
-    private UUID uniqueId;
-    private Location location;
-    private Location compassLocation;
-    private GameMode gameMode;
-    private boolean flightAllowed;
-    private boolean flying;
-    private float fallDistance;
-    private double health;
-    private double maxHealth;
-    private int foodLevel;
-    private int fireTicks;
-    private int totalXP;
-    private float saturation;
-    private float flySpeed;
-    private float walkSpeed;
-    private float exhaustion;
-    private int heldSlot;
-    private ItemStack[] inventory;
-    private ItemStack[] armour;
-    private ItemStack[] enderchest;
-    private Collection<PotionEffect> potionEffects;
+    private ProtobufTransferData.TransferPacket transferData;
 
     /**
      * Implementation
      */
-    public TransferDataImpl(UUID uniqueId, World world, int locationX, int locationY, int locationZ, float locationYaw, float locationPitch, int compassX, int compassY, int compassZ, float compassYaw, float compassPitch, GameMode gameMode, boolean flightAllowed, boolean flying, float fallDistance, double health, double maxHealth, int foodLevel, int fireTicks, int totalXP, float saturation, float flySpeed, float walkSpeed, float exhaustion, int heldSlot, ItemStack[] inventory, ItemStack[] armour, ItemStack[] enderchest, Collection<PotionEffect> potionEffects) {
-        this(uniqueId,new Location(world,locationX,locationY,locationZ,locationYaw,locationPitch),new Location(world,compassX,compassY,compassZ,compassYaw,compassPitch),gameMode,flightAllowed,flying,fallDistance,health,maxHealth,foodLevel,fireTicks,totalXP,saturation,flySpeed,walkSpeed,exhaustion,heldSlot,inventory,armour,enderchest,potionEffects);
-    }
-
-    /**
-     * Implementation
-     */
-    public TransferDataImpl(UUID uniqueId, Location location, Location compassLocation, GameMode gameMode, boolean flightAllowed, boolean flying, float fallDistance, double health, double maxHealth, int foodLevel, int fireTicks, int totalXP, float saturation, float flySpeed, float walkSpeed, float exhaustion, int heldSlot, ItemStack[] inventory, ItemStack[] armour, ItemStack[] enderchest, Collection<PotionEffect> potionEffects) {
-        this.uniqueId = uniqueId;
-        this.location = location;
-        this.compassLocation = compassLocation;
-        this.gameMode = gameMode;
-        this.flightAllowed = flightAllowed;
-        this.flying = flying;
-        this.fallDistance = fallDistance;
-        this.health = health;
-        this.maxHealth = maxHealth;
-        this.foodLevel = foodLevel;
-        this.fireTicks = fireTicks;
-        this.totalXP = totalXP;
-        this.saturation = saturation;
-        this.flySpeed = flySpeed;
-        this.walkSpeed = walkSpeed;
-        this.exhaustion = exhaustion;
-        this.heldSlot = heldSlot;
-        this.inventory = inventory;
-        this.armour = armour;
-        this.enderchest = enderchest;
-        this.potionEffects = potionEffects;
+    public TransferDataImpl(ProtobufTransferData.TransferPacket transferData) {
+        this.transferData = transferData;
     }
 
     @Override
-    public UUID getPlayerUniqueId() {
-        return this.uniqueId;
+    public ProtobufTransferData.TransferPacket getData() {
+        return this.transferData;
     }
 
     @Override
-    public Location getLocation() {
-        return this.location;
-    }
+    public void execute(Player player) {
 
-    @Override
-    public Location getCompassLocation() {
-        return this.compassLocation;
-    }
+        // player abilities
+        ProtobufTransferData.ProtoPlayerAbilities playerAbilities = this.transferData.getPlayerAbilities();
 
-    @Override
-    public GameMode getGameMode() {
-        return this.gameMode;
-    }
-
-    @Override
-    public boolean isAllowFlight() {
-        return this.flightAllowed;
-    }
-
-    @Override
-    public boolean isFlying() {
-        return this.flying;
-    }
-
-    @Override
-    public float getFallDistance() {
-        return this.fallDistance;
-    }
-
-    @Override
-    public double getHealth() {
-        return this.health;
-    }
-
-    @Override
-    public double getMaxHealth() {
-        return this.maxHealth;
-    }
-
-    @Override
-    public int getFoodLevel() {
-        return this.foodLevel;
-    }
-
-    @Override
-    public int getFireTicks() {
-        return this.fireTicks;
-    }
-
-    @Override
-    public int getTotalExperience() {
-        return this.totalXP;
-    }
-
-    @Override
-    public float getSaturation() {
-        return this.saturation;
-    }
-
-    @Override
-    public float getFlySpeed() {
-        return this.flySpeed;
-    }
-
-    @Override
-    public float getWalkSpeed() {
-        return this.walkSpeed;
-    }
-
-    @Override
-    public float getExhaustion() {
-        return this.exhaustion;
-    }
-
-    @Override
-    public int getHeldSlot() {
-        return this.heldSlot;
-    }
-
-    @Override
-    public ItemStack[] getInventoryContents() {
-        return this.inventory;
-    }
-
-    @Override
-    public ItemStack[] getArmourContents() {
-        return this.armour;
-    }
-
-    @Override
-    public ItemStack[] getEnderchestContents() {
-        return this.enderchest;
-    }
-
-    @Override
-    public Collection<PotionEffect> getActivePotionEffects() {
-        return this.potionEffects;
-    }
-
-    @Override
-    public void apply(Player player) {
+        // player inventory
+        ProtobufTransferData.ProtoPlayerInventory playerInventory = this.transferData.getPlayerInventory();
 
         // apply data to player
-        player.teleport( this.location, PlayerTeleportEvent.TeleportCause.PLUGIN );
-        player.setCompassTarget( this.compassLocation );
-        player.setGameMode( this.gameMode );
-        player.setAllowFlight( this.flightAllowed );
-        player.setFlying( this.flying );
-        player.setFallDistance( this.fallDistance );
-        player.setMaxHealth( this.maxHealth );
-        player.setHealth( this.health );
-        player.setFoodLevel( this.foodLevel );
-        player.setFireTicks( this.fireTicks );
-        player.setTotalExperience( this.totalXP );
-        player.setSaturation( this.saturation );
-        player.setFlySpeed( this.flySpeed );
-        player.setWalkSpeed( this.walkSpeed );
-        player.setExhaustion( this.exhaustion );
-        player.getInventory().setHeldItemSlot( this.heldSlot );
-        player.getInventory().setContents( this.inventory );
-        player.getInventory().setArmorContents( this.armour );
-        player.getEnderChest().setContents( this.enderchest );
+        player.teleport(ProtobufUtils.deserialize(SectorManager.getCurrentSector().getWorld(), this.transferData.getPlayerLocation()), PlayerTeleportEvent.TeleportCause.PLUGIN);
+        player.setCompassTarget(ProtobufUtils.deserialize(SectorManager.getCurrentSector().getWorld(), this.transferData.getCompassLocation()));
+        player.setGameMode(GameMode.getByValue(playerAbilities.getGamemode()));
+        player.setAllowFlight(playerAbilities.getFlyingAllowed());
+        player.setFlying(playerAbilities.getFlying());
+        player.setFallDistance(playerAbilities.getFallDistance());
+        player.setMaxHealth(playerAbilities.getMaxHealth());
+        player.setHealth(playerAbilities.getHealth());
+        player.setFoodLevel(playerAbilities.getFoodLevel());
+        player.setFireTicks(playerAbilities.getFireTicks());
+        player.setTotalExperience(playerAbilities.getTotalXP());
+        player.setSaturation(playerAbilities.getSaturation());
+        player.setFlySpeed(playerAbilities.getFlySpeed());
+        player.setWalkSpeed(playerAbilities.getWalkSpeed());
+        player.setExhaustion(playerAbilities.getExhaustion());
+        player.getInventory().setHeldItemSlot(playerAbilities.getHeldSlot());
+        player.getInventory().setContents(ProtobufUtils.<ItemStack[]>deserialize(playerInventory.getInventoryContent().toByteArray()));
+        player.getInventory().setArmorContents(ProtobufUtils.<ItemStack[]>deserialize(playerInventory.getArmourContent().toByteArray()));
+        player.getEnderChest().setContents(ProtobufUtils.<ItemStack[]>deserialize(this.transferData.getEnderchestContent().toByteArray()));
         player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
-        this.potionEffects.forEach(potion -> player.addPotionEffect(potion, true));
+        ProtobufUtils.<Collection<PotionEffect>>deserialize(this.transferData.getPotionEffects().toByteArray()).forEach(potion -> player.addPotionEffect(potion, true));
+
+        // additional inventory content (> 1.8)
+        if (playerInventory.hasExtraContent())
+            player.getInventory().setExtraContents(ProtobufUtils.<ItemStack[]>deserialize(playerInventory.getExtraContent().toByteArray()));
+        if (playerInventory.hasStorageContent())
+            player.getInventory().setExtraContents(ProtobufUtils.<ItemStack[]>deserialize(playerInventory.getStorageContent().toByteArray()));
 
         // make player damagable
-        player.setNoDamageTicks( 0 );
+        player.setNoDamageTicks(0);
 
         // remove data from cache
-        TransferDataManager.clearTransferData( this );
+        TransferDataManager.clearTransferData(this);
 
     }
 }

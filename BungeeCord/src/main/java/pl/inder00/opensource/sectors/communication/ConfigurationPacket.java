@@ -1,12 +1,12 @@
 package pl.inder00.opensource.sectors.communication;
 
-import io.netty.buffer.ByteBuf;
 import pl.inder00.opensource.sectors.Sectors;
 import pl.inder00.opensource.sectors.basic.manager.SectorManager;
-import pl.inder00.opensource.sectors.protocol.buffer.ByteBufExtension;
+import pl.inder00.opensource.sectors.protobuf.ProtobufConfigurationData;
+import pl.inder00.opensource.sectors.protobuf.ProtobufGeneric;
 import pl.inder00.opensource.sectors.protocol.packet.IPacket;
 
-public class ConfigurationPacket implements IPacket {
+public class ConfigurationPacket implements IPacket<ProtobufGeneric.EmptyMessage> {
 
     /**
      * Data
@@ -21,44 +21,60 @@ public class ConfigurationPacket implements IPacket {
     }
 
     @Override
-    public void execute(ByteBuf bufferIn, ByteBuf bufferOut) {
+    public ProtobufGeneric.EmptyMessage.Builder getBuilder() {
+        return ProtobufGeneric.EmptyMessage.newBuilder();
+    }
 
-        // protection distance
-        bufferOut.writeInt(this.plugin.pluginConfiguration.protectionDistance);
+    @Override
+    public ProtobufConfigurationData.ConfigurationPacket execute(ProtobufGeneric.EmptyMessage emptyMessage) throws Throwable {
 
-        // sector change cooldown
-        bufferOut.writeInt(this.plugin.pluginConfiguration.sectorChangeCooldown);
+        // builder
+        ProtobufConfigurationData.ConfigurationPacket.Builder configurationPacketOutput = ProtobufConfigurationData.ConfigurationPacket.newBuilder();
+
+        // write data
+        configurationPacketOutput.setVersion(this.plugin.getDescription().getVersion());
+        configurationPacketOutput.setProtectionDistance(this.plugin.pluginConfiguration.protectionDistance);
+        configurationPacketOutput.setChangeSectorCooldown(this.plugin.pluginConfiguration.sectorChangeCooldown);
+        configurationPacketOutput.setDefaultLanguage(this.plugin.messagesConfiguration.defaultLocale);
+
+        // aliases configuration
+        this.plugin.messagesConfiguration.localeAliases.forEach((key, val) -> {
+            configurationPacketOutput.addAliases(ProtobufConfigurationData.ConfigurationAlias.newBuilder()
+                    .setTarget(key)
+                    .setSource(val)
+                    .build());
+        });
 
         // messages configuration
-        ByteBufExtension.writeString(bufferOut, this.plugin.messagesConfiguration.defaultLocale);
-        bufferOut.writeInt(this.plugin.messagesConfiguration.localeAliases.size());
-        this.plugin.messagesConfiguration.localeAliases.forEach(( key, val ) -> {
-            ByteBufExtension.writeString(bufferOut, key);
-            ByteBufExtension.writeString(bufferOut, val);
-        });
-        bufferOut.writeInt(this.plugin.messagesConfiguration.messagesList.size());
-        this.plugin.messagesConfiguration.messagesList.forEach(( key, val ) -> {
-            ByteBufExtension.writeString(bufferOut, key);
-            ByteBufExtension.writeString(bufferOut, val);
+        this.plugin.messagesConfiguration.messagesList.forEach((key, val) -> {
+            configurationPacketOutput.addMessages(ProtobufConfigurationData.ConfigurationMessage.newBuilder()
+                    .setKey(key)
+                    .setValue(val)
+                    .build());
         });
 
-        // sectors count
-        bufferOut.writeInt(SectorManager.getSectorsCount());
-
-        // loop sectors
+        // sectors
         SectorManager.getSectorsList().forEach(sector -> {
 
             // write data
-            ByteBufExtension.writeString(bufferOut, sector.getUniqueId().toString());
-            ByteBufExtension.writeString(bufferOut, sector.getInternalServerHostname());
-            bufferOut.writeInt(sector.getInternalServerPort());
-            ByteBufExtension.writeString(bufferOut, sector.getWorld());
-            bufferOut.writeInt(sector.getMinX());
-            bufferOut.writeInt(sector.getMinZ());
-            bufferOut.writeInt(sector.getMaxX());
-            bufferOut.writeInt(sector.getMaxZ());
+            configurationPacketOutput.addSectors(ProtobufGeneric.ProtoSector.newBuilder()
+                            .setUniqueId(ProtobufGeneric.ProtoUUID.newBuilder()
+                                    .setMostSig(sector.getUniqueId().getMostSignificantBits())
+                                    .setLeastSig(sector.getUniqueId().getLeastSignificantBits())
+                                    .build())
+                            .setInternalHostname(sector.getInternalServerHostname())
+                            .setInternalPort(sector.getInternalServerPort())
+                            .setWorldName(sector.getWorld())
+                            .setMinX(sector.getMinX())
+                            .setMinZ(sector.getMinZ())
+                            .setMaxX(sector.getMaxX())
+                            .setMaxZ(sector.getMaxZ())
+                    .build());
 
         });
+
+        // return null
+        return configurationPacketOutput.build();
 
     }
 

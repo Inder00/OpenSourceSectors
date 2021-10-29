@@ -9,10 +9,11 @@ public class SerializeUtils {
 
     /**
      * Serialize object into a byte array
+     *
      * @param object Object
      * @return Array of bytes
      */
-    public static byte[] serializeObject(Object object){
+    public static byte[] serializeObject(Object object) {
 
         // streamers
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -28,7 +29,7 @@ public class SerializeUtils {
             // return bytes
             return bos.toByteArray();
 
-        } catch (Throwable e){
+        } catch (Throwable e) {
 
             // throw error
             e.printStackTrace();
@@ -49,10 +50,11 @@ public class SerializeUtils {
 
     /**
      * Deserialize byte array into a object
+     *
      * @param data Array of bytes
      * @return object
      */
-    public static Object deserializeObject(byte[] data){
+    public static Object deserializeObject(byte[] data) {
 
         // streamers
         ByteArrayInputStream bis = new ByteArrayInputStream(data);
@@ -66,7 +68,7 @@ public class SerializeUtils {
             // return bytes
             return oit.readObject();
 
-        } catch (Throwable e){
+        } catch (Throwable e) {
 
             // return empty bytes
             return null;

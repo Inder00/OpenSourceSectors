@@ -50,7 +50,7 @@ public class SectorImpl implements ISector {
         this.maxZ = maxZ;
         this.protectionDistance = protectionDistance;
         this.sectorChangeCooldown = changeCooldown * 1000; // convert to millis
-        this.logger = new SectorLogger(plugin,this);
+        this.logger = new SectorLogger(plugin, this);
     }
 
     @Override
@@ -105,7 +105,7 @@ public class SectorImpl implements ISector {
 
     @Override
     public boolean isInLocation(Location location) {
-        return location.getX() >= this.minX && location.getX() <= this.maxX && location.getZ() >= this.minZ && location.getZ() <=  this.maxZ;
+        return location.getX() >= this.minX && location.getX() <= this.maxX && location.getZ() >= this.minZ && location.getZ() <= this.maxZ;
     }
 
     @Override
@@ -114,8 +114,8 @@ public class SectorImpl implements ISector {
     }
 
     @Override
-    public void send(ISectorClient masterserver, ISectorUser sectorUser,Player player) {
-        this.send(masterserver,sectorUser,player,player.getLocation());
+    public void send(ISectorClient masterserver, ISectorUser sectorUser, Player player) {
+        this.send(masterserver, sectorUser, player, player.getLocation());
     }
 
     @Override
@@ -123,41 +123,41 @@ public class SectorImpl implements ISector {
 
         // check cooldown
         long currentTimeMillis = System.currentTimeMillis();
-        if( (SectorUserManager.getUserJoinTime(player.getUniqueId()) + this.sectorChangeCooldown) > currentTimeMillis ){
+        if ((SectorUserManager.getUserJoinTime(player.getUniqueId()) + this.sectorChangeCooldown) > currentTimeMillis) {
 
             // send message
-            player.sendMessage( ChatColor.translateAlternateColorCodes('&', this.sectors.languageProvider.getLocalizedMessage(sectorUser.getLocale(), "sector.change.cooldown")) );
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.sectors.languageProvider.getLocalizedMessage(sectorUser.getLocale(), "sector.change.cooldown")));
             return;
 
         }
 
         // call sector change event
-        PlayerChangeSectorEvent event = new PlayerChangeSectorEvent( player, this );
+        PlayerChangeSectorEvent event = new PlayerChangeSectorEvent(player, this);
 
         // fire event
-        Bukkit.getServer().getPluginManager().callEvent( event );
+        Bukkit.getServer().getPluginManager().callEvent(event);
 
         // check if the event is not cancelled
-        if(!event.isCancelled()){
+        if (!event.isCancelled()) {
 
             // update target sector
-            sectorUser.setTargetSector( this, location );
+            sectorUser.setTargetSector(this, location);
 
             // send transfer data
             try {
 
                 // send positon data to target server
-                this.sectorClient.getRSocket().fireAndForget(SpigotPayloadUtils.createPositionDataPayload( player, location ))
+                this.sectorClient.getRSocket().fireAndForget(SpigotPayloadUtils.createPositionDataPayload(player, location))
                         .doOnError(error -> {
 
                             // checks is player online
-                            if(player.isOnline()){
+                            if (player.isOnline()) {
 
                                 // clear target sector
-                                sectorUser.setTargetSector( null, null );
+                                sectorUser.setTargetSector(null, null);
 
                                 // send message
-                                player.sendMessage( ChatColor.translateAlternateColorCodes('&', String.format(this.sectors.languageProvider.getLocalizedMessage(sectorUser.getLocale(), "failed.connect"), error.getMessage() )) );
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', String.format(this.sectors.languageProvider.getLocalizedMessage(sectorUser.getLocale(), "failed.connect"), error.getMessage())));
 
                             }
 
@@ -169,13 +169,13 @@ public class SectorImpl implements ISector {
                                     .doOnError(error -> {
 
                                         // checks is player online
-                                        if(player.isOnline()){
+                                        if (player.isOnline()) {
 
                                             // clear target sector
-                                            sectorUser.setTargetSector( null, null );
+                                            sectorUser.setTargetSector(null, null);
 
                                             // send message
-                                            player.sendMessage( ChatColor.translateAlternateColorCodes('&', String.format(this.sectors.languageProvider.getLocalizedMessage(sectorUser.getLocale(), "failed.connect"), error.getMessage() )) );
+                                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', String.format(this.sectors.languageProvider.getLocalizedMessage(sectorUser.getLocale(), "failed.connect"), error.getMessage())));
 
                                         }
 
@@ -186,7 +186,7 @@ public class SectorImpl implements ISector {
                         })
                         .subscribe();
 
-            }catch (Throwable e){
+            } catch (Throwable e) {
 
                 // throw data
                 e.printStackTrace();

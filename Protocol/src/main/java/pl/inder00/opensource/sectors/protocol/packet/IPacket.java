@@ -1,15 +1,23 @@
 package pl.inder00.opensource.sectors.protocol.packet;
 
-import io.netty.buffer.ByteBuf;
+import com.google.protobuf.Message;
+import com.google.protobuf.MessageOrBuilder;
 
-public interface IPacket {
+public interface IPacket<T extends MessageOrBuilder> {
+
+    /**
+     * Returns google protobuf builder
+     *
+     * @return Message.Builder
+     */
+    <T extends Message.Builder> T getBuilder();
 
     /**
      * Packet execution code
-     * @param bufferIn Input data
-     * @param bufferOut Output data
+     *
+     * @param bufferIn  Input data
      * @return Payload
      */
-    void execute(ByteBuf bufferIn, ByteBuf bufferOut) throws Throwable;
+    <Y extends Message> Y execute(T bufferIn) throws Throwable;
 
 }

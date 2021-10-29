@@ -7,12 +7,14 @@ public interface ISectorClient {
 
     /**
      * RSocket client implementation
+     *
      * @return RSocketServer
      */
     RSocket getRSocket();
 
     /**
      * Connect to server
+     *
      * @return Mono of CloseableChannel
      */
     Mono<RSocket> connect();

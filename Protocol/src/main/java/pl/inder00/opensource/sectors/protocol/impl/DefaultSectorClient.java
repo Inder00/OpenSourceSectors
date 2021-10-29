@@ -30,7 +30,7 @@ public class DefaultSectorClient implements ISectorClient {
      * Implementation
      */
     public DefaultSectorClient(String hostname, int port) {
-        this(hostname,port,null);
+        this(hostname, port, null);
     }
 
     /**
@@ -45,6 +45,7 @@ public class DefaultSectorClient implements ISectorClient {
 
         // create socket connector implementation
         this.socketConnector = RSocketConnector.create()
+                .keepAlive(Duration.ofSeconds(5), Duration.ofSeconds(10))
                 .payloadDecoder(PayloadDecoder.ZERO_COPY)
                 .setupPayload(ProtocolPayloadUtils.createSetupPayload(password))
                 .fragment(65535)
@@ -59,6 +60,6 @@ public class DefaultSectorClient implements ISectorClient {
 
     @Override
     public Mono<RSocket> connect() {
-        return this.socketConnector.connect(TcpClientTransport.create(this.hostname,this.port)).doOnSuccess(socket -> this.socketClient = socket);
+        return this.socketConnector.connect(TcpClientTransport.create(this.hostname, this.port)).doOnSuccess(socket -> this.socketClient = socket);
     }
 }

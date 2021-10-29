@@ -1,0 +1,43 @@
+// ProtoGeneric
+syntax = "proto2";
+package pl.inder00.opensource.sectors.protobuf;
+import "google/protobuf/any.proto";
+option java_outer_classname = "ProtobufGeneric";
+
+// map
+message ProtoMap {
+  required google.protobuf.Any key = 1;
+  required google.protobuf.Any value = 2;
+}
+
+// uuid
+message ProtoUUID {
+  required uint64 mostSig = 1;
+  required uint64 leastSig = 2;
+}
+
+// Position data
+message ProtoLocation {
+  optional string world = 1;
+  required double x = 2;
+  required double y = 3;
+  required double z = 4;
+  optional float yaw = 5;
+  optional float pitch = 6;
+}
+
+// Sector data
+message ProtoSector {
+  required ProtoUUID uniqueId = 1;
+  optional string internalHostname = 2;
+  optional uint32 internalPort = 3;
+  optional string worldName = 4;
+  optional uint32 minX = 5;
+  optional uint32 minZ = 6;
+  optional uint32 maxX = 7;
+  optional uint32 maxZ = 8;
+}
+
+message EmptyMessage {
+
+}

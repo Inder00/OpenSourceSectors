@@ -14,6 +14,7 @@ public class Reflection {
 
     /**
      * Reurning a nms class
+     *
      * @param prefix Part of string before nms version tag
      * @param suffix Part of string after nms version tag
      * @return Class
@@ -32,6 +33,7 @@ public class Reflection {
 
     /**
      * Send nms packet to player
+     *
      * @param player Player
      * @param packet Packet
      * @param prefix Part of string before nms version tag of packet class
@@ -44,9 +46,10 @@ public class Reflection {
 
     /**
      * Gets a nms server version
+     *
      * @return String
      */
-    public static String getServerVersion(){
+    public static String getServerVersion() {
         return serverNmsVersion;
     }
 
