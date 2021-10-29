@@ -43,7 +43,7 @@ public class DefaultServerHandler implements RSocket {
             if (packet == null) throw new PacketException("Invalid packet id");
 
             // create protobuf message
-            Message protobufMessage = bufferIn.readableBytes() > 0 ? packet.getBuilder().mergeFrom(ByteString.copyFrom(bufferIn.nioBuffer())).build() : packet.getBuilder().build();
+            Message protobufMessage = packet.getBuilder().mergeFrom(ByteString.copyFrom(bufferIn.nioBuffer())).build();
 
             // execute packet
             packet.execute(protobufMessage);
@@ -85,7 +85,7 @@ public class DefaultServerHandler implements RSocket {
             if (packet == null) throw new PacketException("Invalid packet id");
 
             // create protobuf message
-            Message protobufMessage = bufferIn.readableBytes() > 0 ? packet.getBuilder().mergeFrom(ByteString.copyFrom(bufferIn.nioBuffer())).build() : packet.getBuilder().build();
+            Message protobufMessage = packet.getBuilder().mergeFrom(ByteString.copyFrom(bufferIn.nioBuffer())).build();
 
             // execute packet
             Message outputData = packet.execute(protobufMessage);

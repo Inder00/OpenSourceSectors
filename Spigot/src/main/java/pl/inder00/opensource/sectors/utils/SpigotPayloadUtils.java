@@ -41,9 +41,7 @@ public class SpigotPayloadUtils {
                 .build();
 
         // write bytes to payload
-        byte[] outputData = changeSectorPacket.toByteArray();
-        outputBuffer.writeInt(outputData.length);
-        outputBuffer.writeBytes(outputData);
+        outputBuffer.writeBytes(changeSectorPacket.toByteArray());
 
         // return payload
         return ByteBufPayload.create(outputBuffer);
@@ -103,9 +101,7 @@ public class SpigotPayloadUtils {
         transferDataPacketBuilder.setPlayerInventory(playerInventoryBuilder.build());
 
         // write bytes to payload
-        byte[] outputData = transferDataPacketBuilder.build().toByteArray();
-        outputBuffer.writeInt(outputData.length);
-        outputBuffer.writeBytes(outputData);
+        outputBuffer.writeBytes(transferDataPacketBuilder.build().toByteArray());
 
         // return payload
         return ByteBufPayload.create(outputBuffer);
@@ -132,9 +128,7 @@ public class SpigotPayloadUtils {
                 .build();
 
         // write bytes to payload
-        byte[] outputData = positionDataPacket.toByteArray();
-        outputBuffer.writeInt(outputData.length);
-        outputBuffer.writeBytes(outputData);
+        outputBuffer.writeBytes(positionDataPacket.toByteArray());
 
         // return payload
         return ByteBufPayload.create(outputBuffer);
