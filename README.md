@@ -50,6 +50,7 @@ The most powerful feature of open source projects is developers community❤️.
 below 🔥.
 
 - [oskarPLL 🥰](https://github.com/oskarPLL)
+- [shitzuu 🥰](https://github.com/shitzuu)
 
 # TODO 📓
 
