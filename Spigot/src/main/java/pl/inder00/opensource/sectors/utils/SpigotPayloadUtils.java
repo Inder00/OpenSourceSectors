@@ -37,7 +37,6 @@ public class SpigotPayloadUtils {
         // build data
         ProtobufChangeSectorData.ChangeSectorPacket changeSectorPacket = ProtobufChangeSectorData.ChangeSectorPacket.newBuilder()
                 .setPlayerName(player.getName())
-
                 .setSector(ProtobufGeneric.ProtoSector.newBuilder().setUniqueId(ProtobufUtils.serialize(sector.getUniqueId())).build())
                 .build();
 

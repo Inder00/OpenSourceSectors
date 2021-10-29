@@ -6,7 +6,7 @@ import pl.inder00.opensource.sectors.protobuf.ProtobufConfigurationData;
 import pl.inder00.opensource.sectors.protobuf.ProtobufGeneric;
 import pl.inder00.opensource.sectors.protocol.packet.IPacket;
 
-public class ConfigurationPacket implements IPacket<ProtobufConfigurationData.ConfiguractionPacket> {
+public class ConfigurationPacket implements IPacket<ProtobufGeneric.EmptyMessage> {
 
     /**
      * Data
@@ -21,12 +21,12 @@ public class ConfigurationPacket implements IPacket<ProtobufConfigurationData.Co
     }
 
     @Override
-    public ProtobufConfigurationData.ConfiguractionPacket.Builder getBuilder() {
-        return ProtobufConfigurationData.ConfiguractionPacket.newBuilder();
+    public ProtobufGeneric.EmptyMessage.Builder getBuilder() {
+        return ProtobufGeneric.EmptyMessage.newBuilder();
     }
 
     @Override
-    public ProtobufConfigurationData.ConfiguractionPacket execute(ProtobufConfigurationData.ConfiguractionPacket configuractionPacket) throws Throwable {
+    public ProtobufConfigurationData.ConfiguractionPacket execute(ProtobufGeneric.EmptyMessage emptyMessage) throws Throwable {
 
         // builder
         ProtobufConfigurationData.ConfiguractionPacket.Builder configurationPacketOutput = ProtobufConfigurationData.ConfiguractionPacket.newBuilder();
