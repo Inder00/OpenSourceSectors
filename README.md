@@ -8,7 +8,7 @@
 # Requirements 📗
 - Bungeecord
 - Spigot servers (as many you want)
-- Private address space (to internal communication between servers) (eg. 127.0.0.1, 172.16.0.0, etc...)
+- Private address space (to internal communication between servers) (eg. 127.0.0.1, 172.16.0.0, 192.168.0.0, etc...)
 
 # Usage ✔️
 🎉Download the latest stable release from [releases page](https://github.com/Inder00/OpenSourceSectors/releases), put the BungeeCord plugin into the BungeeCord Server and configure it, put the Spigot plugin into every Spigot server and configure the master server (look at BungeeCord configuration for more information) and launch all servers.
