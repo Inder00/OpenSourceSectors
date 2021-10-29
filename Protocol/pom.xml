@@ -47,13 +47,13 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>4.1.63.Final</version>
+            <version>4.1.69.Final</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-transport-native-unix-common</artifactId>
-            <version>4.1.63.Final</version>
+            <version>4.1.69.Final</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

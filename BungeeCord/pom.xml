@@ -96,7 +96,7 @@
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
-            <version>1.8-SNAPSHOT</version>
+            <version>1.16-R0.4</version>
         </dependency>
         <dependency>
             <groupId>pl.inder00.opensource.sectors.protocol</groupId>
