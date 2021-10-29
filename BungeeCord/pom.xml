@@ -5,7 +5,7 @@
 
     <profiles> 
         <profile>
-            <id>compile-version-missing/id>
+            <id>compile-version-missing</id>
             <activation>
                 <property>
                     <name>!compile.version</name>
@@ -16,7 +16,7 @@
             </properties>
         </profile>
         <profile>
-            <id>compile-output-missing/id>
+            <id>compile-output-missing</id>
             <activation>
                 <property>
                     <name>!compile.output</name>
@@ -27,7 +27,7 @@
             </properties>
         </profile>
         <profile>
-            <id>compile-java-version-missing/id>
+            <id>compile-java-version-missing</id>
             <activation>
                 <property>
                     <name>!compile.java_version</name>
