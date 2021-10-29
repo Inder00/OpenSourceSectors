@@ -42,12 +42,8 @@ public class DefaultServerHandler implements RSocket {
             IPacket packet = PacketManager.getPacketById(packetId);
             if (packet == null) throw new PacketException("Invalid packet id");
 
-            // read data
-            byte[] data = new byte[bufferIn.readableBytes()];
-            bufferIn.readBytes(data);
-
             // create protobuf message
-            Message protobufMessage = packet.getBuilder().mergeFrom(data).build();
+            Message protobufMessage = packet.getBuilder().mergeFrom(ByteString.copyFrom(bufferIn.nioBuffer())).build();
 
             // execute packet
             packet.execute(protobufMessage);
