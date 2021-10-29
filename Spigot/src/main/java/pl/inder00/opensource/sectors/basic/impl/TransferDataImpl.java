@@ -68,7 +68,7 @@ public class TransferDataImpl implements IProtobufData<ProtobufTransferData.Tran
         if (playerInventory.hasExtraContent())
             player.getInventory().setExtraContents(ProtobufUtils.<ItemStack[]>deserialize(playerInventory.getExtraContent().toByteArray()));
         if (playerInventory.hasStorageContent())
-            player.getInventory().setExtraContents(ProtobufUtils.<ItemStack[]>deserialize(playerInventory.getStorageContent().toByteArray()));
+            player.getInventory().getStorageContent(ProtobufUtils.<ItemStack[]>deserialize(playerInventory.getStorageContent().toByteArray()));
 
         // make player damagable
         player.setNoDamageTicks(0);
