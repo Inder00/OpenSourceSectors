@@ -3,41 +3,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <profiles> 
-        <profile>
-            <id>compile-version-missing</id>
-            <activation>
-                <property>
-                    <name>!compile.version</name>
-                </property>
-            </activation>
-            <properties>
-                <compile.version>0</compile.version>
-            </properties>
-        </profile>
-        <profile>
-            <id>compile-output-missing</id>
-            <activation>
-                <property>
-                    <name>!compile.output</name>
-                </property>
-            </activation>
-            <properties>
-                <compile.output></compile.output>
-            </properties>
-        </profile>
-        <profile>
-            <id>compile-java-version-missing</id>
-            <activation>
-                <property>
-                    <name>!compile.java_version</name>
-                </property>
-            </activation>
-            <properties>
-                <compile.java_version>8</compile.java_version>
-            </properties>
-        </profile>
-    </profiles>
+    <properties>
+        <compile.version>0</compile.version>
+        <compile.java_version>8</compile.java_version>
+        <compile.output>target</compile.output>
+    </properties>
 
     <groupId>pl.inder00.opensource.sectors.spigot</groupId>
     <artifactId>Sectors-Spigot</artifactId>
