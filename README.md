@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-
 # OpenSourceSectors 😎
 
 🗒️This is a plugin for [Minecraft Server (Spigot API)](https://spigotmc.org/) introduces a sector system which connects
@@ -9,10 +7,12 @@ a single world across multiple servers.
 between them easier. 👉Finally, I am glad to provide the OpenSourceSectors, and everyone is welcome to adjust the code
 and help make it better by editting the code, adding new features, etc.
 
+💖If you want to report any bug or request a feature please [create a issue](https://github.com/Inder00/OpenSourceSectors/issues).
+
 # Requirements 📗
 
-- Bungeecord
-- Spigot servers (as many you want)
+- [Bungeecord](https://ci.md-5.net/job/BungeeCord/)
+- [Spigot servers 1.8 - 1.17.1](https://hub.spigotmc.org/jenkins/job/BuildTools/) (as many you want)
 - Private address space (to internal communication between servers) (eg. 127.0.0.1, 172.16.0.0, etc...)
 
 # Usage ✔️
@@ -55,6 +55,10 @@ below 🔥.
 # TODO 📓
 
 - Make a Easy-To-Use API to write compatible plugins with OpenSourceSectors. 📖
+
+# Known Issues 🐛
+
+- Remaining distance is wrongly calculated. 👻
 
 **Thanks for your support.❤️**
 =======
