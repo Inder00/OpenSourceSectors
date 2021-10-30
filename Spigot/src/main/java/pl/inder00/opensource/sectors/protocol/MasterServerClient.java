@@ -181,12 +181,14 @@ public class MasterServerClient extends DefaultSectorClient {
                                                     double sectorCenterZ = (currentSector.getMaxZ() + currentSector.getMinZ()) / 2;
 
                                                     // set world border
-                                                    WorldBorder worldBorder = currentSector.getWorld().getWorldBorder();
-                                                    worldBorder.setCenter(sectorCenterX, sectorCenterZ);
-                                                    worldBorder.setSize(sectorSize + 6);
-                                                    worldBorder.setDamageAmount(0);
-                                                    worldBorder.setDamageBuffer(0);
-                                                    worldBorder.setWarningDistance(0);
+                                                    Bukkit.getServer().getScheduler().runTask(this.plugin, () -> {
+                                                        WorldBorder worldBorder = currentSector.getWorld().getWorldBorder();
+                                                        worldBorder.setCenter(sectorCenterX, sectorCenterZ);
+                                                        worldBorder.setSize(sectorSize + 6);
+                                                        worldBorder.setDamageAmount(0);
+                                                        worldBorder.setDamageBuffer(0);
+                                                        worldBorder.setWarningDistance(0);
+                                                    });
 
                                                 })
                                                 .subscribe();
