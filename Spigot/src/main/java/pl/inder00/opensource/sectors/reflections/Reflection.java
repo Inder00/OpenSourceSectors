@@ -10,7 +10,7 @@ public class Reflection {
     /**
      * Data
      */
-    private static final String serverNmsVersion = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + ".";
+    private static final String serverNmsVersion = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",") [3] + ".";
 
     /**
      * Reurning a nms class
