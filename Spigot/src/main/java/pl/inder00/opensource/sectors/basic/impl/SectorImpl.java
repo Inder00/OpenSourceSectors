@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import pl.inder00.opensource.sectors.Sectors;
 import pl.inder00.opensource.sectors.basic.ISector;
 import pl.inder00.opensource.sectors.basic.ISectorUser;
-import pl.inder00.opensource.sectors.basic.manager.SectorUserManager;
 import pl.inder00.opensource.sectors.events.PlayerChangeSectorEvent;
 import pl.inder00.opensource.sectors.logging.SectorLogger;
 import pl.inder00.opensource.sectors.protocol.ISectorClient;
@@ -24,23 +23,23 @@ public class SectorImpl implements ISector {
     /**
      * Sector data
      */
-    private Sectors sectors;
-    private UUID uniqueId;
-    private ISectorClient sectorClient;
-    private Logger logger;
-    private World world;
-    private int minX;
-    private int minZ;
-    private int maxX;
-    private int maxZ;
-    private int protectionDistance;
-    private int sectorChangeCooldown;
+    private final Sectors plugin;
+    private final UUID uniqueId;
+    private final ISectorClient sectorClient;
+    private final Logger logger;
+    private final World world;
+    private final int minX;
+    private final int minZ;
+    private final int maxX;
+    private final int maxZ;
+    private final int protectionDistance;
+    private final int sectorChangeCooldown;
 
     /**
      * Implementation
      */
     public SectorImpl(Sectors plugin, UUID uniqueId, ISectorClient sectorClient, World world, int minX, int minZ, int maxX, int maxZ, int protectionDistance, int changeCooldown) {
-        this.sectors = plugin;
+        this.plugin = plugin;
         this.uniqueId = uniqueId;
         this.sectorClient = sectorClient;
         this.world = world;
@@ -50,7 +49,7 @@ public class SectorImpl implements ISector {
         this.maxZ = maxZ;
         this.protectionDistance = protectionDistance;
         this.sectorChangeCooldown = changeCooldown * 1000; // convert to millis
-        this.logger = new SectorLogger(plugin, this);
+        this.logger = new SectorLogger(this.plugin, this);
     }
 
     @Override
@@ -123,16 +122,16 @@ public class SectorImpl implements ISector {
 
         // check cooldown
         long currentTimeMillis = System.currentTimeMillis();
-        if ((SectorUserManager.getUserJoinTime(player.getUniqueId()) + this.sectorChangeCooldown) > currentTimeMillis) {
+        if ((plugin.getSectorUserManager().getUserJoinTime(player.getUniqueId()) + this.sectorChangeCooldown) > currentTimeMillis) {
 
             // send message
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.sectors.languageProvider.getLocalizedMessage(sectorUser.getLocale(), "sector.change.cooldown")));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.languageProvider.getLocalizedMessage(sectorUser.getLocale(), "sector.change.cooldown")));
             return;
 
         }
 
         // call sector change event
-        PlayerChangeSectorEvent event = new PlayerChangeSectorEvent(player, this);
+        PlayerChangeSectorEvent event = new PlayerChangeSectorEvent(player, this, plugin.getSectorManager().getCurrentSector());
 
         // fire event
         Bukkit.getServer().getPluginManager().callEvent(event);
@@ -157,7 +156,7 @@ public class SectorImpl implements ISector {
                                 sectorUser.setTargetSector(null, null);
 
                                 // send message
-                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', String.format(this.sectors.languageProvider.getLocalizedMessage(sectorUser.getLocale(), "failed.connect"), error.getMessage())));
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', String.format(this.plugin.languageProvider.getLocalizedMessage(sectorUser.getLocale(), "failed.connect"), error.getMessage())));
 
                             }
 
@@ -175,7 +174,7 @@ public class SectorImpl implements ISector {
                                             sectorUser.setTargetSector(null, null);
 
                                             // send message
-                                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', String.format(this.sectors.languageProvider.getLocalizedMessage(sectorUser.getLocale(), "failed.connect"), error.getMessage())));
+                                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', String.format(this.plugin.languageProvider.getLocalizedMessage(sectorUser.getLocale(), "failed.connect"), error.getMessage())));
 
                                         }
 

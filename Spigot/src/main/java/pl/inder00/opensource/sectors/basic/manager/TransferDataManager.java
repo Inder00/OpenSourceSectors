@@ -15,7 +15,7 @@ public class TransferDataManager {
     /**
      * Cached data
      */
-    private static Cache<UUID, IProtobufData<ProtobufTransferData.TransferPacket, Player>> transferDataCache = CacheBuilder.newBuilder()
+    private final Cache<UUID, IProtobufData<ProtobufTransferData.TransferPacket, Player>> transferDataCache = CacheBuilder.newBuilder()
             .expireAfterWrite(30, TimeUnit.SECONDS)
             .concurrencyLevel(Runtime.getRuntime().availableProcessors())
             .build();
@@ -26,7 +26,7 @@ public class TransferDataManager {
      * @param uuid Player unique id
      * @return Implementation of ITransferData if present
      */
-    public static IProtobufData<ProtobufTransferData.TransferPacket, Player> getTransferDataByPlayerUniqueId(UUID uuid) {
+    public IProtobufData<ProtobufTransferData.TransferPacket, Player> getTransferDataByPlayerUniqueId(UUID uuid) {
         return transferDataCache.getIfPresent(uuid);
     }
 
@@ -35,7 +35,7 @@ public class TransferDataManager {
      *
      * @param transferData Implementation of ITransferData
      */
-    public static void cacheTransferData(IProtobufData<ProtobufTransferData.TransferPacket, Player> transferData) {
+    public void cacheTransferData(IProtobufData<ProtobufTransferData.TransferPacket, Player> transferData) {
         transferDataCache.put(ProtobufUtils.deserialize(transferData.getData().getPlayerUniqueId()), transferData);
     }
 
@@ -44,7 +44,7 @@ public class TransferDataManager {
      *
      * @param transferData Implementation of ITransferData
      */
-    public static void clearTransferData(IProtobufData<ProtobufTransferData.TransferPacket, Player> transferData) {
+    public void clearTransferData(IProtobufData<ProtobufTransferData.TransferPacket, Player> transferData) {
         transferDataCache.invalidate(ProtobufUtils.deserialize(transferData.getData().getPlayerUniqueId()));
     }
 

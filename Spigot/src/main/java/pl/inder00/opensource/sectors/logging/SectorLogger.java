@@ -1,6 +1,6 @@
 package pl.inder00.opensource.sectors.logging;
 
-import org.bukkit.plugin.Plugin;
+import pl.inder00.opensource.sectors.Sectors;
 import pl.inder00.opensource.sectors.basic.ISector;
 
 import java.util.logging.Level;
@@ -20,7 +20,7 @@ public class SectorLogger extends Logger {
      * @param plugin A reference to the plugin
      * @param sector A reference to the sector
      */
-    public SectorLogger(Plugin plugin, ISector sector) {
+    public SectorLogger(Sectors plugin, ISector sector) {
         super(plugin.getClass().getCanonicalName(), null);
         String prefix = plugin.getDescription().getPrefix();
         sectorName = "[" + (prefix != null ? prefix : plugin.getName()) + "-" + sector.getUniqueId().toString() + "] ";

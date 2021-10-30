@@ -15,7 +15,7 @@ public class DefaultServerAcceptor implements SocketAcceptor {
     /**
      * Socket server implementation
      */
-    private ISectorServer sectorServer;
+    private final ISectorServer sectorServer;
 
     /**
      * Implementation

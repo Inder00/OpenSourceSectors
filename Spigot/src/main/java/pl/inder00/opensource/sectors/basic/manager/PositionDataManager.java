@@ -15,7 +15,7 @@ public class PositionDataManager {
     /**
      * Cached data
      */
-    private static Cache<UUID, IProtobufData<ProtobufPositionData.PositionPacket, Player>> positionDataCache = CacheBuilder.newBuilder()
+    private Cache<UUID, IProtobufData<ProtobufPositionData.PositionPacket, Player>> positionDataCache = CacheBuilder.newBuilder()
             .expireAfterWrite(30, TimeUnit.SECONDS)
             .concurrencyLevel(Runtime.getRuntime().availableProcessors())
             .build();
@@ -26,7 +26,7 @@ public class PositionDataManager {
      * @param uuid Player unique id
      * @return Implementation of IPositionData if present
      */
-    public static IProtobufData<ProtobufPositionData.PositionPacket, Player> getPositionDataByPlayerUniqueId(UUID uuid) {
+    public IProtobufData<ProtobufPositionData.PositionPacket, Player> getPositionDataByPlayerUniqueId(UUID uuid) {
         return positionDataCache.getIfPresent(uuid);
     }
 
@@ -35,7 +35,7 @@ public class PositionDataManager {
      *
      * @param positionData Implementation of IPositionData
      */
-    public static void cachePositionData(IProtobufData<ProtobufPositionData.PositionPacket, Player> positionData) {
+    public void cachePositionData(IProtobufData<ProtobufPositionData.PositionPacket, Player> positionData) {
         positionDataCache.put(ProtobufUtils.deserialize(positionData.getData().getPlayerUniqueId()), positionData);
     }
 
@@ -44,7 +44,7 @@ public class PositionDataManager {
      *
      * @param positionData Implementation of IPositionData
      */
-    public static void clearPositionData(IProtobufData<ProtobufPositionData.PositionPacket, Player> positionData) {
+    public void clearPositionData(IProtobufData<ProtobufPositionData.PositionPacket, Player> positionData) {
         positionDataCache.invalidate(ProtobufUtils.deserialize(positionData.getData().getPlayerUniqueId()));
     }
 

@@ -5,7 +5,6 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 import pl.inder00.opensource.sectors.basic.ISector;
-import pl.inder00.opensource.sectors.basic.manager.SectorManager;
 
 public class PlayerChangeSectorEvent extends PlayerEvent implements Cancellable {
 
@@ -13,15 +12,16 @@ public class PlayerChangeSectorEvent extends PlayerEvent implements Cancellable 
      * Data
      */
     private static final HandlerList handlers = new HandlerList();
-    private ISector sector;
+    private final ISector sector, currentSector;
     private boolean cancel = false;
 
     /**
      * Implementation
      */
-    public PlayerChangeSectorEvent(Player player, ISector sector) {
+    public PlayerChangeSectorEvent(Player player, ISector sector, ISector currentSector) {
         super(player);
         this.sector = sector;
+        this.currentSector = currentSector;
     }
 
     /**
@@ -48,7 +48,7 @@ public class PlayerChangeSectorEvent extends PlayerEvent implements Cancellable 
      * @return ISector
      */
     public ISector getOldSector() {
-        return SectorManager.getCurrentSector();
+        return currentSector;
     }
 
     @Override

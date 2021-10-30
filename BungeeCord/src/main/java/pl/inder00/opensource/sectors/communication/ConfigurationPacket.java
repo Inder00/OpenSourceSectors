@@ -11,7 +11,7 @@ public class ConfigurationPacket implements IPacket<ProtobufGeneric.EmptyMessage
     /**
      * Data
      */
-    private Sectors plugin;
+    private final Sectors plugin;
 
     /**
      * Implementation
@@ -54,21 +54,21 @@ public class ConfigurationPacket implements IPacket<ProtobufGeneric.EmptyMessage
         });
 
         // sectors
-        SectorManager.getSectorsList().forEach(sector -> {
+        plugin.getSectorManager().getSectorsList().forEach(sector -> {
 
             // write data
             configurationPacketOutput.addSectors(ProtobufGeneric.ProtoSector.newBuilder()
-                            .setUniqueId(ProtobufGeneric.ProtoUUID.newBuilder()
-                                    .setMostSig(sector.getUniqueId().getMostSignificantBits())
-                                    .setLeastSig(sector.getUniqueId().getLeastSignificantBits())
-                                    .build())
-                            .setInternalHostname(sector.getInternalServerHostname())
-                            .setInternalPort(sector.getInternalServerPort())
-                            .setWorldName(sector.getWorld())
-                            .setMinX(sector.getMinX())
-                            .setMinZ(sector.getMinZ())
-                            .setMaxX(sector.getMaxX())
-                            .setMaxZ(sector.getMaxZ())
+                    .setUniqueId(ProtobufGeneric.ProtoUUID.newBuilder()
+                            .setMostSig(sector.getUniqueId().getMostSignificantBits())
+                            .setLeastSig(sector.getUniqueId().getLeastSignificantBits())
+                            .build())
+                    .setInternalHostname(sector.getInternalServerHostname())
+                    .setInternalPort(sector.getInternalServerPort())
+                    .setWorldName(sector.getWorld())
+                    .setMinX(sector.getMinX())
+                    .setMinZ(sector.getMinZ())
+                    .setMaxX(sector.getMaxX())
+                    .setMaxZ(sector.getMaxZ())
                     .build());
 
         });

@@ -17,7 +17,7 @@ public class PluginConfiguration {
     /**
      * Configuration file
      */
-    private YamlConfiguration yamlConfiguration;
+    private final YamlConfiguration yamlConfiguration;
 
     /**
      * Implementation

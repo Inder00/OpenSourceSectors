@@ -47,8 +47,8 @@ public class SectorUserImpl implements ISectorUser {
     }
 
     @Override
-    public void setTargetSector(ISector value, Location target) {
-        this.targetSector = value;
+    public void setTargetSector(ISector targetSector, Location target) {
+        this.targetSector = targetSector;
         this.targetLocation = target;
     }
 

@@ -27,7 +27,7 @@ public abstract class AbstractPlugin extends Plugin {
 
         File outFile = new File(this.getDataFolder(), resourcePath);
         int lastIndex = resourcePath.lastIndexOf('/');
-        File outDir = new File(this.getDataFolder(), resourcePath.substring(0, lastIndex >= 0 ? lastIndex : 0));
+        File outDir = new File(this.getDataFolder(), resourcePath.substring(0, Math.max(lastIndex, 0)));
 
         if (!outDir.exists()) {
             outDir.mkdirs();

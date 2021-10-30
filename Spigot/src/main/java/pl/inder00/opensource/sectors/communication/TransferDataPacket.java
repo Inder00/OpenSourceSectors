@@ -3,9 +3,8 @@ package pl.inder00.opensource.sectors.communication;
 import com.google.protobuf.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
+import pl.inder00.opensource.sectors.Sectors;
 import pl.inder00.opensource.sectors.basic.impl.TransferDataImpl;
-import pl.inder00.opensource.sectors.basic.manager.TransferDataManager;
 import pl.inder00.opensource.sectors.protobuf.ProtobufTransferData;
 import pl.inder00.opensource.sectors.protocol.IProtobufData;
 import pl.inder00.opensource.sectors.protocol.packet.IPacket;
@@ -16,12 +15,12 @@ public class TransferDataPacket implements IPacket<ProtobufTransferData.Transfer
     /**
      * Data
      */
-    private JavaPlugin plugin;
+    private final Sectors plugin;
 
     /**
      * Implementation
      */
-    public TransferDataPacket(JavaPlugin plugin) {
+    public TransferDataPacket(Sectors plugin) {
         this.plugin = plugin;
     }
 
@@ -34,8 +33,8 @@ public class TransferDataPacket implements IPacket<ProtobufTransferData.Transfer
     public <Y extends Message> Y execute(ProtobufTransferData.TransferPacket transferPacket) throws Throwable {
 
         // insert data into cache
-        IProtobufData<ProtobufTransferData.TransferPacket, Player> transferData = new TransferDataImpl(transferPacket);
-        TransferDataManager.cacheTransferData(transferData);
+        IProtobufData<ProtobufTransferData.TransferPacket, Player> transferData = new TransferDataImpl(plugin, transferPacket);
+        plugin.getTransferDataManager().cacheTransferData(transferData);
 
         // check does target player is online
         Player targetPlayer = Bukkit.getPlayer(ProtobufUtils.deserialize(transferPacket.getPlayerUniqueId()));
@@ -47,7 +46,7 @@ public class TransferDataPacket implements IPacket<ProtobufTransferData.Transfer
         }
 
         // return null
-         return null;
+        return null;
 
     }
 

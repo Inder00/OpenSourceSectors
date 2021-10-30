@@ -10,41 +10,56 @@ public class SectorImpl implements ISector {
     /**
      * Sector data
      */
-    private UUID uniqueId;
-    private ServerInfo serverInfo;
-    private String hostname;
-    private String world;
-    private int port;
-    private int xa;
-    private int za;
-    private int xb;
-    private int zb;
+    private final UUID uniqueId;
+    private final ServerInfo serverInfo;
+    private final String hostname;
+    private final String world;
+    private final int port;
+    private final int minX;
+    private final int maxX;
+    private final int minZ;
+    private final int maxZ;
 
     /**
      * Implementation
      */
-    public SectorImpl(UUID uniqueId, ServerInfo serverInfo, String hostname, int port, String world, int xa, int za, int xb, int zb) {
+    public SectorImpl(UUID uniqueId, ServerInfo serverInfo, String hostname, int port, String world, int minX, int maxX, int minZ, int maxZ) {
         this.uniqueId = uniqueId;
         this.serverInfo = serverInfo;
         this.hostname = hostname;
         this.port = port;
         this.world = world;
-        this.xa = xa;
-        this.xb = xb;
-        this.za = za;
-        this.zb = zb;
+        this.minX = minX;
+        this.minZ = minZ;
+        this.maxX = maxX;
+        this.maxZ = maxZ;
     }
 
+    /**
+     * UniqueID
+     *
+     * @return uuid
+     */
     @Override
     public UUID getUniqueId() {
         return this.uniqueId;
     }
 
+    /**
+     * ServerInfo
+     *
+     * @return serverinfo
+     */
     @Override
     public ServerInfo getServerInfo() {
         return this.serverInfo;
     }
 
+    /**
+     * InternalServerHostname
+     *
+     * @return string
+     */
     @Override
     public String getInternalServerHostname() {
         return this.hostname;
@@ -62,21 +77,21 @@ public class SectorImpl implements ISector {
 
     @Override
     public int getMinX() {
-        return this.xa;
+        return this.minX;
     }
 
     @Override
     public int getMinZ() {
-        return this.za;
+        return this.maxX;
     }
 
     @Override
     public int getMaxX() {
-        return this.xb;
+        return this.minZ;
     }
 
     @Override
     public int getMaxZ() {
-        return this.zb;
+        return this.maxZ;
     }
 }

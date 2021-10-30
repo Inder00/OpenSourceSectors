@@ -4,11 +4,13 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.YamlConfiguration;
+import pl.inder00.opensource.sectors.Sectors;
 import pl.inder00.opensource.sectors.configuration.exceptions.ConfigurationException;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
 public class MessagesConfiguration {
@@ -17,13 +19,13 @@ public class MessagesConfiguration {
      * List of messages
      */
     public String defaultLocale;
-    public HashMap<String, String> localeAliases = new HashMap<String, String>();
-    public HashMap<String, String> messagesList = new HashMap<String, String>();
+    public Map<String, String> localeAliases = new HashMap<>();
+    public Map<String, String> messagesList = new HashMap<>();
 
     /**
      * Configuration
      */
-    private Plugin plugin;
+    private final Sectors plugin;
     private Configuration yamlConfiguration;
 
     /**
@@ -31,7 +33,7 @@ public class MessagesConfiguration {
      *
      * @param configurationFile Configuration java file
      */
-    public MessagesConfiguration(Plugin plugin, File configurationFile) {
+    public MessagesConfiguration(Sectors plugin, File configurationFile) {
 
         // set plugin
         this.plugin = plugin;

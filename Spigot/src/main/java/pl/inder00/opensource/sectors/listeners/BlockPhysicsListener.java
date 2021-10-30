@@ -5,12 +5,24 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPhysicsEvent;
+import pl.inder00.opensource.sectors.Sectors;
 import pl.inder00.opensource.sectors.basic.ISector;
-import pl.inder00.opensource.sectors.basic.manager.SectorManager;
 
 public class BlockPhysicsListener implements Listener {
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    /**
+     * Main class
+     */
+    private final Sectors plugin;
+
+    /**
+     * Implementation
+     */
+    public BlockPhysicsListener(Sectors plugin) {
+        this.plugin = plugin;
+    }
+
+    @EventHandler ( priority = EventPriority.MONITOR )
     public void onPhysics(BlockPhysicsEvent e) {
         if (e.isCancelled()) return;
 
@@ -18,7 +30,7 @@ public class BlockPhysicsListener implements Listener {
         Location blockLocation = e.getBlock().getLocation();
 
         // current sector
-        ISector currentSector = SectorManager.getCurrentSector();
+        ISector currentSector = plugin.getSectorManager().getCurrentSector();
         if (currentSector == null) return;
 
         // check is block inside protected area

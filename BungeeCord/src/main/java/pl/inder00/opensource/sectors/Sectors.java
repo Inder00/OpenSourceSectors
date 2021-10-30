@@ -1,6 +1,7 @@
 package pl.inder00.opensource.sectors;
 
 import net.md_5.bungee.api.ProxyServer;
+import pl.inder00.opensource.sectors.basic.manager.SectorManager;
 import pl.inder00.opensource.sectors.communication.ChangeServerPacket;
 import pl.inder00.opensource.sectors.communication.ConfigurationPacket;
 import pl.inder00.opensource.sectors.configuration.MessagesConfiguration;
@@ -27,10 +28,17 @@ public class Sectors extends AbstractPlugin {
      */
     private File messagesFile;
     /**
+     * Manager of sectors
+     */
+    private SectorManager sectorManager;
+    /**
      * Master server
      */
     private ISectorServer masterServer;
 
+    public SectorManager getSectorManager() {
+        return sectorManager;
+    }
 
     @Override
     public void onEnable() {
@@ -56,6 +64,9 @@ public class Sectors extends AbstractPlugin {
             // Load messages configuration
             this.messagesConfiguration = new MessagesConfiguration(this, this.messagesFile);
             this.messagesConfiguration.loadConfiguration();
+
+            // Load sector manager
+            sectorManager = new SectorManager();
 
             // create master server implementation and bind over tcp
             this.masterServer = new DefaultSectorServer(this.pluginConfiguration.masterHostname, this.pluginConfiguration.masterPort, this.pluginConfiguration.masterPassword != null ? (this.pluginConfiguration.masterPassword.length() > 0 ? this.pluginConfiguration.masterPassword : null) : null);

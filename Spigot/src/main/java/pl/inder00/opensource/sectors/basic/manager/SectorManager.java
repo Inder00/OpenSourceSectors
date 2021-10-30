@@ -12,24 +12,23 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SectorManager {
 
     /**
-     * Current sector where plugin is runs
-     */
-    private static UUID currentSectorUniqueId;
-    private static ISector currentSector;
-    private static ISectorServer currentSectorEndpoint;
-
-    /**
      * List of all available sectors
      */
-    private static ConcurrentHashMap<UUID, ISector> listOfSectors = new ConcurrentHashMap<UUID, ISector>();
+    private final ConcurrentHashMap<UUID, ISector> sectors = new ConcurrentHashMap<>();
+    /**
+     * Current sector where plugin is runs
+     */
+    private UUID currentSectorUniqueId;
+    private ISector currentSector;
+    private ISectorServer currentSectorEndpoint;
 
     /**
      * List of all sectors
      *
      * @return List of sectors
      */
-    public static List<ISector> getSectorsList() {
-        return new ArrayList<>(listOfSectors.values());
+    public List<ISector> getSectorsList() {
+        return new ArrayList<>(sectors.values());
     }
 
     /**
@@ -38,8 +37,8 @@ public class SectorManager {
      * @param location
      * @return ISector / null
      */
-    public static ISector getSectorAtLocation(Location location) {
-        return listOfSectors.values().stream().filter(sector -> sector.isInLocation(location)).findFirst().orElse(null);
+    public ISector getSectorAtLocation(Location location) {
+        return sectors.values().stream().filter(sector -> sector.isInLocation(location)).findFirst().orElse(null);
     }
 
     /**
@@ -48,8 +47,8 @@ public class SectorManager {
      * @param uniqueId UUIDv3
      * @return ISector / null
      */
-    public static ISector getSectorByUniqueId(UUID uniqueId) {
-        return listOfSectors.get(uniqueId);
+    public ISector getSectorByUniqueId(UUID uniqueId) {
+        return sectors.get(uniqueId);
     }
 
     /**
@@ -57,8 +56,8 @@ public class SectorManager {
      *
      * @return int
      */
-    public static int getSectorsCount() {
-        return listOfSectors.size();
+    public int getSectorsCount() {
+        return sectors.size();
     }
 
     /**
@@ -66,7 +65,7 @@ public class SectorManager {
      *
      * @return ISocket
      */
-    public static ISector getCurrentSector() {
+    public ISector getCurrentSector() {
         return currentSector;
     }
 
@@ -75,7 +74,7 @@ public class SectorManager {
      *
      * @return ISectorServer
      */
-    public static ISectorServer getCurrentSectorEndpoint() {
+    public ISectorServer getCurrentSectorEndpoint() {
         return currentSectorEndpoint;
     }
 
@@ -84,15 +83,15 @@ public class SectorManager {
      *
      * @param endpoint A reference of sector server
      */
-    public static void setCurrentSectorEndpoint(ISectorServer endpoint) {
+    public void setCurrentSectorEndpoint(ISectorServer endpoint) {
         currentSectorEndpoint = endpoint;
     }
 
     /**
      * Clear list of sectors
      */
-    public static void clearSectors() {
-        listOfSectors.clear();
+    public void clearSectors() {
+        sectors.clear();
     }
 
     /**
@@ -100,13 +99,13 @@ public class SectorManager {
      *
      * @param sector Implementation of sector
      */
-    public static void addSectorToList(ISector sector) {
+    public void addSectorToList(ISector sector) {
 
         // update current sector if necessary
         if (currentSectorUniqueId.equals(sector.getUniqueId())) currentSector = sector;
 
         // add sector to map
-        listOfSectors.put(sector.getUniqueId(), sector);
+        sectors.put(sector.getUniqueId(), sector);
 
     }
 
@@ -115,7 +114,7 @@ public class SectorManager {
      *
      * @return UUIDv3 / null
      */
-    public static UUID getCurrentSectorUniqueId() {
+    public UUID getCurrentSectorUniqueId() {
         return currentSectorUniqueId;
     }
 
@@ -124,7 +123,7 @@ public class SectorManager {
      *
      * @param uuid UUIDv3 from sector name
      */
-    public static void setCurrentSectorUniqueId(UUID uuid) {
+    public void setCurrentSectorUniqueId(UUID uuid) {
         currentSectorUniqueId = uuid;
     }
 }

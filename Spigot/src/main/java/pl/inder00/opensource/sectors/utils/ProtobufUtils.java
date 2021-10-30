@@ -22,13 +22,11 @@ public class ProtobufUtils {
     public static byte[] serializeRaw(Object object) {
 
         // streamers
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        BukkitObjectOutputStream out = null;
 
-        try {
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream()
+             ; BukkitObjectOutputStream out = new BukkitObjectOutputStream(bos)) {
 
             // create object output stream and write object
-            out = new BukkitObjectOutputStream(bos);
             out.writeObject(object);
             out.flush();
 
@@ -43,14 +41,8 @@ public class ProtobufUtils {
             // return empty bytes
             return null;
 
-        } finally {
-            try {
-                bos.close();
-                out.close();
-            } catch (Throwable ex) {
-                // ignore close exception
-            }
         }
+        // ignore close exception
 
     }
 
@@ -63,13 +55,10 @@ public class ProtobufUtils {
     public static <T> T deserializeRaw(byte[] data) {
 
         // streamers
-        ByteArrayInputStream bis = new ByteArrayInputStream(data);
-        BukkitObjectInputStream oit = null;
 
-        try {
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(data) ; BukkitObjectInputStream oit = new BukkitObjectInputStream(bis)) {
 
             // create object output stream and write object
-            oit = new BukkitObjectInputStream(bis);
 
             // return bytes
             return (T) oit.readObject();
@@ -79,14 +68,8 @@ public class ProtobufUtils {
             // return empty bytes
             return null;
 
-        } finally {
-            try {
-                bis.close();
-                oit.close();
-            } catch (Throwable ex) {
-                // ignore close exception
-            }
         }
+        // ignore close exception
 
     }
 

@@ -44,9 +44,9 @@ public interface ISectorUser {
     /**
      * Sets a target sector where player is moving
      *
-     * @param value  ISector
+     * @param targetSector  ISector
      * @param target Location where player should be moved
      */
-    void setTargetSector(ISector value, Location target);
+    void setTargetSector(ISector targetSector, Location target);
 
 }

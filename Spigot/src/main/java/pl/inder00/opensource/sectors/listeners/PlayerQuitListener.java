@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
+import pl.inder00.opensource.sectors.Sectors;
 import pl.inder00.opensource.sectors.basic.ISector;
 import pl.inder00.opensource.sectors.basic.ISectorUser;
 import pl.inder00.opensource.sectors.basic.manager.SectorUserManager;
@@ -12,17 +13,29 @@ import pl.inder00.opensource.sectors.utils.SpigotPayloadUtils;
 
 public class PlayerQuitListener implements Listener {
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    /**
+     * Main class
+     */
+    private final Sectors plugin;
+
+    /**
+     * Implementation
+     */
+    public PlayerQuitListener(Sectors plugin) {
+        this.plugin = plugin;
+    }
+
+    @EventHandler ( priority = EventPriority.MONITOR )
     public void onQuit(PlayerQuitEvent event) {
 
         // values
         Player player = event.getPlayer();
 
         // remove join time time
-        SectorUserManager.deleteJoinTimeUser(player.getUniqueId());
+        plugin.getSectorUserManager().deleteJoinTimeUser(player.getUniqueId());
 
         // sector user
-        ISectorUser sectorUser = SectorUserManager.getUserByPlayerUniqueIdIfPresent(player.getUniqueId());
+        ISectorUser sectorUser = plugin.getSectorUserManager().getUserByPlayerUniqueIdIfPresent(player.getUniqueId());
         if (sectorUser != null) {
 
             // check does player is changing their sector
@@ -35,7 +48,7 @@ public class PlayerQuitListener implements Listener {
             }
 
             // clear sector user
-            SectorUserManager.deleteSectorUser(sectorUser);
+            plugin.getSectorUserManager().deleteSectorUser(sectorUser);
 
         }
 

@@ -16,14 +16,14 @@ public class DefaultSectorClient implements ISectorClient {
     /**
      * Client properties
      */
-    private String hostname;
-    private String password;
-    private int port;
+    private final String hostname;
+    private final String password;
+    private final int port;
 
     /**
      * Client data
      */
-    private RSocketConnector socketConnector;
+    private final RSocketConnector socketConnector;
     private RSocket socketClient;
 
     /**

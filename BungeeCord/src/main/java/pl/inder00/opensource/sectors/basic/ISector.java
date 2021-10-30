@@ -37,7 +37,7 @@ public interface ISector {
     /**
      * World name
      *
-     * @return
+     * @return string
      */
     String getWorld();
 

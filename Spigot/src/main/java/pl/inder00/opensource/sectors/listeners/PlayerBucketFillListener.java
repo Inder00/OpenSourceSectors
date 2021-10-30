@@ -5,12 +5,24 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBucketFillEvent;
+import pl.inder00.opensource.sectors.Sectors;
 import pl.inder00.opensource.sectors.basic.ISector;
-import pl.inder00.opensource.sectors.basic.manager.SectorManager;
 
 public class PlayerBucketFillListener implements Listener {
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    /**
+     * Main class
+     */
+    private final Sectors plugin;
+
+    /**
+     * Implementation
+     */
+    public PlayerBucketFillListener(Sectors plugin) {
+        this.plugin = plugin;
+    }
+
+    @EventHandler ( priority = EventPriority.MONITOR )
     public void onFill(PlayerBucketFillEvent e) {
         if (e.isCancelled()) return;
 
@@ -18,7 +30,7 @@ public class PlayerBucketFillListener implements Listener {
         Location blockLocation = e.getBlockClicked().getLocation();
 
         // current sector
-        ISector currentSector = SectorManager.getCurrentSector();
+        ISector currentSector = plugin.getSectorManager().getCurrentSector();
         if (currentSector == null) return;
 
         // check is block inside protected area

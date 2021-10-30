@@ -17,15 +17,15 @@ public class DefaultSectorServer implements ISectorServer {
     /**
      * Server properties
      */
-    private String hostname;
-    private int port;
+    private final String hostname;
+    private final int port;
     private String password;
 
     /**
      * Server data
      */
-    private RSocketServer socketServer;
-    private List<RSocket> connectionList = new ArrayList<RSocket>();
+    private final RSocketServer socketServer;
+    private final List<RSocket> connectionList = new ArrayList<RSocket>();
 
     /**
      * Implementation

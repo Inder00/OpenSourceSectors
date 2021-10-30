@@ -7,10 +7,8 @@ import org.bukkit.WorldBorder;
 import pl.inder00.opensource.sectors.Sectors;
 import pl.inder00.opensource.sectors.basic.ISector;
 import pl.inder00.opensource.sectors.basic.impl.SectorImpl;
-import pl.inder00.opensource.sectors.basic.manager.SectorManager;
 import pl.inder00.opensource.sectors.i18n.I18nFactory;
 import pl.inder00.opensource.sectors.protobuf.ProtobufConfigurationData;
-import pl.inder00.opensource.sectors.protobuf.ProtobufGeneric;
 import pl.inder00.opensource.sectors.protocol.impl.DefaultSectorClient;
 import pl.inder00.opensource.sectors.protocol.impl.DefaultSectorServer;
 import pl.inder00.opensource.sectors.protocol.packet.EPacket;
@@ -25,8 +23,8 @@ public class MasterServerClient extends DefaultSectorClient {
     /**
      * Data
      */
-    private Sectors plugin;
-    private String password;
+    private final Sectors plugin;
+    private final String password;
 
     /**
      * Implementation
@@ -66,7 +64,7 @@ public class MasterServerClient extends DefaultSectorClient {
                                     ProtobufConfigurationData.ConfigurationPacket configurationPacket = ProtobufConfigurationData.ConfigurationPacket.parseFrom(ByteString.copyFrom(response.getData()));
 
                                     // compare version
-                                    if(!this.plugin.getDescription().getVersion().equals(configurationPacket.getVersion())){
+                                    if (!this.plugin.getDescription().getVersion().equals(configurationPacket.getVersion())) {
 
                                         // log
                                         this.plugin.getLogger().log(Level.SEVERE, "Plugin version mismatch. Stopping server.");
@@ -77,16 +75,14 @@ public class MasterServerClient extends DefaultSectorClient {
                                     }
 
                                     // load sectors
-                                    for(ProtobufGeneric.ProtoSector protoSector : configurationPacket.getSectorsList()){
-
-                                        // sector uuid
+                                    // sector uuid
+                                    // is current iterating sector is self sector?
+                                    configurationPacket.getSectorsList().forEach(protoSector -> {
                                         UUID uniqueId = ProtobufUtils.deserialize(protoSector.getUniqueId());
-
-                                        // is current iterating sector is self sector?
-                                        if (uniqueId.equals(SectorManager.getCurrentSectorUniqueId())) {
+                                        if (uniqueId.equals(plugin.getSectorManager().getCurrentSectorUniqueId())) {
 
                                             // world implementation
-                                            World world = Bukkit.getWorld(protoSector.hasWorldName() ? protoSector.getWorldName() : "world");
+                                            World world = protoSector.hasWorldName() ? Bukkit.getWorld(protoSector.getWorldName()) : Bukkit.getWorlds().get(0);
                                             if (world == null) {
 
                                                 // log
@@ -95,76 +91,76 @@ public class MasterServerClient extends DefaultSectorClient {
                                                 // stop
                                                 this.plugin.getServer().shutdown();
 
+                                                return;
+
                                             }
 
                                             // create socket implementation
                                             ISector sector = new SectorImpl(this.plugin, uniqueId, null, world, protoSector.getMinX(), protoSector.getMinZ(), protoSector.getMaxX(), protoSector.getMaxZ(), configurationPacket.getProtectionDistance(), configurationPacket.getChangeSectorCooldown());
 
                                             // create sector endpoint
-                                            SectorManager.setCurrentSectorEndpoint(new DefaultSectorServer(protoSector.getInternalHostname(), protoSector.getInternalPort(), this.password));
+                                            plugin.getSectorManager().setCurrentSectorEndpoint(new DefaultSectorServer(protoSector.getInternalHostname(), protoSector.getInternalPort(), this.password));
 
                                             // add sector to manager
-                                            SectorManager.addSectorToList(sector);
+                                            plugin.getSectorManager().addSectorToList(sector);
 
-                                        } else {
-
-                                            // create socket implementation
-                                            ISector sector = new SectorImpl(this.plugin, uniqueId, new DefaultSectorClient(protoSector.getInternalHostname(), protoSector.getInternalPort(), this.password), null, protoSector.getMinX() - 3, protoSector.getMinZ() - 3, protoSector.getMaxX() + 3, protoSector.getMaxZ() + 3, configurationPacket.getProtectionDistance(), configurationPacket.getChangeSectorCooldown());
-
-                                            // connect to sector endpoint
-                                            sector.getEndpoint().connect()
-                                                    .doOnError(sectorError -> {
-
-                                                        // log
-                                                        sector.getLogger().log(Level.SEVERE, String.format("Failed connect to sector endpoint (%s). Stopping server.", sectorError.getMessage()));
-
-                                                        // stop
-                                                        this.plugin.getServer().shutdown();
-
-                                                    })
-                                                    .doOnSuccess(sectorSuccess -> {
-
-                                                        // log
-                                                        sector.getLogger().info("Successfully connected to sector endpoint.");
-
-                                                    })
-                                                    .subscribe();
-
-                                            // add sector to manager
-                                            SectorManager.addSectorToList(sector);
-
+                                            return;
                                         }
 
-                                    }
+                                        // create socket implementation
+                                        ISector sector = new SectorImpl(this.plugin, uniqueId, new DefaultSectorClient(protoSector.getInternalHostname(), protoSector.getInternalPort(), this.password), null, protoSector.getMinX() - 3, protoSector.getMinZ() - 3, protoSector.getMaxX() + 3, protoSector.getMaxZ() + 3, configurationPacket.getProtectionDistance(), configurationPacket.getChangeSectorCooldown());
+
+                                        // connect to sector endpoint
+                                        sector.getEndpoint().connect()
+                                                .doOnError(sectorError -> {
+
+                                                    // log
+                                                    sector.getLogger().log(Level.SEVERE, String.format("Failed connect to sector endpoint (%s). Stopping server.", sectorError.getMessage()));
+
+                                                    // stop
+                                                    this.plugin.getServer().shutdown();
+
+                                                })
+                                                .doOnSuccess(sectorSuccess -> {
+
+                                                    // log
+                                                    sector.getLogger().info("Successfully connected to sector endpoint.");
+
+                                                })
+                                                .subscribe();
+
+                                        // add sector to manager
+                                        plugin.getSectorManager().addSectorToList(sector);
+
+                                    });
 
                                     // default language
                                     this.plugin.languageProvider = new I18nFactory(configurationPacket.getDefaultLanguage());
 
                                     // aliases
-                                    for(ProtobufConfigurationData.ConfigurationAlias langMap : configurationPacket.getAliasesList()){
-                                        this.plugin.languageProvider.addLocaleAlias(langMap.getSource(), langMap.getTarget());
-                                    }
+                                    configurationPacket.getAliasesList().forEach(langMap ->
+                                            this.plugin.languageProvider.addLocaleAlias(langMap.getSource(), langMap.getTarget()));
 
                                     // message
-                                    for(ProtobufConfigurationData.ConfigurationMessage msgMap : configurationPacket.getMessagesList()){
-                                        this.plugin.languageProvider.addLocalizedMessage(msgMap.getKey(), msgMap.getValue());
-                                    }
+                                    configurationPacket.getMessagesList().forEach(msgMap ->
+                                            this.plugin.languageProvider.addLocalizedMessage(msgMap.getKey(), msgMap.getValue()));
 
                                     // log
-                                    this.plugin.getLogger().info(String.format("Loaded %d/%d sectors.", SectorManager.getSectorsCount(), configurationPacket.getSectorsCount()));
+                                    this.plugin.getLogger().info(String.format("Loaded %d/%d sectors.", plugin.getSectorManager().getSectorsCount(), configurationPacket.getSectorsCount()));
+
+
+                                    // current sector
+                                    ISector currentSector = plugin.getSectorManager().getCurrentSector();
 
                                     // check local sector is loaded
-                                    if (SectorManager.getCurrentSector() != null) {
-
-                                        // current sector
-                                        ISector currentSector = SectorManager.getCurrentSector();
+                                    if (currentSector != null) {
 
                                         // bind internal sector endpoint
-                                        SectorManager.getCurrentSectorEndpoint().bind()
+                                        plugin.getSectorManager().getCurrentSectorEndpoint().bind()
                                                 .doOnError(sectorError -> {
 
                                                     // log
-                                                    currentSector.getLogger().log(Level.SEVERE, String.format("Failed to bind sector endpoint. Stopping server.", sectorError.getMessage()));
+                                                    currentSector.getLogger().log(Level.SEVERE, String.format("Failed to bind sector endpoint. Stopping server. (%s)", sectorError.getMessage()));
 
                                                     // stop
                                                     this.plugin.getServer().shutdown();
@@ -177,8 +173,8 @@ public class MasterServerClient extends DefaultSectorClient {
 
                                                     // calculate border values
                                                     double sectorSize = Math.abs(currentSector.getMaxX() - currentSector.getMinX());
-                                                    double sectorCenterX = (currentSector.getMaxX() + currentSector.getMinX()) / 2;
-                                                    double sectorCenterZ = (currentSector.getMaxZ() + currentSector.getMinZ()) / 2;
+                                                    double sectorCenterX = (double) (currentSector.getMaxX() + currentSector.getMinX()) / 2;
+                                                    double sectorCenterZ = (double) (currentSector.getMaxZ() + currentSector.getMinZ()) / 2;
 
                                                     // set world border
                                                     Bukkit.getServer().getScheduler().runTask(this.plugin, () -> {
@@ -193,16 +189,15 @@ public class MasterServerClient extends DefaultSectorClient {
                                                 })
                                                 .subscribe();
 
-                                    } else {
-
-
-                                        // log
-                                        this.plugin.getLogger().log(Level.SEVERE, String.format("Failed to successfully start plugin (Server sector configuration not found). Stopping server..."));
-
-                                        // stop server
-                                        this.plugin.getServer().shutdown();
+                                        return;
 
                                     }
+
+                                    // log
+                                    this.plugin.getLogger().log(Level.SEVERE, "Failed to successfully start plugin (Server sector configuration not found). Stopping server...");
+
+                                    // stop server
+                                    this.plugin.getServer().shutdown();
 
                                 } catch (Throwable e) {
 

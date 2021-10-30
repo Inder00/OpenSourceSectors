@@ -10,7 +10,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import pl.inder00.opensource.sectors.Sectors;
 import pl.inder00.opensource.sectors.basic.ISector;
 import pl.inder00.opensource.sectors.basic.ISectorUser;
-import pl.inder00.opensource.sectors.basic.manager.SectorManager;
 import pl.inder00.opensource.sectors.basic.manager.SectorUserManager;
 import pl.inder00.opensource.sectors.utils.ActionbarUtils;
 
@@ -19,16 +18,16 @@ public class PlayerMoveListener implements Listener {
     /**
      * Main class
      */
-    private Sectors sectors;
+    private final Sectors plugin;
 
     /**
      * Implementation
      */
-    public PlayerMoveListener(Sectors sectors) {
-        this.sectors = sectors;
+    public PlayerMoveListener(Sectors plugin) {
+        this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler ( priority = EventPriority.MONITOR )
     public void onMove(PlayerMoveEvent event) {
 
         // event checks
@@ -44,38 +43,38 @@ public class PlayerMoveListener implements Listener {
             return;
 
         // check does current sector exists
-        ISector currentSector = SectorManager.getCurrentSector();
+        ISector currentSector = plugin.getSectorManager().getCurrentSector();
         if (currentSector != null && currentSector.getWorld() == locationTo.getWorld()) {
 
             // check is player inside protected area
             if (!(locationTo.getX() >= currentSector.getMinX() + currentSector.getProtectionDistance() && locationTo.getX() <= currentSector.getMaxX() - currentSector.getProtectionDistance() && locationTo.getZ() >= currentSector.getMinZ() + currentSector.getProtectionDistance() && locationTo.getZ() <= currentSector.getMaxZ() - currentSector.getProtectionDistance())) {
 
                 // sector user
-                ISectorUser sectorUser = SectorUserManager.getUserByPlayerUniqueId(player.getUniqueId());
+                ISectorUser sectorUser = plugin.getSectorUserManager().getUserByPlayerUniqueId(player.getUniqueId());
 
                 // distance to the sector
                 int distanceToSector = currentSector.getDistanceToBorder(locationTo);
 
                 // send actionbar
-                ActionbarUtils.sendActionbar(player, ChatColor.translateAlternateColorCodes('&', String.format(this.sectors.languageProvider.getLocalizedMessage(sectorUser.getLocale(), "border.distance"), distanceToSector)));
+                ActionbarUtils.sendActionbar(player, ChatColor.translateAlternateColorCodes('&', String.format(this.plugin.languageProvider.getLocalizedMessage(sectorUser.getLocale(), "border.distance"), distanceToSector)));
 
                 // check is player outside sector area
                 if (!(locationTo.getX() >= currentSector.getMinX() - 2 && locationTo.getX() <= currentSector.getMaxX() + 2 && locationTo.getZ() >= currentSector.getMinZ() - 2 && locationTo.getZ() <= currentSector.getMaxZ() + 2)) {
 
                     // get sector at location
-                    ISector targetSector = SectorManager.getSectorAtLocation(locationTo);
+                    ISector targetSector = plugin.getSectorManager().getSectorAtLocation(locationTo);
                     if (targetSector != null && targetSector != currentSector) {
 
                         // check does target server is online
                         if (sectorUser.getTargetSector() == null && targetSector.getEndpoint() != null && targetSector.getEndpoint().getRSocket() != null && !targetSector.getEndpoint().getRSocket().isDisposed()) {
 
                             // send player to target sector
-                            targetSector.send(this.sectors.masterServer, sectorUser, player);
+                            targetSector.send(this.plugin.masterServer, sectorUser, player);
 
                         } else if (sectorUser.getTargetSector() == null) {
 
                             // send message
-                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.sectors.languageProvider.getLocalizedMessage(sectorUser.getLocale(), "sector.offline")));
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.languageProvider.getLocalizedMessage(sectorUser.getLocale(), "sector.offline")));
 
                         }
 

@@ -17,7 +17,7 @@ public class SectorUserManager {
     /**
      * Cached data
      */
-    private static LoadingCache<UUID, ISectorUser> sectorUserCache = CacheBuilder.newBuilder()
+    private LoadingCache<UUID, ISectorUser> sectorUserCache = CacheBuilder.newBuilder()
             .expireAfterWrite(10, TimeUnit.MINUTES)
             .concurrencyLevel(Runtime.getRuntime().availableProcessors())
             .build(new CacheLoader<UUID, ISectorUser>() {
@@ -26,7 +26,11 @@ public class SectorUserManager {
                     return new SectorUserImpl(Bukkit.getPlayer(key));
                 }
             });
-    private static HashMap<UUID, Long> userJoinTimeCache = new HashMap<>();
+
+    /**
+     * Cached join timestamp data
+     */
+    private final HashMap<UUID, Long> userJoinTimeCache = new HashMap<>();
 
     /**
      * Gets sector uset by player uuid
@@ -34,7 +38,7 @@ public class SectorUserManager {
      * @param uuid Player unique id
      * @return Implementation of ISectorUser
      */
-    public static ISectorUser getUserByPlayerUniqueId(UUID uuid) {
+    public ISectorUser getUserByPlayerUniqueId(UUID uuid) {
         try {
             return sectorUserCache.get(uuid);
         } catch (ExecutionException e) {
@@ -48,7 +52,7 @@ public class SectorUserManager {
      * @param uuid Player unique id
      * @return Implementation of ISectorUser
      */
-    public static ISectorUser getUserByPlayerUniqueIdIfPresent(UUID uuid) {
+    public ISectorUser getUserByPlayerUniqueIdIfPresent(UUID uuid) {
         return sectorUserCache.getIfPresent(uuid);
     }
 
@@ -57,7 +61,7 @@ public class SectorUserManager {
      *
      * @param sectorUser Implementation of ISectorUser
      */
-    public static void deleteSectorUser(ISectorUser sectorUser) {
+    public void deleteSectorUser(ISectorUser sectorUser) {
         sectorUserCache.invalidate(sectorUser.getUniqueId());
     }
 
@@ -66,7 +70,7 @@ public class SectorUserManager {
      *
      * @param uniqueId UUID
      */
-    public static void deleteSectorUser(UUID uniqueId) {
+    public void deleteSectorUser(UUID uniqueId) {
         sectorUserCache.invalidate(uniqueId);
     }
 
@@ -76,7 +80,7 @@ public class SectorUserManager {
      * @param uniqueId Player unique id
      * @return long
      */
-    public static long getUserJoinTime(UUID uniqueId) {
+    public long getUserJoinTime(UUID uniqueId) {
         return userJoinTimeCache.get(uniqueId);
     }
 
@@ -86,7 +90,7 @@ public class SectorUserManager {
      * @param uniqueId Player unique id
      * @param unix     Unix time
      */
-    public static void setUserJoinTime(UUID uniqueId, long unix) {
+    public void setUserJoinTime(UUID uniqueId, long unix) {
         userJoinTimeCache.put(uniqueId, unix);
     }
 
@@ -95,7 +99,7 @@ public class SectorUserManager {
      *
      * @param uniqueId Player unique id
      */
-    public static void deleteJoinTimeUser(UUID uniqueId) {
+    public void deleteJoinTimeUser(UUID uniqueId) {
         userJoinTimeCache.remove(uniqueId);
     }
 

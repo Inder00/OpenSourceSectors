@@ -5,6 +5,7 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.YamlConfiguration;
+import pl.inder00.opensource.sectors.Sectors;
 import pl.inder00.opensource.sectors.basic.ISector;
 import pl.inder00.opensource.sectors.basic.impl.SectorImpl;
 import pl.inder00.opensource.sectors.basic.manager.SectorManager;
@@ -30,7 +31,7 @@ public class PluginConfiguration {
     /**
      * Configuration
      */
-    private Plugin plugin;
+    private final Sectors plugin;
     private Configuration yamlConfiguration;
 
     /**
@@ -38,7 +39,7 @@ public class PluginConfiguration {
      *
      * @param configurationFile Configuration java file
      */
-    public PluginConfiguration(Plugin plugin, File configurationFile) {
+    public PluginConfiguration(Sectors plugin, File configurationFile) {
 
         // set plugin
         this.plugin = plugin;
@@ -94,16 +95,16 @@ public class PluginConfiguration {
                 if (serverInfo == null) throw new ConfigurationException("Server name is invalid");
 
                 // check for config collisions
-                if (SectorManager.getSectorByServerInfo(serverInfo) != null)
+                if (plugin.getSectorManager().getSectorByServerInfo(serverInfo) != null)
                     throw new ConfigurationException("Server name in sector is already using by other sector");
-                if (SectorManager.getSectorByInternalServer(internalHostname, internalPort) != null)
+                if (plugin.getSectorManager().getSectorByInternalServer(internalHostname, internalPort) != null)
                     throw new ConfigurationException("Internal server configuration is colliding with other sector");
 
                 // create sector implementation
                 ISector sector = new SectorImpl(UUID.nameUUIDFromBytes(serverName.getBytes(StandardCharsets.UTF_8)), serverInfo, internalHostname, internalPort, worldName, minX, minZ, maxX, maxZ);
 
                 // add sector to manager
-                SectorManager.addSectorToList(sector);
+                plugin.getSectorManager().addSectorToList(sector);
 
                 // log
                 this.plugin.getLogger().log(Level.INFO, String.format("Successfully registered \"%s\" (%s) sector.", key, serverName));

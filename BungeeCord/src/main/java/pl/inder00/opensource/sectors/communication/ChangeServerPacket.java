@@ -3,6 +3,7 @@ package pl.inder00.opensource.sectors.communication;
 import com.google.protobuf.Message;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
+import pl.inder00.opensource.sectors.Sectors;
 import pl.inder00.opensource.sectors.basic.ISector;
 import pl.inder00.opensource.sectors.basic.manager.SectorManager;
 import pl.inder00.opensource.sectors.communication.exceptions.InvalidPlayerException;
@@ -17,12 +18,12 @@ public class ChangeServerPacket implements IPacket<ProtobufChangeSectorData.Chan
     /**
      * Data
      */
-    private Plugin plugin;
+    private final Sectors plugin;
 
     /**
      * Implementation
      */
-    public ChangeServerPacket(Plugin plugin) {
+    public ChangeServerPacket(Sectors plugin) {
         this.plugin = plugin;
     }
 
@@ -40,7 +41,7 @@ public class ChangeServerPacket implements IPacket<ProtobufChangeSectorData.Chan
 
         // target sector
         UUID sectorId = new UUID(changeSectorPacket.getSector().getUniqueId().getMostSig(), changeSectorPacket.getSector().getUniqueId().getLeastSig());
-        ISector targetSector = SectorManager.getSectorByUniqueId(sectorId);
+        ISector targetSector = plugin.getSectorManager().getSectorByUniqueId(sectorId);
         if (targetSector == null) throw new InvalidSectorException();
 
         // move player to target server
