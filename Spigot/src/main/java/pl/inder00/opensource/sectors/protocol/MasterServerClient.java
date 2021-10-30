@@ -180,8 +180,8 @@ public class MasterServerClient extends DefaultSectorClient {
                                                     double sectorCenterX = (currentSector.getMaxX() + currentSector.getMinX()) / 2;
                                                     double sectorCenterZ = (currentSector.getMaxZ() + currentSector.getMinZ()) / 2;
 
+                                                    // set world border
                                                     Bukkit.getServer().getScheduler().runTask(this.plugin, () -> {
-                                                        // set world border
                                                         WorldBorder worldBorder = currentSector.getWorld().getWorldBorder();
                                                         worldBorder.setCenter(sectorCenterX, sectorCenterZ);
                                                         worldBorder.setSize(sectorSize + 6);
