@@ -169,3 +169,6 @@ hs_err_pid*
 
 # Protobuf compiled files
 **/protobuf/*.java
+
+# Reduced pom files
+**/*-reduced-pom.*
