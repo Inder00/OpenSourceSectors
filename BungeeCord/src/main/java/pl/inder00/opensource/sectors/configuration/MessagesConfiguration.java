@@ -23,7 +23,7 @@ public class MessagesConfiguration {
     /**
      * Configuration
      */
-    private Plugin plugin;
+    private final Plugin plugin;
     private Configuration yamlConfiguration;
 
     /**

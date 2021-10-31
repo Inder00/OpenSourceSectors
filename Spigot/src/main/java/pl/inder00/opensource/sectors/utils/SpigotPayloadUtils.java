@@ -66,8 +66,8 @@ public class SpigotPayloadUtils {
 
         // data
         ProtobufTransferData.ProtoPlayerInventory.Builder playerInventoryBuilder = ProtobufTransferData.ProtoPlayerInventory.newBuilder()
-                .setInventoryContent(ByteString.copyFrom(ProtobufUtils.<ItemStack[]>serialize(player.getInventory().getContents())))
-                .setArmourContent(ByteString.copyFrom(ProtobufUtils.<ItemStack[]>serialize(player.getInventory().getArmorContents())));
+                .setInventoryContent(ByteString.copyFrom(ProtobufUtils.serialize(player.getInventory().getContents())))
+                .setArmourContent(ByteString.copyFrom(ProtobufUtils.serialize(player.getInventory().getArmorContents())));
         ProtobufTransferData.TransferPacket.Builder transferDataPacketBuilder = ProtobufTransferData.TransferPacket.newBuilder()
                 .setPlayerUniqueId(ProtobufUtils.serialize(player.getUniqueId()))
                 .setPlayerLocation(ProtobufUtils.serialize(player.getLocation()))
@@ -88,13 +88,13 @@ public class SpigotPayloadUtils {
                         .setExhaustion(player.isDead() ? 0 : player.getExhaustion())
                         .setHeldSlot(player.getInventory().getHeldItemSlot())
                         .build())
-                .setEnderchestContent(ByteString.copyFrom(ProtobufUtils.<ItemStack[]>serialize(player.getEnderChest().getContents())))
-                .setPotionEffects(ByteString.copyFrom(ProtobufUtils.<Collection<PotionEffect>>serialize(player.getActivePotionEffects())));
+                .setEnderchestContent(ByteString.copyFrom(ProtobufUtils.serialize(player.getEnderChest().getContents())))
+                .setPotionEffects(ByteString.copyFrom(ProtobufUtils.serialize(player.getActivePotionEffects())));
 
         // > 1_8
         if (!nmsVersion.contains("v1_8")) {
-            playerInventoryBuilder.setExtraContent(ByteString.copyFrom(ProtobufUtils.<ItemStack[]>serialize(player.getInventory().getExtraContents())));
-            playerInventoryBuilder.setStorageContent(ByteString.copyFrom(ProtobufUtils.<ItemStack[]>serialize(player.getInventory().getStorageContents())));
+            playerInventoryBuilder.setExtraContent(ByteString.copyFrom(ProtobufUtils.serialize(player.getInventory().getExtraContents())));
+            playerInventoryBuilder.setStorageContent(ByteString.copyFrom(ProtobufUtils.serialize(player.getInventory().getStorageContents())));
         }
 
         // build inventory

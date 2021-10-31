@@ -3,8 +3,8 @@ package pl.inder00.opensource.sectors.communication;
 import com.google.protobuf.Message;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
+import pl.inder00.opensource.sectors.Sectors;
 import pl.inder00.opensource.sectors.basic.ISector;
-import pl.inder00.opensource.sectors.basic.manager.SectorManager;
 import pl.inder00.opensource.sectors.communication.exceptions.InvalidPlayerException;
 import pl.inder00.opensource.sectors.communication.exceptions.InvalidSectorException;
 import pl.inder00.opensource.sectors.protobuf.ProtobufChangeSectorData;
@@ -17,13 +17,13 @@ public class ChangeServerPacket implements IPacket<ProtobufChangeSectorData.Chan
     /**
      * Data
      */
-    private Plugin plugin;
+    private final Sectors sectors;
 
     /**
      * Implementation
      */
-    public ChangeServerPacket(Plugin plugin) {
-        this.plugin = plugin;
+    public ChangeServerPacket(Sectors sectors) {
+        this.sectors = sectors;
     }
 
     @Override
@@ -35,12 +35,12 @@ public class ChangeServerPacket implements IPacket<ProtobufChangeSectorData.Chan
     public <Y extends Message> Y execute(ProtobufChangeSectorData.ChangeSectorPacket changeSectorPacket) throws Throwable {
 
         // player
-        ProxiedPlayer player = this.plugin.getProxy().getPlayer(changeSectorPacket.getPlayerName());
+        ProxiedPlayer player = this.sectors.getProxy().getPlayer(changeSectorPacket.getPlayerName());
         if (player == null) throw new InvalidPlayerException();
 
         // target sector
         UUID sectorId = new UUID(changeSectorPacket.getSector().getUniqueId().getMostSig(), changeSectorPacket.getSector().getUniqueId().getLeastSig());
-        ISector targetSector = SectorManager.getSectorByUniqueId(sectorId);
+        ISector targetSector = this.sectors.sectorManager.getByKey(sectorId);
         if (targetSector == null) throw new InvalidSectorException();
 
         // move player to target server

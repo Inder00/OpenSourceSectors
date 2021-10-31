@@ -1,8 +1,7 @@
 package pl.inder00.opensource.sectors.basic.impl;
 
 import org.bukkit.entity.Player;
-import pl.inder00.opensource.sectors.basic.manager.PositionDataManager;
-import pl.inder00.opensource.sectors.basic.manager.SectorManager;
+import pl.inder00.opensource.sectors.Sectors;
 import pl.inder00.opensource.sectors.protobuf.ProtobufPositionData;
 import pl.inder00.opensource.sectors.protocol.IProtobufData;
 import pl.inder00.opensource.sectors.utils.ProtobufUtils;
@@ -12,12 +11,14 @@ public class PositionDataImpl implements IProtobufData<ProtobufPositionData.Posi
     /**
      * Data
      */
-    private ProtobufPositionData.PositionPacket positionData;
+    private final Sectors sectors;
+    private final ProtobufPositionData.PositionPacket positionData;
 
     /**
      * Constructor
      */
-    public PositionDataImpl(ProtobufPositionData.PositionPacket positionData) {
+    public PositionDataImpl(Sectors sectors, ProtobufPositionData.PositionPacket positionData) {
+        this.sectors = sectors;
         this.positionData = positionData;
     }
 
@@ -30,7 +31,7 @@ public class PositionDataImpl implements IProtobufData<ProtobufPositionData.Posi
     public void execute(Player player) {
 
         // update position
-        player.teleport(ProtobufUtils.deserialize(SectorManager.getCurrentSector().getWorld(), this.getData().getPlayerPosition()));
+        player.teleport(ProtobufUtils.deserialize(this.sectors.sectorManager.getCurrentSector().getWorld(), this.getData().getPlayerPosition()));
 
         // remove inventory, enderchest, potions containts
         player.getInventory().clear();
@@ -41,7 +42,7 @@ public class PositionDataImpl implements IProtobufData<ProtobufPositionData.Posi
         player.setNoDamageTicks(600);
 
         // remove data from cache
-        PositionDataManager.clearPositionData(this);
+        this.sectors.positionDataManager.delete(ProtobufUtils.deserialize(this.getData().getPlayerUniqueId()));
 
     }
 

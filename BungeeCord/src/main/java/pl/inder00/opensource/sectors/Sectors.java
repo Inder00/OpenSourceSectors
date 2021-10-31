@@ -1,6 +1,8 @@
 package pl.inder00.opensource.sectors;
 
 import net.md_5.bungee.api.ProxyServer;
+import pl.inder00.opensource.sectors.basic.ISectorManager;
+import pl.inder00.opensource.sectors.basic.manager.SectorManagerImpl;
 import pl.inder00.opensource.sectors.communication.ChangeServerPacket;
 import pl.inder00.opensource.sectors.communication.ConfigurationPacket;
 import pl.inder00.opensource.sectors.configuration.MessagesConfiguration;
@@ -16,21 +18,31 @@ import java.util.logging.Level;
 
 public class Sectors extends AbstractPlugin {
 
+    /**
+     * Plugin configurations
+     */
     public PluginConfiguration pluginConfiguration;
     public MessagesConfiguration messagesConfiguration;
+
     /**
      * Configuration file
      */
     private File configurationFile;
+
     /**
      * Messages file
      */
     private File messagesFile;
+
     /**
      * Master server
      */
     private ISectorServer masterServer;
 
+    /**
+     * Sector manager
+     */
+    public ISectorManager sectorManager;
 
     @Override
     public void onEnable() {
@@ -48,6 +60,9 @@ public class Sectors extends AbstractPlugin {
             if (!this.messagesFile.exists()) {
                 this.saveResource("messages.yml", true);
             }
+
+            // create sector manager
+            this.sectorManager = new SectorManagerImpl();
 
             // Load plugin configuration
             this.pluginConfiguration = new PluginConfiguration(this, this.configurationFile);
@@ -92,8 +107,4 @@ public class Sectors extends AbstractPlugin {
 
     }
 
-    @Override
-    public void onDisable() {
-
-    }
 }

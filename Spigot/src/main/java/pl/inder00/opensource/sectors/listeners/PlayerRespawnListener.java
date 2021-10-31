@@ -4,28 +4,20 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import pl.inder00.opensource.sectors.Sectors;
 import pl.inder00.opensource.sectors.basic.ISector;
 import pl.inder00.opensource.sectors.basic.ISectorUser;
-import pl.inder00.opensource.sectors.basic.manager.SectorManager;
-import pl.inder00.opensource.sectors.basic.manager.SectorUserManager;
 
-public class PlayerRespawnListener implements Listener {
-
-    /**
-     * Main class
-     */
-    private Sectors sectors;
+public class PlayerRespawnListener extends AbstractListener {
 
     /**
      * Implementation
+     * @param sectors
      */
     public PlayerRespawnListener(Sectors sectors) {
-        this.sectors = sectors;
+        super(sectors);
     }
-
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onRespawn(PlayerRespawnEvent event) {
@@ -35,13 +27,13 @@ public class PlayerRespawnListener implements Listener {
         Location respawnLocation = event.getRespawnLocation();
 
         // check respawn location is not in current sector
-        if (SectorManager.getCurrentSector() != null && !SectorManager.getCurrentSector().isInLocation(respawnLocation)) {
+        if (this.sectors.sectorManager.getCurrentSector() != null && !this.sectors.sectorManager.getCurrentSector().isInLocation(respawnLocation)) {
 
             // sector user
-            ISectorUser sectorUser = SectorUserManager.getUserByPlayerUniqueId(player.getUniqueId());
+            ISectorUser sectorUser = this.sectors.userManager.getByKey(player.getUniqueId());
 
             // get sector at respawn location
-            ISector targetSector = SectorManager.getSectorAtLocation(respawnLocation);
+            ISector targetSector = this.sectors.sectorManager.getAtLocation(respawnLocation);
             if (targetSector != null && sectorUser.getTargetSector() == null) {
 
                 // send player to target sector

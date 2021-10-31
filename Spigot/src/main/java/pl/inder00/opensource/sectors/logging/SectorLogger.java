@@ -12,7 +12,7 @@ public class SectorLogger extends Logger {
     /**
      * Sector name (UUIDv3)
      */
-    private String sectorName;
+    private final String sectorName;
 
     /**
      * Creates a new SectorLogger that extracts the from a plugin.

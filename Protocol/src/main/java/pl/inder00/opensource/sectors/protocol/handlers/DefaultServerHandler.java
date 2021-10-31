@@ -17,7 +17,7 @@ public class DefaultServerHandler implements RSocket {
     /**
      * Socket data
      */
-    private ISectorServer sectorServer;
+    private final ISectorServer sectorServer;
 
     /**
      * Implementation

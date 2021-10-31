@@ -15,7 +15,7 @@ public interface IPacket<T extends MessageOrBuilder> {
     /**
      * Packet execution code
      *
-     * @param bufferIn  Input data
+     * @param bufferIn Input data
      * @return Payload
      */
     <Y extends Message> Y execute(T bufferIn) throws Throwable;

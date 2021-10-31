@@ -10,7 +10,7 @@ public enum EPacket {
     DATA_EXCHANGE((short) (1 << 2)),
     POSITION_DATA_EXCHANGE((short) (1 << 3));
 
-    private short id;
+    private final short id;
 
     /**
      * Implementation

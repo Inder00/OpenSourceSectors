@@ -10,22 +10,16 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import pl.inder00.opensource.sectors.Sectors;
 import pl.inder00.opensource.sectors.basic.ISector;
 import pl.inder00.opensource.sectors.basic.ISectorUser;
-import pl.inder00.opensource.sectors.basic.manager.SectorManager;
-import pl.inder00.opensource.sectors.basic.manager.SectorUserManager;
 import pl.inder00.opensource.sectors.utils.ActionbarUtils;
 
-public class PlayerMoveListener implements Listener {
-
-    /**
-     * Main class
-     */
-    private Sectors sectors;
+public class PlayerMoveListener extends AbstractListener {
 
     /**
      * Implementation
+     * @param sectors
      */
     public PlayerMoveListener(Sectors sectors) {
-        this.sectors = sectors;
+        super(sectors);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -44,14 +38,14 @@ public class PlayerMoveListener implements Listener {
             return;
 
         // check does current sector exists
-        ISector currentSector = SectorManager.getCurrentSector();
+        ISector currentSector = this.sectors.sectorManager.getCurrentSector();
         if (currentSector != null && currentSector.getWorld() == locationTo.getWorld()) {
 
             // check is player inside protected area
             if (!(locationTo.getX() >= currentSector.getMinX() + currentSector.getProtectionDistance() && locationTo.getX() <= currentSector.getMaxX() - currentSector.getProtectionDistance() && locationTo.getZ() >= currentSector.getMinZ() + currentSector.getProtectionDistance() && locationTo.getZ() <= currentSector.getMaxZ() - currentSector.getProtectionDistance())) {
 
                 // sector user
-                ISectorUser sectorUser = SectorUserManager.getUserByPlayerUniqueId(player.getUniqueId());
+                ISectorUser sectorUser = this.sectors.userManager.getByKey(player.getUniqueId());
 
                 // distance to the sector
                 int distanceToSector = currentSector.getDistanceToBorder(locationTo);
@@ -63,7 +57,7 @@ public class PlayerMoveListener implements Listener {
                 if (!(locationTo.getX() >= currentSector.getMinX() - 2 && locationTo.getX() <= currentSector.getMaxX() + 2 && locationTo.getZ() >= currentSector.getMinZ() - 2 && locationTo.getZ() <= currentSector.getMaxZ() + 2)) {
 
                     // get sector at location
-                    ISector targetSector = SectorManager.getSectorAtLocation(locationTo);
+                    ISector targetSector = this.sectors.sectorManager.getAtLocation(locationTo);
                     if (targetSector != null && targetSector != currentSector) {
 
                         // check does target server is online

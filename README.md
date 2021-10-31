@@ -7,7 +7,8 @@ a single world across multiple servers.
 between them easier. 👉Finally, I am glad to provide the OpenSourceSectors, and everyone is welcome to adjust the code
 and help make it better by editting the code, adding new features, etc.
 
-💖If you want to report any bug or request a feature please [create a issue](https://github.com/Inder00/OpenSourceSectors/issues).
+💖If you want to report any bug or request a feature
+please [create a issue](https://github.com/Inder00/OpenSourceSectors/issues).
 
 # Requirements 📗
 

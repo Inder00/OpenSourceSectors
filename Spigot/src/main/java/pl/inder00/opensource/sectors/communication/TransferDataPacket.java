@@ -4,8 +4,8 @@ import com.google.protobuf.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import pl.inder00.opensource.sectors.Sectors;
 import pl.inder00.opensource.sectors.basic.impl.TransferDataImpl;
-import pl.inder00.opensource.sectors.basic.manager.TransferDataManager;
 import pl.inder00.opensource.sectors.protobuf.ProtobufTransferData;
 import pl.inder00.opensource.sectors.protocol.IProtobufData;
 import pl.inder00.opensource.sectors.protocol.packet.IPacket;
@@ -16,13 +16,13 @@ public class TransferDataPacket implements IPacket<ProtobufTransferData.Transfer
     /**
      * Data
      */
-    private JavaPlugin plugin;
+    private final Sectors sectors;
 
     /**
      * Implementation
      */
-    public TransferDataPacket(JavaPlugin plugin) {
-        this.plugin = plugin;
+    public TransferDataPacket(Sectors sectors) {
+        this.sectors = sectors;
     }
 
     @Override
@@ -34,20 +34,20 @@ public class TransferDataPacket implements IPacket<ProtobufTransferData.Transfer
     public <Y extends Message> Y execute(ProtobufTransferData.TransferPacket transferPacket) throws Throwable {
 
         // insert data into cache
-        IProtobufData<ProtobufTransferData.TransferPacket, Player> transferData = new TransferDataImpl(transferPacket);
-        TransferDataManager.cacheTransferData(transferData);
+        IProtobufData<ProtobufTransferData.TransferPacket, Player> transferData = new TransferDataImpl(this.sectors, transferPacket);
+        this.sectors.transferDataManager.save(transferData, ProtobufUtils.deserialize(transferData.getData().getPlayerUniqueId()));
 
         // check does target player is online
         Player targetPlayer = Bukkit.getPlayer(ProtobufUtils.deserialize(transferPacket.getPlayerUniqueId()));
         if (targetPlayer != null && targetPlayer.isOnline()) {
 
             // apply transfer data into player
-            Bukkit.getServer().getScheduler().runTask(this.plugin, () -> transferData.execute(targetPlayer));
+            Bukkit.getServer().getScheduler().runTask(this.sectors, () -> transferData.execute(targetPlayer));
 
         }
 
         // return null
-         return null;
+        return null;
 
     }
 

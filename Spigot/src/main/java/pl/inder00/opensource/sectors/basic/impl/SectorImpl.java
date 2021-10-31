@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import pl.inder00.opensource.sectors.Sectors;
 import pl.inder00.opensource.sectors.basic.ISector;
 import pl.inder00.opensource.sectors.basic.ISectorUser;
-import pl.inder00.opensource.sectors.basic.manager.SectorUserManager;
 import pl.inder00.opensource.sectors.events.PlayerChangeSectorEvent;
 import pl.inder00.opensource.sectors.logging.SectorLogger;
 import pl.inder00.opensource.sectors.protocol.ISectorClient;
@@ -24,17 +23,17 @@ public class SectorImpl implements ISector {
     /**
      * Sector data
      */
-    private Sectors sectors;
-    private UUID uniqueId;
-    private ISectorClient sectorClient;
-    private Logger logger;
-    private World world;
-    private int minX;
-    private int minZ;
-    private int maxX;
-    private int maxZ;
-    private int protectionDistance;
-    private int sectorChangeCooldown;
+    private final Sectors sectors;
+    private final UUID uniqueId;
+    private final ISectorClient sectorClient;
+    private final Logger logger;
+    private final World world;
+    private final int minX;
+    private final int minZ;
+    private final int maxX;
+    private final int maxZ;
+    private final int protectionDistance;
+    private final int sectorChangeCooldown;
 
     /**
      * Implementation
@@ -123,7 +122,7 @@ public class SectorImpl implements ISector {
 
         // check cooldown
         long currentTimeMillis = System.currentTimeMillis();
-        if ((SectorUserManager.getUserJoinTime(player.getUniqueId()) + this.sectorChangeCooldown) > currentTimeMillis) {
+        if ((sectorUser.getJoinTime() + this.sectorChangeCooldown) > currentTimeMillis) {
 
             // send message
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.sectors.languageProvider.getLocalizedMessage(sectorUser.getLocale(), "sector.change.cooldown")));
@@ -132,7 +131,7 @@ public class SectorImpl implements ISector {
         }
 
         // call sector change event
-        PlayerChangeSectorEvent event = new PlayerChangeSectorEvent(player, this);
+        PlayerChangeSectorEvent event = new PlayerChangeSectorEvent(this.sectors, player, this);
 
         // fire event
         Bukkit.getServer().getPluginManager().callEvent(event);

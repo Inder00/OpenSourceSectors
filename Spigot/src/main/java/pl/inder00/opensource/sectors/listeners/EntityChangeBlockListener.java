@@ -3,12 +3,19 @@ package pl.inder00.opensource.sectors.listeners;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
+import pl.inder00.opensource.sectors.Sectors;
 import pl.inder00.opensource.sectors.basic.ISector;
-import pl.inder00.opensource.sectors.basic.manager.SectorManager;
 
-public class EntityChangeBlockListener implements Listener {
+public class EntityChangeBlockListener extends AbstractListener {
+
+    /**
+     * Implementation
+     * @param sectors
+     */
+    public EntityChangeBlockListener(Sectors sectors) {
+        super(sectors);
+    }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onChangeBlock(EntityChangeBlockEvent e) {
@@ -18,7 +25,7 @@ public class EntityChangeBlockListener implements Listener {
         Location blockLocation = e.getBlock().getLocation();
 
         // current sector
-        ISector currentSector = SectorManager.getCurrentSector();
+        ISector currentSector = this.sectors.sectorManager.getCurrentSector();
         if (currentSector == null) return;
 
         // check is block inside protected area

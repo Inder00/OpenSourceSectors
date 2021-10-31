@@ -7,7 +7,7 @@ public class PacketManager {
     /**
      * List of packets
      */
-    private static ConcurrentHashMap<Short, IPacket> packetList = new ConcurrentHashMap<Short, IPacket>();
+    private static final ConcurrentHashMap<Short, IPacket> packetList = new ConcurrentHashMap<Short, IPacket>();
 
     /**
      * Register packet

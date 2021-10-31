@@ -1,7 +1,6 @@
 package pl.inder00.opensource.sectors.communication;
 
 import pl.inder00.opensource.sectors.Sectors;
-import pl.inder00.opensource.sectors.basic.manager.SectorManager;
 import pl.inder00.opensource.sectors.protobuf.ProtobufConfigurationData;
 import pl.inder00.opensource.sectors.protobuf.ProtobufGeneric;
 import pl.inder00.opensource.sectors.protocol.packet.IPacket;
@@ -11,13 +10,13 @@ public class ConfigurationPacket implements IPacket<ProtobufGeneric.EmptyMessage
     /**
      * Data
      */
-    private Sectors plugin;
+    private final Sectors sectors;
 
     /**
      * Implementation
      */
-    public ConfigurationPacket(Sectors plugin) {
-        this.plugin = plugin;
+    public ConfigurationPacket(Sectors sectors) {
+        this.sectors = sectors;
     }
 
     @Override
@@ -32,13 +31,13 @@ public class ConfigurationPacket implements IPacket<ProtobufGeneric.EmptyMessage
         ProtobufConfigurationData.ConfigurationPacket.Builder configurationPacketOutput = ProtobufConfigurationData.ConfigurationPacket.newBuilder();
 
         // write data
-        configurationPacketOutput.setVersion(this.plugin.getDescription().getVersion());
-        configurationPacketOutput.setProtectionDistance(this.plugin.pluginConfiguration.protectionDistance);
-        configurationPacketOutput.setChangeSectorCooldown(this.plugin.pluginConfiguration.sectorChangeCooldown);
-        configurationPacketOutput.setDefaultLanguage(this.plugin.messagesConfiguration.defaultLocale);
+        configurationPacketOutput.setVersion(this.sectors.getDescription().getVersion());
+        configurationPacketOutput.setProtectionDistance(this.sectors.pluginConfiguration.protectionDistance);
+        configurationPacketOutput.setChangeSectorCooldown(this.sectors.pluginConfiguration.sectorChangeCooldown);
+        configurationPacketOutput.setDefaultLanguage(this.sectors.messagesConfiguration.defaultLocale);
 
         // aliases configuration
-        this.plugin.messagesConfiguration.localeAliases.forEach((key, val) -> {
+        this.sectors.messagesConfiguration.localeAliases.forEach((key, val) -> {
             configurationPacketOutput.addAliases(ProtobufConfigurationData.ConfigurationAlias.newBuilder()
                     .setTarget(key)
                     .setSource(val)
@@ -46,7 +45,7 @@ public class ConfigurationPacket implements IPacket<ProtobufGeneric.EmptyMessage
         });
 
         // messages configuration
-        this.plugin.messagesConfiguration.messagesList.forEach((key, val) -> {
+        this.sectors.messagesConfiguration.messagesList.forEach((key, val) -> {
             configurationPacketOutput.addMessages(ProtobufConfigurationData.ConfigurationMessage.newBuilder()
                     .setKey(key)
                     .setValue(val)
@@ -54,22 +53,10 @@ public class ConfigurationPacket implements IPacket<ProtobufGeneric.EmptyMessage
         });
 
         // sectors
-        SectorManager.getSectorsList().forEach(sector -> {
+        this.sectors.sectorManager.getDataCollection().forEach(sector -> {
 
             // write data
-            configurationPacketOutput.addSectors(ProtobufGeneric.ProtoSector.newBuilder()
-                            .setUniqueId(ProtobufGeneric.ProtoUUID.newBuilder()
-                                    .setMostSig(sector.getUniqueId().getMostSignificantBits())
-                                    .setLeastSig(sector.getUniqueId().getLeastSignificantBits())
-                                    .build())
-                            .setInternalHostname(sector.getInternalServerHostname())
-                            .setInternalPort(sector.getInternalServerPort())
-                            .setWorldName(sector.getWorld())
-                            .setMinX(sector.getMinX())
-                            .setMinZ(sector.getMinZ())
-                            .setMaxX(sector.getMaxX())
-                            .setMaxZ(sector.getMaxZ())
-                    .build());
+            configurationPacketOutput.addSectors(sector.getProtobufSector());
 
         });
 

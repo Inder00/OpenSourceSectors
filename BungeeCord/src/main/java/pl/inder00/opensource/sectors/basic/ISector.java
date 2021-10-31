@@ -1,38 +1,32 @@
 package pl.inder00.opensource.sectors.basic;
 
 import net.md_5.bungee.api.config.ServerInfo;
+import pl.inder00.opensource.sectors.protobuf.ProtobufGeneric;
 
 import java.util.UUID;
 
 public interface ISector {
 
     /**
-     * Server unique id
+     * Returns sector unique id
      *
      * @return UUIDv3
      */
     UUID getUniqueId();
 
     /**
-     * BungeeCord sector server info
+     * Returns BungeeCord sector server info
      *
      * @return ServerInfo
      */
     ServerInfo getServerInfo();
 
     /**
-     * Internal server hostname / ip
+     * Returns reference of internal server
      *
-     * @return String
+     * @return IInternalServer
      */
-    String getInternalServerHostname();
-
-    /**
-     * Internal server port
-     *
-     * @return int
-     */
-    int getInternalServerPort();
+    IInternalServer getInternalServer();
 
     /**
      * World name
@@ -42,31 +36,38 @@ public interface ISector {
     String getWorld();
 
     /**
-     * The x coordinate of first corner
+     * Returns x coordinate of first corner
      *
      * @return int
      */
     int getMinX();
 
     /**
-     * The z coordinate of first corner
+     * Returns z coordinate of first corner
      *
      * @return int
      */
     int getMinZ();
 
     /**
-     * The x coordinate of second corner
+     * Returns x coordinate of second corner
      *
      * @return int
      */
     int getMaxX();
 
     /**
-     * The z coordinate of second coordinate
+     * Returns z coordinate of second coordinate
      *
      * @return int
      */
     int getMaxZ();
+
+    /**
+     * Returns protobuf sector implementation
+     *
+     * @return ProtoSector
+     */
+    ProtobufGeneric.ProtoSector getProtobufSector();
 
 }

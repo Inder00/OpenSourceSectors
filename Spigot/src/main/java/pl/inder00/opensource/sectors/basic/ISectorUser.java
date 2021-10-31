@@ -49,4 +49,11 @@ public interface ISectorUser {
      */
     void setTargetSector(ISector value, Location target);
 
+    /**
+     * Returns player sector join time in millis
+     * 
+     * @return long
+     */
+    long getJoinTime();
+
 }

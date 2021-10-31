@@ -5,12 +5,20 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
+import pl.inder00.opensource.sectors.Sectors;
 import pl.inder00.opensource.sectors.basic.ISector;
 import pl.inder00.opensource.sectors.basic.ISectorUser;
-import pl.inder00.opensource.sectors.basic.manager.SectorUserManager;
 import pl.inder00.opensource.sectors.utils.SpigotPayloadUtils;
 
-public class PlayerQuitListener implements Listener {
+public class PlayerQuitListener extends AbstractListener {
+
+    /**
+     * Implementation
+     * @param sectors
+     */
+    public PlayerQuitListener(Sectors sectors) {
+        super(sectors);
+    }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onQuit(PlayerQuitEvent event) {
@@ -18,11 +26,8 @@ public class PlayerQuitListener implements Listener {
         // values
         Player player = event.getPlayer();
 
-        // remove join time time
-        SectorUserManager.deleteJoinTimeUser(player.getUniqueId());
-
         // sector user
-        ISectorUser sectorUser = SectorUserManager.getUserByPlayerUniqueIdIfPresent(player.getUniqueId());
+        ISectorUser sectorUser = this.sectors.userManager.getByKey(player.getUniqueId());
         if (sectorUser != null) {
 
             // check does player is changing their sector
@@ -34,10 +39,10 @@ public class PlayerQuitListener implements Listener {
 
             }
 
-            // clear sector user
-            SectorUserManager.deleteSectorUser(sectorUser);
-
         }
+
+        // remove user from memory
+        this.sectors.userManager.delete(player.getUniqueId());
 
     }
 

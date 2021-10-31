@@ -7,9 +7,9 @@ public class I18nFactory implements I18n {
     /**
      * Data
      */
-    private String defaultLanguage;
-    private ConcurrentHashMap<String, String> aliases;
-    private ConcurrentHashMap<String, String> messages;
+    private final String defaultLanguage;
+    private final ConcurrentHashMap<String, String> aliases;
+    private final ConcurrentHashMap<String, String> messages;
 
     /**
      * Implementation

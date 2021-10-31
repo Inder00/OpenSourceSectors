@@ -14,6 +14,7 @@ public class SectorUserImpl implements ISectorUser {
      * Data
      */
     private final UUID uniqueId;
+    private final long joinTime;
     private String locale;
     private ISector targetSector;
     private Location targetLocation;
@@ -23,6 +24,7 @@ public class SectorUserImpl implements ISectorUser {
      */
     public SectorUserImpl(Player player) {
         this.uniqueId = player.getUniqueId();
+        this.joinTime = System.currentTimeMillis();
         this.locale = I18nUtils.getPlayerLocale(player);
     }
 
@@ -57,4 +59,8 @@ public class SectorUserImpl implements ISectorUser {
         return this.targetLocation;
     }
 
+    @Override
+    public long getJoinTime() {
+        return this.joinTime;
+    }
 }

@@ -5,9 +5,11 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.YamlConfiguration;
+import pl.inder00.opensource.sectors.Sectors;
+import pl.inder00.opensource.sectors.basic.IInternalServer;
 import pl.inder00.opensource.sectors.basic.ISector;
+import pl.inder00.opensource.sectors.basic.impl.InternalServerImpl;
 import pl.inder00.opensource.sectors.basic.impl.SectorImpl;
-import pl.inder00.opensource.sectors.basic.manager.SectorManager;
 import pl.inder00.opensource.sectors.configuration.exceptions.ConfigurationException;
 
 import java.io.File;
@@ -30,7 +32,7 @@ public class PluginConfiguration {
     /**
      * Configuration
      */
-    private Plugin plugin;
+    private final Sectors sectors;
     private Configuration yamlConfiguration;
 
     /**
@@ -38,10 +40,10 @@ public class PluginConfiguration {
      *
      * @param configurationFile Configuration java file
      */
-    public PluginConfiguration(Plugin plugin, File configurationFile) {
+    public PluginConfiguration(Sectors sectors, File configurationFile) {
 
         // set plugin
-        this.plugin = plugin;
+        this.sectors = sectors;
 
         // load configuration
         try {
@@ -94,24 +96,26 @@ public class PluginConfiguration {
                 if (serverInfo == null) throw new ConfigurationException("Server name is invalid");
 
                 // check for config collisions
-                if (SectorManager.getSectorByServerInfo(serverInfo) != null)
+                if (this.sectors.sectorManager.getSectorByServerInfo(serverInfo) != null)
                     throw new ConfigurationException("Server name in sector is already using by other sector");
-                if (SectorManager.getSectorByInternalServer(internalHostname, internalPort) != null)
+                if (this.sectors.sectorManager.getByInternalServer(internalHostname, internalPort) != null)
                     throw new ConfigurationException("Internal server configuration is colliding with other sector");
 
                 // create sector implementation
-                ISector sector = new SectorImpl(UUID.nameUUIDFromBytes(serverName.getBytes(StandardCharsets.UTF_8)), serverInfo, internalHostname, internalPort, worldName, minX, minZ, maxX, maxZ);
+                UUID sectorUniqueId = UUID.nameUUIDFromBytes(serverName.getBytes(StandardCharsets.UTF_8));
+                IInternalServer internalServer = new InternalServerImpl(internalHostname, internalPort);
+                ISector sector = new SectorImpl(sectorUniqueId, serverInfo, internalServer, worldName, minX, minZ, maxX, maxZ);
 
                 // add sector to manager
-                SectorManager.addSectorToList(sector);
+                this.sectors.sectorManager.save(sector, sectorUniqueId);
 
                 // log
-                this.plugin.getLogger().log(Level.INFO, String.format("Successfully registered \"%s\" (%s) sector.", key, serverName));
+                this.sectors.getLogger().log(Level.INFO, String.format("Successfully registered \"%s\" (%s) sector.", key, serverName));
 
             } catch (Throwable e) {
 
                 // log
-                this.plugin.getLogger().log(Level.SEVERE, String.format("Failed to register \"%s\" sector (%s).", key, e.getMessage()));
+                this.sectors.getLogger().log(Level.SEVERE, String.format("Failed to register \"%s\" sector (%s).", key, e.getMessage()));
 
                 // stop proxy
                 ProxyServer.getInstance().stop();

@@ -7,7 +7,6 @@ import org.bukkit.WorldBorder;
 import pl.inder00.opensource.sectors.Sectors;
 import pl.inder00.opensource.sectors.basic.ISector;
 import pl.inder00.opensource.sectors.basic.impl.SectorImpl;
-import pl.inder00.opensource.sectors.basic.manager.SectorManager;
 import pl.inder00.opensource.sectors.i18n.I18nFactory;
 import pl.inder00.opensource.sectors.protobuf.ProtobufConfigurationData;
 import pl.inder00.opensource.sectors.protobuf.ProtobufGeneric;
@@ -25,8 +24,8 @@ public class MasterServerClient extends DefaultSectorClient {
     /**
      * Data
      */
-    private Sectors plugin;
-    private String password;
+    private final Sectors plugin;
+    private final String password;
 
     /**
      * Implementation
@@ -43,11 +42,7 @@ public class MasterServerClient extends DefaultSectorClient {
     public void connectToMasterServer() {
         super.connect()
                 .doOnError(error -> {
-
-                    // log
                     this.plugin.getLogger().log(Level.SEVERE, "Failed connect to master server. Stopping server...");
-
-                    // stop proxy
                     this.plugin.getServer().shutdown();
 
                 })
@@ -66,7 +61,7 @@ public class MasterServerClient extends DefaultSectorClient {
                                     ProtobufConfigurationData.ConfigurationPacket configurationPacket = ProtobufConfigurationData.ConfigurationPacket.parseFrom(ByteString.copyFrom(response.getData()));
 
                                     // compare version
-                                    if(!this.plugin.getDescription().getVersion().equals(configurationPacket.getVersion())){
+                                    if (!this.plugin.getDescription().getVersion().equals(configurationPacket.getVersion())) {
 
                                         // log
                                         this.plugin.getLogger().log(Level.SEVERE, "Plugin version mismatch. Stopping server.");
@@ -76,14 +71,17 @@ public class MasterServerClient extends DefaultSectorClient {
 
                                     }
 
+                                    // Current sector RSocket endpoint
+                                    ISectorServer sectorServer = null;
+
                                     // load sectors
-                                    for(ProtobufGeneric.ProtoSector protoSector : configurationPacket.getSectorsList()){
+                                    for (ProtobufGeneric.ProtoSector protoSector : configurationPacket.getSectorsList()) {
 
                                         // sector uuid
                                         UUID uniqueId = ProtobufUtils.deserialize(protoSector.getUniqueId());
 
                                         // is current iterating sector is self sector?
-                                        if (uniqueId.equals(SectorManager.getCurrentSectorUniqueId())) {
+                                        if (uniqueId.equals(this.plugin.sectorManager.getCurrentSectorUniqueId())) {
 
                                             // world implementation
                                             World world = Bukkit.getWorld(protoSector.hasWorldName() ? protoSector.getWorldName() : "world");
@@ -101,15 +99,15 @@ public class MasterServerClient extends DefaultSectorClient {
                                             ISector sector = new SectorImpl(this.plugin, uniqueId, null, world, protoSector.getMinX(), protoSector.getMinZ(), protoSector.getMaxX(), protoSector.getMaxZ(), configurationPacket.getProtectionDistance(), configurationPacket.getChangeSectorCooldown());
 
                                             // create sector endpoint
-                                            SectorManager.setCurrentSectorEndpoint(new DefaultSectorServer(protoSector.getInternalHostname(), protoSector.getInternalPort(), this.password));
+                                            sectorServer = new DefaultSectorServer(protoSector.getInternalServer().getHostname(), protoSector.getInternalServer().getPort(), this.password);
 
                                             // add sector to manager
-                                            SectorManager.addSectorToList(sector);
+                                            this.plugin.sectorManager.save(sector, sector.getUniqueId());
 
                                         } else {
 
                                             // create socket implementation
-                                            ISector sector = new SectorImpl(this.plugin, uniqueId, new DefaultSectorClient(protoSector.getInternalHostname(), protoSector.getInternalPort(), this.password), null, protoSector.getMinX() - 3, protoSector.getMinZ() - 3, protoSector.getMaxX() + 3, protoSector.getMaxZ() + 3, configurationPacket.getProtectionDistance(), configurationPacket.getChangeSectorCooldown());
+                                            ISector sector = new SectorImpl(this.plugin, uniqueId, new DefaultSectorClient(protoSector.getInternalServer().getHostname(), protoSector.getInternalServer().getPort(), this.password), null, protoSector.getMinX() - 3, protoSector.getMinZ() - 3, protoSector.getMaxX() + 3, protoSector.getMaxZ() + 3, configurationPacket.getProtectionDistance(), configurationPacket.getChangeSectorCooldown());
 
                                             // connect to sector endpoint
                                             sector.getEndpoint().connect()
@@ -131,7 +129,7 @@ public class MasterServerClient extends DefaultSectorClient {
                                                     .subscribe();
 
                                             // add sector to manager
-                                            SectorManager.addSectorToList(sector);
+                                            this.plugin.sectorManager.save(sector, sector.getUniqueId());
 
                                         }
 
@@ -141,26 +139,26 @@ public class MasterServerClient extends DefaultSectorClient {
                                     this.plugin.languageProvider = new I18nFactory(configurationPacket.getDefaultLanguage());
 
                                     // aliases
-                                    for(ProtobufConfigurationData.ConfigurationAlias langMap : configurationPacket.getAliasesList()){
+                                    for (ProtobufConfigurationData.ConfigurationAlias langMap : configurationPacket.getAliasesList()) {
                                         this.plugin.languageProvider.addLocaleAlias(langMap.getSource(), langMap.getTarget());
                                     }
 
                                     // message
-                                    for(ProtobufConfigurationData.ConfigurationMessage msgMap : configurationPacket.getMessagesList()){
+                                    for (ProtobufConfigurationData.ConfigurationMessage msgMap : configurationPacket.getMessagesList()) {
                                         this.plugin.languageProvider.addLocalizedMessage(msgMap.getKey(), msgMap.getValue());
                                     }
 
                                     // log
-                                    this.plugin.getLogger().info(String.format("Loaded %d/%d sectors.", SectorManager.getSectorsCount(), configurationPacket.getSectorsCount()));
+                                    this.plugin.getLogger().info(String.format("Loaded %d/%d sectors.", this.plugin.sectorManager.getDataCount(), configurationPacket.getSectorsCount()));
 
                                     // check local sector is loaded
-                                    if (SectorManager.getCurrentSector() != null) {
+                                    if (this.plugin.sectorManager.getCurrentSector() != null && sectorServer != null) {
 
                                         // current sector
-                                        ISector currentSector = SectorManager.getCurrentSector();
+                                        ISector currentSector = this.plugin.sectorManager.getCurrentSector();
 
                                         // bind internal sector endpoint
-                                        SectorManager.getCurrentSectorEndpoint().bind()
+                                        sectorServer.bind()
                                                 .doOnError(sectorError -> {
 
                                                     // log

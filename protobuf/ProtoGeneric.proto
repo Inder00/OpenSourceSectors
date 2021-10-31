@@ -26,16 +26,21 @@ message ProtoLocation {
   optional float pitch = 6;
 }
 
+// Internal server
+message ProtoInternalServer {
+  required string hostname = 1;
+  required uint32 port = 2;
+}
+
 // Sector data
 message ProtoSector {
   required ProtoUUID uniqueId = 1;
-  optional string internalHostname = 2;
-  optional uint32 internalPort = 3;
-  optional string worldName = 4;
-  optional uint32 minX = 5;
-  optional uint32 minZ = 6;
-  optional uint32 maxX = 7;
-  optional uint32 maxZ = 8;
+  optional ProtoInternalServer internalServer = 2;
+  optional string worldName = 3;
+  optional uint32 minX = 4;
+  optional uint32 minZ = 5;
+  optional uint32 maxX = 6;
+  optional uint32 maxZ = 7;
 }
 
 message EmptyMessage {

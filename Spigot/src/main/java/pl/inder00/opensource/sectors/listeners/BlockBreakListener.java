@@ -3,12 +3,19 @@ package pl.inder00.opensource.sectors.listeners;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import pl.inder00.opensource.sectors.Sectors;
 import pl.inder00.opensource.sectors.basic.ISector;
-import pl.inder00.opensource.sectors.basic.manager.SectorManager;
 
-public class BlockBreakListener implements Listener {
+public class BlockBreakListener extends AbstractListener {
+
+    /**
+     * Implementation
+     * @param sectors
+     */
+    public BlockBreakListener(Sectors sectors) {
+        super(sectors);
+    }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onBreak(BlockBreakEvent e) {
@@ -18,7 +25,7 @@ public class BlockBreakListener implements Listener {
         Location blockLocation = e.getBlock().getLocation();
 
         // current sector
-        ISector currentSector = SectorManager.getCurrentSector();
+        ISector currentSector = this.sectors.sectorManager.getCurrentSector();
         if (currentSector == null) return;
 
         // check is block inside protected area

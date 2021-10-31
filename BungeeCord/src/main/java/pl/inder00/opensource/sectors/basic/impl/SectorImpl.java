@@ -1,7 +1,9 @@
 package pl.inder00.opensource.sectors.basic.impl;
 
 import net.md_5.bungee.api.config.ServerInfo;
+import pl.inder00.opensource.sectors.basic.IInternalServer;
 import pl.inder00.opensource.sectors.basic.ISector;
+import pl.inder00.opensource.sectors.protobuf.ProtobufGeneric;
 
 import java.util.UUID;
 
@@ -10,29 +12,33 @@ public class SectorImpl implements ISector {
     /**
      * Sector data
      */
-    private UUID uniqueId;
-    private ServerInfo serverInfo;
-    private String hostname;
-    private String world;
-    private int port;
-    private int xa;
-    private int za;
-    private int xb;
-    private int zb;
+    private final UUID uniqueId;
+    private final ServerInfo serverInfo;
+    private final IInternalServer internalServer;
+    private final String world;
+    private final int minX;
+    private final int minZ;
+    private final int maxX;
+    private final int maxZ;
+    private final ProtobufGeneric.ProtoSector protoSector;
 
     /**
      * Implementation
      */
-    public SectorImpl(UUID uniqueId, ServerInfo serverInfo, String hostname, int port, String world, int xa, int za, int xb, int zb) {
+    public SectorImpl(UUID uniqueId, ServerInfo serverInfo, IInternalServer internalServer, String world, int minX, int minZ, int maxX, int maxZ) {
+
+        // set data
         this.uniqueId = uniqueId;
         this.serverInfo = serverInfo;
-        this.hostname = hostname;
-        this.port = port;
+        this.internalServer = internalServer;
         this.world = world;
-        this.xa = xa;
-        this.xb = xb;
-        this.za = za;
-        this.zb = zb;
+        this.minX = minX;
+        this.minZ = minZ;
+        this.maxX = maxX;
+        this.maxZ = maxZ;
+
+        // build protobuf implementation
+        this.protoSector = ProtobufGeneric.ProtoSector.newBuilder().setUniqueId(ProtobufGeneric.ProtoUUID.newBuilder().setMostSig(this.uniqueId.getMostSignificantBits()).setLeastSig(this.uniqueId.getLeastSignificantBits()).build()).setInternalServer(ProtobufGeneric.ProtoInternalServer.newBuilder().setHostname(this.internalServer.getHostname()).setPort(this.internalServer.getPort()).build()).setWorldName(this.world).setMinX(this.minX).setMinZ(this.minZ).setMaxX(this.maxX).setMaxZ(this.maxZ).build();
     }
 
     @Override
@@ -46,13 +52,8 @@ public class SectorImpl implements ISector {
     }
 
     @Override
-    public String getInternalServerHostname() {
-        return this.hostname;
-    }
-
-    @Override
-    public int getInternalServerPort() {
-        return this.port;
+    public IInternalServer getInternalServer() {
+        return this.internalServer;
     }
 
     @Override
@@ -62,21 +63,26 @@ public class SectorImpl implements ISector {
 
     @Override
     public int getMinX() {
-        return this.xa;
+        return this.minX;
     }
 
     @Override
     public int getMinZ() {
-        return this.za;
+        return this.minZ;
     }
 
     @Override
     public int getMaxX() {
-        return this.xb;
+        return this.maxX;
     }
 
     @Override
     public int getMaxZ() {
-        return this.zb;
+        return this.maxZ;
+    }
+
+    @Override
+    public ProtobufGeneric.ProtoSector getProtobufSector() {
+        return this.protoSector;
     }
 }
