@@ -51,13 +51,6 @@
                                         <include>io.netty.**</include>
                                     </includes>
                                 </relocation>
-                                <relocation>
-                                    <pattern>com.google.protobuf</pattern>
-                                    <shadedPattern>io.rsocket.protobuf</shadedPattern>
-                                    <includes>
-                                        <include>com.google.protobuf.**</include>
-                                    </includes>
-                                </relocation>
                             </relocations>
                             <artifactSet>
                                 <excludes>
