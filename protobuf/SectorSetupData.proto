@@ -1,9 +1,11 @@
 // ProtoGeneric
 syntax = "proto2";
-package pl.inder00.opensource.sectors.protobuf;
+package pl.inder00.opensource.sectors.protocol.protobuf;
+import "ProtoGeneric.proto";
 option java_outer_classname = "ProtobufSectorSetup";
 
 // player uuids
 message SectorSetupPacket {
-  optional string password = 1;
+  required ProtoUUID uniqueId = 1;
+  optional string password = 2;
 }

@@ -10,6 +10,7 @@ import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
 
 import java.time.Duration;
+import java.util.UUID;
 
 public class DefaultSectorClient implements ISectorClient {
 
@@ -29,14 +30,14 @@ public class DefaultSectorClient implements ISectorClient {
     /**
      * Implementation
      */
-    public DefaultSectorClient(String hostname, int port) {
-        this(hostname, port, null);
+    public DefaultSectorClient(UUID uniqueId, String hostname, int port) {
+        this(uniqueId, hostname, port, null);
     }
 
     /**
      * Implementation
      */
-    public DefaultSectorClient(String hostname, int port, String password) {
+    public DefaultSectorClient(UUID uniqueId, String hostname, int port, String password) {
 
         // set server properties
         this.hostname = hostname;
@@ -47,7 +48,7 @@ public class DefaultSectorClient implements ISectorClient {
         this.socketConnector = RSocketConnector.create()
                 .keepAlive(Duration.ofSeconds(5), Duration.ofSeconds(10))
                 .payloadDecoder(PayloadDecoder.ZERO_COPY)
-                .setupPayload(ProtocolPayloadUtils.createSetupPayload(password))
+                .setupPayload(ProtocolPayloadUtils.createSetupPayload(uniqueId,password))
                 .fragment(65535)
                 .reconnect(Retry.fixedDelay(Integer.MAX_VALUE, Duration.ofSeconds(1)));
 

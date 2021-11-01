@@ -1,6 +1,6 @@
 // ProtoGeneric
 syntax = "proto2";
-package pl.inder00.opensource.sectors.protobuf;
+package pl.inder00.opensource.sectors.protocol.protobuf;
 import "google/protobuf/any.proto";
 option java_outer_classname = "ProtobufGeneric";
 
@@ -44,5 +44,7 @@ message ProtoSector {
 }
 
 message EmptyMessage {
+  message AnotherEmptyMessage {
 
+  }
 }

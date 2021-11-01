@@ -4,8 +4,11 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.rsocket.Payload;
 import io.rsocket.util.ByteBufPayload;
-import pl.inder00.opensource.sectors.protobuf.ProtobufSectorSetup;
+import pl.inder00.opensource.sectors.protocol.protobuf.ProtobufGeneric;
+import pl.inder00.opensource.sectors.protocol.protobuf.ProtobufSectorSetup;
 import pl.inder00.opensource.sectors.protocol.packet.EPacket;
+
+import java.util.UUID;
 
 public class ProtocolPayloadUtils {
 
@@ -15,8 +18,8 @@ public class ProtocolPayloadUtils {
      * @param password String / null
      * @return Initial payload
      */
-    public static Payload createSetupPayload(String password) {
-        return ByteBufPayload.create(ProtobufSectorSetup.SectorSetupPacket.newBuilder().setPassword(password != null ? password : "").build().toByteArray());
+    public static Payload createSetupPayload(UUID uniqueId, String password) {
+        return ByteBufPayload.create(ProtobufSectorSetup.SectorSetupPacket.newBuilder().setUniqueId(ProtobufGeneric.ProtoUUID.newBuilder().setLeastSig(uniqueId.getLeastSignificantBits()).setMostSig(uniqueId.getMostSignificantBits()).build()).setPassword(password != null ? password : "").build().toByteArray());
     }
 
     /**

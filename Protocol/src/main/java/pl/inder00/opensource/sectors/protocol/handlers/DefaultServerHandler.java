@@ -6,10 +6,13 @@ import io.netty.buffer.ByteBuf;
 import io.rsocket.Payload;
 import io.rsocket.RSocket;
 import io.rsocket.util.ByteBufPayload;
+import org.reactivestreams.Publisher;
+import org.reactivestreams.Subscriber;
 import pl.inder00.opensource.sectors.protocol.ISectorServer;
 import pl.inder00.opensource.sectors.protocol.exceptions.PacketException;
 import pl.inder00.opensource.sectors.protocol.packet.IPacket;
 import pl.inder00.opensource.sectors.protocol.packet.PacketManager;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public class DefaultServerHandler implements RSocket {
@@ -18,12 +21,14 @@ public class DefaultServerHandler implements RSocket {
      * Socket data
      */
     private final ISectorServer sectorServer;
+    private Subscriber<Payload> payloadSubscriber;
 
     /**
      * Implementation
      */
-    public DefaultServerHandler(ISectorServer sectorServer) {
+    public DefaultServerHandler(ISectorServer sectorServer, Subscriber<Payload> payloadSubscriber) {
         this.sectorServer = sectorServer;
+        this.payloadSubscriber = payloadSubscriber;
     }
 
     @Override
@@ -107,6 +112,17 @@ public class DefaultServerHandler implements RSocket {
             payload.release();
 
         }
+
+    }
+
+    @Override
+    public Flux<Payload> requestChannel(Publisher<Payload> payloads) {
+
+        // add payloads subscriber
+        payloads.subscribe(this.payloadSubscriber);
+
+        // return empty flux
+        return Flux.empty();
 
     }
 

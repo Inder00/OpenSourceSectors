@@ -1,12 +1,15 @@
 package pl.inder00.opensource.sectors.protocol.impl;
 
+import io.rsocket.Payload;
 import io.rsocket.RSocket;
 import io.rsocket.core.RSocketServer;
 import io.rsocket.frame.decoder.PayloadDecoder;
 import io.rsocket.transport.netty.server.CloseableChannel;
 import io.rsocket.transport.netty.server.TcpServerTransport;
+import org.reactivestreams.Subscriber;
 import pl.inder00.opensource.sectors.protocol.ISectorServer;
 import pl.inder00.opensource.sectors.protocol.handlers.DefaultServerAcceptor;
+import pl.inder00.opensource.sectors.protocol.IServerAcceptor;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
@@ -30,14 +33,14 @@ public class DefaultSectorServer implements ISectorServer {
     /**
      * Implementation
      */
-    public DefaultSectorServer(String hostname, int port) {
-        this(hostname, port, null);
+    public DefaultSectorServer(String hostname, int port, IServerAcceptor serverAcceptor, Subscriber<Payload> payloadSubscriber) {
+        this(hostname, port, null, serverAcceptor, payloadSubscriber);
     }
 
     /**
      * Implementation
      */
-    public DefaultSectorServer(String hostname, int port, String password) {
+    public DefaultSectorServer(String hostname, int port, String password, IServerAcceptor serverAcceptor, Subscriber<Payload> payloadSubscriber) {
 
         // set server properties
         this.hostname = hostname;
@@ -45,7 +48,7 @@ public class DefaultSectorServer implements ISectorServer {
         this.password = password;
 
         // create server implementation
-        this.socketServer = RSocketServer.create(new DefaultServerAcceptor(this));
+        this.socketServer = RSocketServer.create(new DefaultServerAcceptor(this, serverAcceptor, payloadSubscriber));
         this.socketServer.payloadDecoder(PayloadDecoder.ZERO_COPY);
         this.socketServer.fragment(65535);
 
