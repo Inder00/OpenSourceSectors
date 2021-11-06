@@ -1,7 +1,6 @@
 package pl.inder00.opensource.sectors.spigot.protocol;
 
 import pl.inder00.opensource.sectors.spigot.Sectors;
-import pl.inder00.opensource.sectors.protocol.IServerAcceptor;
 
 import java.util.UUID;
 

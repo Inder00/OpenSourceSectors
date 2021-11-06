@@ -7,7 +7,6 @@ import io.rsocket.util.DefaultPayload;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.reactivestreams.Subscriber;
 import pl.inder00.opensource.sectors.protocol.ISectorsStream;
-import pl.inder00.opensource.sectors.protocol.IStreamEmiter;
 import pl.inder00.opensource.sectors.protocol.exceptions.InvalidProtobufMessageException;
 import pl.inder00.opensource.sectors.protocol.handlers.stream.DefaultStreamSubscriber;
 import pl.inder00.opensource.sectors.spigot.basic.ISector;

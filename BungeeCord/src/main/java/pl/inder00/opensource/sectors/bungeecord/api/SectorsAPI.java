@@ -8,7 +8,6 @@ import net.md_5.bungee.api.plugin.Plugin;
 import pl.inder00.opensource.sectors.bungeecord.api.impl.SectorsStreamImpl;
 import pl.inder00.opensource.sectors.bungeecord.basic.ISector;
 import pl.inder00.opensource.sectors.protocol.ISectorsStream;
-import pl.inder00.opensource.sectors.protocol.IStreamEmiter;
 import pl.inder00.opensource.sectors.protocol.exceptions.InvalidProtobufMessageException;
 import pl.inder00.opensource.sectors.protocol.handlers.stream.DefaultStreamEmitter;
 import pl.inder00.opensource.sectors.protocol.stream.StreamManager;

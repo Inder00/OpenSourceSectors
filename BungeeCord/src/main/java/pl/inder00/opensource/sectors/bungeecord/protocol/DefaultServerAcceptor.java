@@ -1,7 +1,6 @@
 package pl.inder00.opensource.sectors.bungeecord.protocol;
 
 import pl.inder00.opensource.sectors.bungeecord.Sectors;
-import pl.inder00.opensource.sectors.protocol.IServerAcceptor;
 
 import java.util.UUID;
 

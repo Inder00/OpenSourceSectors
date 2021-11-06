@@ -1,22 +1,43 @@
 package pl.inder00.opensource.sectors.protocol;
 
-import io.rsocket.RSocket;
-import reactor.core.publisher.Mono;
+import com.google.protobuf.Message;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelPipeline;
+import pl.inder00.opensource.sectors.commons.basic.IInternalServer;
 
 public interface ISectorClient {
 
     /**
-     * RSocket client implementation
+     * Netty channel pipeline implementation
      *
-     * @return RSocketServer
+     * @return ChannelPipeline
      */
-    RSocket getRSocket();
+    ChannelPipeline getChannelPipeline();
 
     /**
-     * Connect to server
+     * Netty channel implementation
      *
-     * @return Mono of CloseableChannel
+     * @return Channel
      */
-    Mono<RSocket> connect();
+    Channel getChannel();
+
+    /**
+     * Connects to server
+     */
+    void connect(IInternalServer internalServer);
+
+    /**
+     * Returns boolean representing does client is connected to server
+     *
+     * @return boolean
+     */
+    boolean isConnected();
+
+    /**
+     * Sends protobuf message to server
+     *
+     * @param message Protobuf message
+     */
+    void sendData(Message message);
 
 }

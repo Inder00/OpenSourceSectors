@@ -1,27 +1,12 @@
 package pl.inder00.opensource.sectors.protocol;
 
 import com.google.protobuf.Message;
-import io.rsocket.Payload;
-import org.reactivestreams.Subscriber;
 import pl.inder00.opensource.sectors.protocol.exceptions.InvalidProtobufMessageException;
 
+import java.util.List;
 import java.util.Map;
 
 public interface ISectorsStream<T extends Message> {
-
-    /**
-     * Process data from socket stream
-     *
-     * @param payload Payload
-     */
-    void processData(Payload payload);
-
-    /**
-     * Get stream subsriber
-     *
-     * @return Subscriber
-     */
-    Subscriber<Payload> getSubsriber();
 
     /**
      * Returns stream manager
@@ -36,20 +21,6 @@ public interface ISectorsStream<T extends Message> {
      * @return Data
      */
     Data<T> getStreamListener();
-
-    /**
-     * Returns map of channels
-     *
-     * @return Map
-     */
-    Map<Class<?>, Integer> getChannels();
-
-    /**
-     * Returns stream emiter implementation
-     *
-     * @return IStreamEmiter
-     */
-    IStreamEmiter<Payload> getStreamEmiter();
 
     interface Data<T extends Message> {
 

@@ -7,7 +7,6 @@ import io.rsocket.util.DefaultPayload;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.reactivestreams.Subscriber;
 import pl.inder00.opensource.sectors.protocol.ISectorsStream;
-import pl.inder00.opensource.sectors.protocol.IStreamEmiter;
 import pl.inder00.opensource.sectors.bungeecord.basic.ISector;
 import pl.inder00.opensource.sectors.protocol.exceptions.InvalidProtobufMessageException;
 import pl.inder00.opensource.sectors.protocol.handlers.stream.DefaultStreamSubscriber;

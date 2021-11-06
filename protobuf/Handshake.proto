@@ -1,0 +1,16 @@
+// ProtoGeneric
+syntax = "proto2";
+package pl.inder00.opensource.sectors.protocol.protobuf;
+import "ProtoGeneric.proto";
+option java_outer_classname = "ProtobufHandshake";
+
+// player uuids
+message HandshakePacket {
+  message Client {
+    required ProtoUUID uniqueId = 1;
+    required string version = 2;
+  }
+  message Server {
+    required string version = 1;
+  }
+}

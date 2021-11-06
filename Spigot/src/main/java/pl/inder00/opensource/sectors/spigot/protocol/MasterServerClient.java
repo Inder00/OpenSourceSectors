@@ -10,14 +10,12 @@ import pl.inder00.opensource.sectors.spigot.Sectors;
 import pl.inder00.opensource.sectors.spigot.basic.ISector;
 import pl.inder00.opensource.sectors.spigot.basic.impl.SectorImpl;
 import pl.inder00.opensource.sectors.spigot.i18n.I18nFactory;
-import pl.inder00.opensource.sectors.spigot.utils.SpigotSerializationUtils;
 import pl.inder00.opensource.sectors.protocol.protobuf.ProtobufConfigurationData;
 import pl.inder00.opensource.sectors.protocol.protobuf.ProtobufGeneric;
 import pl.inder00.opensource.sectors.protocol.ISectorServer;
 import pl.inder00.opensource.sectors.protocol.impl.DefaultSectorClient;
 import pl.inder00.opensource.sectors.protocol.impl.DefaultSectorServer;
 import pl.inder00.opensource.sectors.protocol.packet.EPacket;
-import pl.inder00.opensource.sectors.protocol.utils.ProtocolPayloadUtils;
 
 import java.util.UUID;
 import java.util.logging.Level;
@@ -110,7 +108,7 @@ public class MasterServerClient extends DefaultSectorClient {
                                         } else {
 
                                             // create socket implementation
-                                            ISector sector = new SectorImpl(this.plugin, uniqueId, new DefaultSectorClient(Sectors.getSectorManager().getCurrentSectorUniqueId(), protoSector.getInternalServer().getHostname(), protoSector.getInternalServer().getPort(), this.password), null, protoSector.getMinX() - 3, protoSector.getMinZ() - 3, protoSector.getMaxX() + 3, protoSector.getMaxZ() + 3, configurationPacket.getProtectionDistance(), configurationPacket.getChangeSectorCooldown());
+                                            ISector sector = new SectorImpl(this.plugin, uniqueId, new DefaultSectorClient(Sectors.getSectorManager().getCurrentSectorUniqueId(), , this.password), null, protoSector.getMinX() - 3, protoSector.getMinZ() - 3, protoSector.getMaxX() + 3, protoSector.getMaxZ() + 3, configurationPacket.getProtectionDistance(), configurationPacket.getChangeSectorCooldown());
 
                                             // connect to sector endpoint
                                             sector.getEndpoint().connect()

@@ -1,66 +1,131 @@
 package pl.inder00.opensource.sectors.protocol.impl;
 
-import io.rsocket.RSocket;
-import io.rsocket.core.RSocketConnector;
-import io.rsocket.frame.decoder.PayloadDecoder;
-import io.rsocket.transport.netty.client.TcpClientTransport;
+import com.google.protobuf.Message;
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.*;
+import io.netty.channel.epoll.Epoll;
+import io.netty.channel.epoll.EpollEventLoopGroup;
+import io.netty.channel.epoll.EpollSocketChannel;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import pl.inder00.opensource.sectors.commons.basic.IInternalServer;
 import pl.inder00.opensource.sectors.protocol.ISectorClient;
-import pl.inder00.opensource.sectors.protocol.utils.ProtocolPayloadUtils;
-import reactor.core.publisher.Mono;
-import reactor.util.retry.Retry;
-
-import java.time.Duration;
-import java.util.UUID;
+import pl.inder00.opensource.sectors.protocol.exceptions.ProtocolException;
+import pl.inder00.opensource.sectors.protocol.handlers.client.DefaultClientChannelInitializer;
+import pl.inder00.opensource.sectors.protocol.listeners.ISectorClientListener;
 
 public class DefaultSectorClient implements ISectorClient {
 
     /**
      * Client properties
      */
-    private final String hostname;
-    private final String password;
-    private final int port;
+    private Bootstrap clientBootstrap;
+    private EventLoopGroup clientEventLoopGroup;
+    private final ISectorClientListener clientListener;
 
     /**
      * Client data
      */
-    private final RSocketConnector socketConnector;
-    private RSocket socketClient;
+    private Channel channel;
 
     /**
      * Implementation
      */
-    public DefaultSectorClient(UUID uniqueId, String hostname, int port) {
-        this(uniqueId, hostname, port, null);
+    public DefaultSectorClient(ISectorClientListener clientListener) {
+        this.clientListener = clientListener;
+        this.clientListener.onClientCreated(this);
     }
 
-    /**
-     * Implementation
-     */
-    public DefaultSectorClient(UUID uniqueId, String hostname, int port, String password) {
+    @Override
+    public ChannelPipeline getChannelPipeline() {
+        return this.channel.pipeline();
+    }
 
-        // set server properties
-        this.hostname = hostname;
-        this.port = port;
-        this.password = password;
+    @Override
+    public Channel getChannel() {
+        return this.channel;
+    }
 
-        // create socket connector implementation
-        this.socketConnector = RSocketConnector.create()
-                .keepAlive(Duration.ofSeconds(5), Duration.ofSeconds(10))
-                .payloadDecoder(PayloadDecoder.ZERO_COPY)
-                .setupPayload(ProtocolPayloadUtils.createSetupPayload(uniqueId,password))
-                .fragment(65535)
-                .reconnect(Retry.fixedDelay(Integer.MAX_VALUE, Duration.ofSeconds(1)));
+    @Override
+    public void connect(IInternalServer internalServer) {
+
+        try {
+
+            // check does client is already connected
+            if(this.isConnected()) throw new ProtocolException("Client is already connected");
+
+            // client boostrap
+            if(this.clientBootstrap == null){
+
+                // create bootstrap
+                this.clientEventLoopGroup = Epoll.isAvailable() ? new EpollEventLoopGroup(0) : new NioEventLoopGroup(0);
+                this.clientBootstrap = new Bootstrap();
+                this.clientBootstrap.group(this.clientEventLoopGroup);
+                this.clientBootstrap.channel(this.clientEventLoopGroup instanceof EpollEventLoopGroup ? EpollSocketChannel.class : NioSocketChannel.class);
+                this.clientBootstrap.option(ChannelOption.IP_TOS, 0x18); //https://students.mimuw.edu.pl/SO/Linux/Kod/include/linux/socket.h.html
+                this.clientBootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 1000);
+                this.clientBootstrap.handler(new DefaultClientChannelInitializer(this, this.clientListener));
+
+            }
+
+            // try connect to server
+            try {
+
+                // connect to server
+                ChannelFuture channelFuture = this.clientBootstrap.connect(internalServer.getHostname(), internalServer.getPort()).syncUninterruptibly();
+                if(channelFuture.isSuccess() && channelFuture.channel() != null){
+
+                    // update channel
+                    this.channel = channelFuture.channel();
+
+                } else {
+
+                    // reconnect
+                    this.connect(internalServer);
+
+                }
+
+            } catch (Throwable ex){
+
+                // trigger listener
+                this.clientListener.onClientException(this, ex);
+
+            }
+
+        } catch (Throwable e) {
+
+            // trigger listener
+            this.clientListener.onClientException(this, e);
+
+        }
 
     }
 
     @Override
-    public RSocket getRSocket() {
-        return this.socketClient;
+    public synchronized void sendData(Message message) {
+
+        try {
+
+            // check does client is already connected
+            if(!this.isConnected()) throw new ProtocolException("Client is not connected.");
+
+            // send data
+            synchronized (this){
+                this.channel.writeAndFlush(message);
+            }
+
+        } catch (Throwable e){
+
+            // trigger listener
+            this.clientListener.onClientException(this, e);
+
+        }
+
     }
 
     @Override
-    public Mono<RSocket> connect() {
-        return this.socketConnector.connect(TcpClientTransport.create(this.hostname, this.port)).doOnSuccess(socket -> this.socketClient = socket);
+    public boolean isConnected() {
+        return this.channel != null && this.channel.isActive() && this.channel.isOpen();
     }
+
 }

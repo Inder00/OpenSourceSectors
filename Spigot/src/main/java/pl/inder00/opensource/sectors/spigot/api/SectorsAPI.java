@@ -6,7 +6,6 @@ import io.rsocket.Payload;
 import net.jodah.typetools.TypeResolver;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.inder00.opensource.sectors.protocol.ISectorsStream;
-import pl.inder00.opensource.sectors.protocol.IStreamEmiter;
 import pl.inder00.opensource.sectors.protocol.exceptions.InvalidProtobufMessageException;
 import pl.inder00.opensource.sectors.protocol.handlers.stream.DefaultStreamEmitter;
 import pl.inder00.opensource.sectors.protocol.stream.StreamManager;
