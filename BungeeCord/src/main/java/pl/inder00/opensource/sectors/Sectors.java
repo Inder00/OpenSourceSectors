@@ -3,6 +3,7 @@ package pl.inder00.opensource.sectors;
 import net.md_5.bungee.api.ProxyServer;
 import pl.inder00.opensource.sectors.basic.ISectorManager;
 import pl.inder00.opensource.sectors.basic.manager.SectorManagerImpl;
+import pl.inder00.opensource.sectors.utils.bstats.Metrics;
 import pl.inder00.opensource.sectors.communication.ChangeServerPacket;
 import pl.inder00.opensource.sectors.communication.ConfigurationPacket;
 import pl.inder00.opensource.sectors.configuration.MessagesConfiguration;
@@ -105,6 +106,7 @@ public class Sectors extends AbstractPlugin {
 
         }
 
+        new Metrics(this,13144);
     }
 
 }
