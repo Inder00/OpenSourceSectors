@@ -1,6 +1,7 @@
 package pl.inder00.opensource.sectors.protocol;
 
 import com.google.protobuf.ByteString;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldBorder;
@@ -137,6 +138,9 @@ public class MasterServerClient extends DefaultSectorClient {
 
                                     // default language
                                     this.plugin.languageProvider = new I18nFactory(configurationPacket.getDefaultLanguage());
+
+                                    // bStats metrics
+                                    if (configurationPacket.getMetrics()) this.plugin.metrics = new Metrics(this.plugin, 13143);
 
                                     // aliases
                                     for (ProtobufConfigurationData.ConfigurationAlias langMap : configurationPacket.getAliasesList()) {

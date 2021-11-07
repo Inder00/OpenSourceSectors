@@ -1,5 +1,6 @@
 package pl.inder00.opensource.sectors;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.inder00.opensource.sectors.basic.IManager;
@@ -9,7 +10,6 @@ import pl.inder00.opensource.sectors.basic.manager.PositionDataManagerImpl;
 import pl.inder00.opensource.sectors.basic.manager.SectorManagerImpl;
 import pl.inder00.opensource.sectors.basic.manager.SectorUserManagerImpl;
 import pl.inder00.opensource.sectors.basic.manager.TransferDataManagerImpl;
-import pl.inder00.opensource.sectors.utils.bstats.Metrics;
 import pl.inder00.opensource.sectors.communication.PositionDataPacket;
 import pl.inder00.opensource.sectors.communication.TransferDataPacket;
 import pl.inder00.opensource.sectors.configuration.PluginConfiguration;
@@ -50,6 +50,11 @@ public class Sectors extends JavaPlugin {
      */
     private File configurationFile;
     private PluginConfiguration pluginConfiguration;
+
+    /**
+     * bStats metrics
+     */
+    public Metrics metrics;
 
     @Override
     public void onEnable() {
@@ -94,8 +99,6 @@ public class Sectors extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new PlayerBucketEmptyListener(this), this);
         this.getServer().getPluginManager().registerEvents(new PlayerBucketFillListener(this), this);
 
-        new Metrics(this, 13143);
     }
-
 
 }

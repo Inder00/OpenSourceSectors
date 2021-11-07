@@ -11,6 +11,9 @@ protection_distance: 20
 # Cooldown in seconds before player will be able to switch between sectors
 sector_change_cooldown: 20
 
+# Sends optional diagnostic statistic to bStats
+metrics: true
+
 # Master server configuration (master server is using to configure all endpoints servers and some technical things...)
 masterserver:
 

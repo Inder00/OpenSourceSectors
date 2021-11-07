@@ -35,6 +35,7 @@ public class ConfigurationPacket implements IPacket<ProtobufGeneric.EmptyMessage
         configurationPacketOutput.setProtectionDistance(this.sectors.pluginConfiguration.protectionDistance);
         configurationPacketOutput.setChangeSectorCooldown(this.sectors.pluginConfiguration.sectorChangeCooldown);
         configurationPacketOutput.setDefaultLanguage(this.sectors.messagesConfiguration.defaultLocale);
+        configurationPacketOutput.setMetrics(this.sectors.pluginConfiguration.metrics);
 
         // aliases configuration
         this.sectors.messagesConfiguration.localeAliases.forEach((key, val) -> {

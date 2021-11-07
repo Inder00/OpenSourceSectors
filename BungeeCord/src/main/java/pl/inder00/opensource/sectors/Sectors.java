@@ -1,9 +1,9 @@
 package pl.inder00.opensource.sectors;
 
 import net.md_5.bungee.api.ProxyServer;
+import org.bstats.bungeecord.Metrics;
 import pl.inder00.opensource.sectors.basic.ISectorManager;
 import pl.inder00.opensource.sectors.basic.manager.SectorManagerImpl;
-import pl.inder00.opensource.sectors.utils.bstats.Metrics;
 import pl.inder00.opensource.sectors.communication.ChangeServerPacket;
 import pl.inder00.opensource.sectors.communication.ConfigurationPacket;
 import pl.inder00.opensource.sectors.configuration.MessagesConfiguration;
@@ -34,6 +34,11 @@ public class Sectors extends AbstractPlugin {
      * Messages file
      */
     private File messagesFile;
+
+    /**
+     * bStats metrics
+     */
+    private Metrics metrics;
 
     /**
      * Master server
@@ -73,6 +78,9 @@ public class Sectors extends AbstractPlugin {
             this.messagesConfiguration = new MessagesConfiguration(this, this.messagesFile);
             this.messagesConfiguration.loadConfiguration();
 
+            // bStats metrics
+            if (this.pluginConfiguration.metrics) this.metrics = new Metrics(this, 13144);
+
             // create master server implementation and bind over tcp
             this.masterServer = new DefaultSectorServer(this.pluginConfiguration.masterHostname, this.pluginConfiguration.masterPort, this.pluginConfiguration.masterPassword != null ? (this.pluginConfiguration.masterPassword.length() > 0 ? this.pluginConfiguration.masterPassword : null) : null);
             this.masterServer.bind()
@@ -106,7 +114,6 @@ public class Sectors extends AbstractPlugin {
 
         }
 
-        new Metrics(this,13144);
     }
 
 }

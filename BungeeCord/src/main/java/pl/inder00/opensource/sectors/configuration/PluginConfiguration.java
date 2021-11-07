@@ -2,7 +2,6 @@ package pl.inder00.opensource.sectors.configuration;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.YamlConfiguration;
 import pl.inder00.opensource.sectors.Sectors;
@@ -28,6 +27,7 @@ public class PluginConfiguration {
     public String masterHostname;
     public int masterPort;
     public String masterPassword;
+    public boolean metrics;
 
     /**
      * Configuration
@@ -65,6 +65,7 @@ public class PluginConfiguration {
         this.masterHostname = this.yamlConfiguration.getString("masterserver.hostname", "127.0.0.1");
         this.masterPort = this.yamlConfiguration.getInt("masterserver.port", 8180);
         this.masterPassword = this.yamlConfiguration.getString("masterserver.password", "");
+        this.metrics = this.yamlConfiguration.getBoolean("metrics", true);
 
         // sectors
         for (String key : this.yamlConfiguration.getSection("sectors").getKeys()) {
