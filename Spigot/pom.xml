@@ -46,7 +46,7 @@
                             <relocations>
                                 <relocation>
                                     <pattern>io.netty</pattern>
-                                    <shadedPattern>io.rsocket.netty</shadedPattern>
+                                    <shadedPattern>pl.inder00.opensource.libs.netty</shadedPattern>
                                     <includes>
                                         <include>io.netty.**</include>
                                     </includes>
