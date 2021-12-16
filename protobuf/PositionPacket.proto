@@ -1,0 +1,9 @@
+syntax = "proto2";
+package pl.inder00.opensource.sectors.protocol.protobuf;
+import "ProtoGeneric.proto";
+option java_outer_classname = "PositionPacket";
+
+message PlayerPositionPacket {
+  required ProtoUUID playerUniqueId = 1;
+  required ProtoLocation playerPosition = 2;
+}

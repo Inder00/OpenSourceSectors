@@ -4,25 +4,25 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.bukkit.entity.Player;
 import pl.inder00.opensource.sectors.commons.managers.IManager;
-import pl.inder00.opensource.sectors.protocol.protobuf.ProtobufTransferData;
 import pl.inder00.opensource.sectors.protocol.IProtobufData;
+import pl.inder00.opensource.sectors.protocol.protobuf.TransferPacket;
 
 import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class TransferDataManagerImpl implements IManager<IProtobufData<ProtobufTransferData.TransferPacket, Player>, UUID> {
+public class TransferDataManagerImpl implements IManager<IProtobufData<TransferPacket.PlayerTransferPacket, Player>, UUID> {
 
     /**
      * Cached data
      */
-    private final Cache<UUID, IProtobufData<ProtobufTransferData.TransferPacket, Player>> transferDataCache = CacheBuilder.newBuilder()
+    private final Cache<UUID, IProtobufData<TransferPacket.PlayerTransferPacket, Player>> transferDataCache = CacheBuilder.newBuilder()
             .expireAfterWrite(30, TimeUnit.SECONDS)
             .concurrencyLevel(Runtime.getRuntime().availableProcessors())
             .build();
 
     @Override
-    public Collection<IProtobufData<ProtobufTransferData.TransferPacket, Player>> getDataCollection() {
+    public Collection<IProtobufData<TransferPacket.PlayerTransferPacket, Player>> getDataCollection() {
         return this.transferDataCache.asMap().values();
     }
 
@@ -32,12 +32,12 @@ public class TransferDataManagerImpl implements IManager<IProtobufData<ProtobufT
     }
 
     @Override
-    public IProtobufData<ProtobufTransferData.TransferPacket, Player> getByKey(UUID key) {
+    public IProtobufData<TransferPacket.PlayerTransferPacket, Player> getByKey(UUID key) {
         return this.transferDataCache.getIfPresent(key);
     }
 
     @Override
-    public void save(IProtobufData<ProtobufTransferData.TransferPacket, Player> data, UUID key) {
+    public void save(IProtobufData<TransferPacket.PlayerTransferPacket, Player> data, UUID key) {
         this.transferDataCache.put(key, data);
     }
 

@@ -33,7 +33,7 @@ public class PlayerTeleportListener implements Listener {
             if (targetSector != null && sectorUser.getTargetSector() == null) {
 
                 // send player to target sector
-                targetSector.send(Sectors.getMasterServer(), sectorUser, player, teleportLocation);
+                sectorUser.send(targetSector, teleportLocation);
 
             }
 

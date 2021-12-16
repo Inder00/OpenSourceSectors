@@ -2,24 +2,37 @@ package pl.inder00.opensource.sectors.protocol.pipelines;
 
 import com.google.protobuf.MessageLite;
 import com.google.protobuf.MessageLiteOrBuilder;
-import io.netty.channel.ChannelHandler;
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.MessageToMessageEncoder;
+import io.netty.handler.codec.MessageToByteEncoder;
 import pl.inder00.opensource.sectors.protocol.exceptions.ProtocolException;
+import pl.inder00.opensource.sectors.protocol.prototype.IPrototypeManager;
 
-import java.util.List;
+public class ProtobufEncoder extends MessageToByteEncoder<MessageLiteOrBuilder> {
 
-import static io.netty.buffer.Unpooled.wrappedBuffer;
+    /**
+     * Data
+     */
+    private IPrototypeManager prototypeManager;
 
-@ChannelHandler.Sharable
-public class ProtobufEncoder extends MessageToMessageEncoder<MessageLiteOrBuilder> {
+    /**
+     * Implementation
+     */
+    public ProtobufEncoder(IPrototypeManager prototypeManager) {
+        this.prototypeManager = prototypeManager;
+    }
 
     @Override
-    protected void encode(ChannelHandlerContext ctx, MessageLiteOrBuilder msg, List<Object> out) throws Exception {
+    protected void encode(ChannelHandlerContext ctx, MessageLiteOrBuilder msg, ByteBuf out) throws Exception {
 
         // protobuf message
         if (msg instanceof MessageLite) {
-            out.add(wrappedBuffer(((MessageLite) msg).toByteArray()));
+
+            // message class
+            out.writeInt( msg.getClass().hashCode() );
+
+            // data
+            out.writeBytes( ((MessageLite) msg).toByteArray() );
             return;
         }
 
@@ -27,5 +40,4 @@ public class ProtobufEncoder extends MessageToMessageEncoder<MessageLiteOrBuilde
         throw new ProtocolException("Invalid message type");
 
     }
-
 }

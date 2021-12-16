@@ -1,6 +1,7 @@
 package pl.inder00.opensource.sectors.protocol.listeners;
 
 import io.netty.channel.Channel;
+import pl.inder00.opensource.sectors.protocol.ISectorConnection;
 import pl.inder00.opensource.sectors.protocol.ISectorServer;
 
 public interface ISectorServerListener {
@@ -45,8 +46,33 @@ public interface ISectorServerListener {
      * Triggered when occurred exception in client handler
      *
      * @param server ISectorServer
+     * @param connection ISectorConnection
      * @param throwable Throwable
      */
-    void onServerClientException(ISectorServer server, Channel channel, Throwable throwable);
+    void onServerClientException(ISectorServer server, ISectorConnection connection, Throwable throwable);
+
+    /**
+     * Triggered when new client connects to server
+     *
+     * @param server ISectorServer
+     * @param connection ISectorConnection
+     */
+    void onServerClientConnect(ISectorServer server, ISectorConnection connection);
+
+    /**
+     * Triggered when client disconnects from server
+     *
+     * @param server ISectorServer
+     * @param connection ISectorConnection
+     */
+    void onServerClientDisconnect(ISectorServer server, ISectorConnection connection);
+
+    /**
+     * Triggered when client is ready to communicate
+     *
+     * @param server ISectorServer
+     * @param connection ISectorConnection
+     */
+    void onServerClientReady(ISectorServer server, ISectorConnection connection);
 
 }

@@ -1,30 +1,28 @@
 package pl.inder00.opensource.sectors.spigot.basic.impl;
 
 import org.bukkit.entity.Player;
+import pl.inder00.opensource.sectors.protocol.protobuf.PositionPacket;
 import pl.inder00.opensource.sectors.protocol.utils.ProtocolSerializationUtils;
 import pl.inder00.opensource.sectors.spigot.Sectors;
 import pl.inder00.opensource.sectors.spigot.utils.SpigotSerializationUtils;
-import pl.inder00.opensource.sectors.protocol.protobuf.ProtobufPositionData;
 import pl.inder00.opensource.sectors.protocol.IProtobufData;
 
-public class PositionDataImpl implements IProtobufData<ProtobufPositionData.PositionPacket, Player> {
+public class PositionDataImpl implements IProtobufData<PositionPacket.PlayerPositionPacket, Player> {
 
     /**
      * Data
      */
-    private final Sectors sectors;
-    private final ProtobufPositionData.PositionPacket positionData;
+    private final PositionPacket.PlayerPositionPacket positionData;
 
     /**
      * Constructor
      */
-    public PositionDataImpl(Sectors sectors, ProtobufPositionData.PositionPacket positionData) {
-        this.sectors = sectors;
+    public PositionDataImpl(PositionPacket.PlayerPositionPacket positionData) {
         this.positionData = positionData;
     }
 
     @Override
-    public ProtobufPositionData.PositionPacket getData() {
+    public PositionPacket.PlayerPositionPacket getData() {
         return this.positionData;
     }
 

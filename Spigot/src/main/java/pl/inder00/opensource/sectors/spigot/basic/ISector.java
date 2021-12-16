@@ -81,25 +81,6 @@ public interface ISector {
     Logger getLogger();
 
     /**
-     * Send player to sector
-     *
-     * @param masterserver Connection to the master server
-     * @param sectorUser   Sector user
-     * @param player       A reference to the player
-     */
-    void send(ISectorClient masterserver, ISectorUser sectorUser, Player player);
-
-    /**
-     * Send player to sector with specified location
-     *
-     * @param masterserver Connection to the master server
-     * @param location     Location
-     * @param sectorUser   Sector user
-     * @param player       A reference to the player
-     */
-    void send(ISectorClient masterserver, ISectorUser sectorUser, Player player, Location location);
-
-    /**
      * Returning a boolean representing does location is in sector area
      *
      * @param location Location

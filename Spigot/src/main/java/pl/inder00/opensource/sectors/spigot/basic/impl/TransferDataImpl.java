@@ -4,33 +4,30 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.potion.PotionEffect;
-import pl.inder00.opensource.sectors.commons.serialization.CommonsSerializationUtils;
+import pl.inder00.opensource.sectors.protocol.protobuf.TransferPacket;
 import pl.inder00.opensource.sectors.protocol.utils.ProtocolSerializationUtils;
 import pl.inder00.opensource.sectors.spigot.Sectors;
-import pl.inder00.opensource.sectors.protocol.protobuf.ProtobufTransferData;
 import pl.inder00.opensource.sectors.protocol.IProtobufData;
 import pl.inder00.opensource.sectors.spigot.utils.SpigotSerializationUtils;
 
 import java.util.Collection;
 
-public class TransferDataImpl implements IProtobufData<ProtobufTransferData.TransferPacket, Player> {
+public class TransferDataImpl implements IProtobufData<TransferPacket.PlayerTransferPacket, Player> {
 
     /**
      * Data
      */
-    private final Sectors sectors;
-    private final ProtobufTransferData.TransferPacket transferData;
+    private final TransferPacket.PlayerTransferPacket transferData;
 
     /**
      * Implementation
      */
-    public TransferDataImpl(Sectors sectors, ProtobufTransferData.TransferPacket transferData) {
-        this.sectors = sectors;
+    public TransferDataImpl(TransferPacket.PlayerTransferPacket transferData) {
         this.transferData = transferData;
     }
 
     @Override
-    public ProtobufTransferData.TransferPacket getData() {
+    public TransferPacket.PlayerTransferPacket getData() {
         return this.transferData;
     }
 
@@ -38,10 +35,10 @@ public class TransferDataImpl implements IProtobufData<ProtobufTransferData.Tran
     public void execute(Player player) {
 
         // player abilities
-        ProtobufTransferData.ProtoPlayerAbilities playerAbilities = this.transferData.getPlayerAbilities();
+        TransferPacket.ProtoPlayerAbilities playerAbilities = this.transferData.getPlayerAbilities();
 
         // player inventory
-        ProtobufTransferData.ProtoPlayerInventory playerInventory = this.transferData.getPlayerInventory();
+        TransferPacket.ProtoPlayerInventory playerInventory = this.transferData.getPlayerInventory();
 
         // apply data to player
         player.teleport(SpigotSerializationUtils.deserialize(Sectors.getSectorManager().getCurrentSector().getWorld(), this.transferData.getPlayerLocation()), PlayerTeleportEvent.TeleportCause.PLUGIN);

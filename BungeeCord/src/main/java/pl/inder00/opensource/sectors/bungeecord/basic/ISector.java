@@ -1,8 +1,8 @@
 package pl.inder00.opensource.sectors.bungeecord.basic;
 
-import io.rsocket.RSocket;
 import net.md_5.bungee.api.config.ServerInfo;
 import pl.inder00.opensource.sectors.commons.basic.IInternalServer;
+import pl.inder00.opensource.sectors.protocol.ISectorClient;
 import pl.inder00.opensource.sectors.protocol.protobuf.ProtobufGeneric;
 
 import java.util.UUID;
@@ -19,9 +19,9 @@ public interface ISector {
     /**
      * Returns socket implementation to sector
      *
-     * @return RSocket
+     * @return ISectorClient
      */
-    RSocket getSocket();
+    ISectorClient getSocket();
 
     /**
      * Returns BungeeCord sector server info
@@ -78,12 +78,5 @@ public interface ISector {
      * @return ProtoSector
      */
     ProtobufGeneric.ProtoSector getProtobufSector();
-
-    /**
-     * Sets socket implementation to sector
-     *
-     * @param socket RSocket
-     */
-    void setSocket(RSocket socket);
 
 }

@@ -1,12 +1,14 @@
 package pl.inder00.opensource.sectors.protocol.handlers.client;
 
 import com.google.protobuf.Message;
+import com.google.protobuf.MessageLite;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import pl.inder00.opensource.sectors.protocol.ISectorClient;
 import pl.inder00.opensource.sectors.protocol.listeners.ISectorClientListener;
+import pl.inder00.opensource.sectors.protocol.prototype.IPrototypeListener;
 
-public class DefaultClientHandler extends SimpleChannelInboundHandler<Message> {
+public class DefaultClientHandler extends SimpleChannelInboundHandler<MessageLite> {
 
     /**
      * Socket data
@@ -23,7 +25,12 @@ public class DefaultClientHandler extends SimpleChannelInboundHandler<Message> {
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, Message msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, MessageLite msg) throws Exception {
+
+        // push message to listeners
+        for (IPrototypeListener<MessageLite> listener : this.sectorClient.getPrototypeManager().getListenersByPrototype(msg)) {
+            listener.onReceivedData(msg);
+        }
 
     }
 

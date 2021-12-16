@@ -1,9 +1,10 @@
 package pl.inder00.opensource.sectors.bungeecord.basic.impl;
 
-import io.rsocket.RSocket;
 import net.md_5.bungee.api.config.ServerInfo;
 import pl.inder00.opensource.sectors.bungeecord.basic.ISector;
 import pl.inder00.opensource.sectors.commons.basic.IInternalServer;
+import pl.inder00.opensource.sectors.protocol.ISectorClient;
+import pl.inder00.opensource.sectors.protocol.impl.DefaultSectorClient;
 import pl.inder00.opensource.sectors.protocol.protobuf.ProtobufGeneric;
 
 import java.util.UUID;
@@ -22,7 +23,7 @@ public class SectorImpl implements ISector {
     private final int maxX;
     private final int maxZ;
     private final ProtobufGeneric.ProtoSector protoSector;
-    private RSocket socket;
+    private ISectorClient socket;
 
     /**
      * Implementation
@@ -41,6 +42,9 @@ public class SectorImpl implements ISector {
 
         // build protobuf implementation
         this.protoSector = ProtobufGeneric.ProtoSector.newBuilder().setUniqueId(ProtobufGeneric.ProtoUUID.newBuilder().setMostSig(this.uniqueId.getMostSignificantBits()).setLeastSig(this.uniqueId.getLeastSignificantBits()).build()).setInternalServer(ProtobufGeneric.ProtoInternalServer.newBuilder().setHostname(this.internalServer.getHostname()).setPort(this.internalServer.getPort()).build()).setWorldName(this.world).setMinX(this.minX).setMinZ(this.minZ).setMaxX(this.maxX).setMaxZ(this.maxZ).build();
+
+        // build socket implementation
+        this.socket = new DefaultSectorClient(null);
     }
 
     @Override
@@ -89,12 +93,8 @@ public class SectorImpl implements ISector {
     }
 
     @Override
-    public RSocket getSocket() {
+    public ISectorClient getSocket() {
         return this.socket;
     }
 
-    @Override
-    public void setSocket(RSocket socket) {
-        this.socket = socket;
-    }
 }

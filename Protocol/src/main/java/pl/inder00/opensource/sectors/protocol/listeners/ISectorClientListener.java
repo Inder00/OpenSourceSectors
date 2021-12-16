@@ -12,6 +12,13 @@ public interface ISectorClientListener {
     void onClientCreated(ISectorClient client);
 
     /**
+     * Triggered when client is ready to communicate after valid handshake exchange
+     *
+     * @param client ISectorClient
+     */
+    void onClientReady(ISectorClient client);
+
+    /**
      * Triggered when sector client connects to server
      *
      * @param client ISectorClient
