@@ -23,7 +23,6 @@ public class SectorImpl implements ISector {
     private final int maxX;
     private final int maxZ;
     private final ProtobufGeneric.ProtoSector protoSector;
-    private ISectorClient socket;
 
     /**
      * Implementation
@@ -43,8 +42,6 @@ public class SectorImpl implements ISector {
         // build protobuf implementation
         this.protoSector = ProtobufGeneric.ProtoSector.newBuilder().setUniqueId(ProtobufGeneric.ProtoUUID.newBuilder().setMostSig(this.uniqueId.getMostSignificantBits()).setLeastSig(this.uniqueId.getLeastSignificantBits()).build()).setInternalServer(ProtobufGeneric.ProtoInternalServer.newBuilder().setHostname(this.internalServer.getHostname()).setPort(this.internalServer.getPort()).build()).setWorldName(this.world).setMinX(this.minX).setMinZ(this.minZ).setMaxX(this.maxX).setMaxZ(this.maxZ).build();
 
-        // build socket implementation
-        this.socket = new DefaultSectorClient(null);
     }
 
     @Override
@@ -90,11 +87,6 @@ public class SectorImpl implements ISector {
     @Override
     public ProtobufGeneric.ProtoSector getProtobufSector() {
         return this.protoSector;
-    }
-
-    @Override
-    public ISectorClient getSocket() {
-        return this.socket;
     }
 
 }

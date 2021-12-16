@@ -17,13 +17,6 @@ public interface ISector {
     UUID getUniqueId();
 
     /**
-     * Returns socket implementation to sector
-     *
-     * @return ISectorClient
-     */
-    ISectorClient getSocket();
-
-    /**
      * Returns BungeeCord sector server info
      *
      * @return ServerInfo
