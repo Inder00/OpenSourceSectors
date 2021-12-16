@@ -118,6 +118,9 @@ public class DefaultSectorClient implements ISectorClient {
 
                 } else {
 
+                    // sleep 100 millis
+                    Thread.sleep(100L);
+
                     // reconnect
                     this.connect(internalServer);
 
@@ -125,8 +128,11 @@ public class DefaultSectorClient implements ISectorClient {
 
             } catch (Throwable ex){
 
-                // trigger listener
-                this.clientListener.onClientException(this, ex);
+                // sleep 100 millis
+                Thread.sleep(100L);
+
+                // reconnect
+                this.connect(internalServer);
 
             }
 

@@ -38,7 +38,7 @@ public class DefaultMasterServerListener extends AbstractSectorClientListener {
     public void onClientException(ISectorClient client, Throwable throwable) {
 
         // log
-        this.plugin.getLogger().log(Level.SEVERE, "Connection to sector endpoint @ " + client.getChannel().remoteAddress().toString() + " occurred an error.", throwable);
+        this.plugin.getLogger().log(Level.SEVERE, "Connection to master server occurred an error.", throwable);
 
     }
 }
