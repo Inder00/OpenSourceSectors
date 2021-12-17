@@ -1,47 +1,69 @@
 package pl.inder00.opensource.sectors.protocol;
 
-import io.rsocket.RSocket;
-import io.rsocket.core.RSocketServer;
-import io.rsocket.transport.netty.server.CloseableChannel;
-import reactor.core.publisher.Mono;
+import io.netty.channel.Channel;
+import pl.inder00.opensource.sectors.commons.basic.IInternalServer;
+import pl.inder00.opensource.sectors.protocol.exceptions.ProtocolException;
+import pl.inder00.opensource.sectors.protocol.listeners.ISectorServerListener;
+import pl.inder00.opensource.sectors.protocol.prototype.IPrototypeManager;
 
 import java.util.List;
 
 public interface ISectorServer {
 
     /**
-     * RSocket server implementation
+     * Server channel implementation
      *
-     * @return RSocketServer
+     * @return Channel
      */
-    RSocketServer getSocketServer();
-
-    /**
-     * Server password
-     *
-     * @return String
-     */
-    String getPassword();
-
-    /**
-     * Update server password
-     *
-     * @param password String / null
-     */
-    void setPassword(String password);
+    Channel getServerChannel();
 
     /**
      * List of connections to server
      *
-     * @return Array of RSocket
+     * @return Array of Connections
      */
-    List<RSocket> getListOfConnections();
+    List<ISectorConnection> getConnectionsList();
 
     /**
-     * Bind server over tcp
+     * Returns sector connection by channel
      *
-     * @return Mono of CloseableChannel
+     * @param channel Channel
+     * @return ISectorConnection
      */
-    Mono<CloseableChannel> bind();
+    ISectorConnection getConnectionByChannel(Channel channel);
+
+    /**
+     * Prototype manager implementation
+     *
+     * @return Prototype manager
+     */
+    IPrototypeManager getPrototypeManager();
+
+    /**
+     * Returns server listener implementation
+     *
+     * @return ISectorServerListener
+     */
+    ISectorServerListener getServerListener();
+
+    /**
+     * Bind server
+     * Locks thread until response.
+     *
+     * @throws ProtocolException
+     */
+    void bind(IInternalServer internalServer);
+
+    /**
+     * Returns boolean representing does server is currently bound and active
+     *
+     * @return boolean
+     */
+    boolean isActive();
+
+    /**
+     * Shutdowns netty server
+     */
+    void shutdown();
 
 }

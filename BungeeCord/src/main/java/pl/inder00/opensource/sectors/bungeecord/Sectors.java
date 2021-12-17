@@ -3,48 +3,82 @@ package pl.inder00.opensource.sectors.bungeecord;
 import net.md_5.bungee.api.ProxyServer;
 import pl.inder00.opensource.sectors.bungeecord.basic.ISectorManager;
 import pl.inder00.opensource.sectors.bungeecord.basic.manager.SectorManagerImpl;
-import pl.inder00.opensource.sectors.bungeecord.communication.ChangeServerPacket;
-import pl.inder00.opensource.sectors.bungeecord.communication.ConfigurationPacket;
+import pl.inder00.opensource.sectors.bungeecord.communication.configuration.ConfigurationRequestPacket;
+import pl.inder00.opensource.sectors.bungeecord.communication.encryption.EncryptionFinishPacket;
+import pl.inder00.opensource.sectors.bungeecord.communication.encryption.EncryptionServerHelloPacket;
+import pl.inder00.opensource.sectors.bungeecord.communication.server.ChangeServerPacket;
 import pl.inder00.opensource.sectors.bungeecord.configuration.MessagesConfiguration;
 import pl.inder00.opensource.sectors.bungeecord.configuration.PluginConfiguration;
 import pl.inder00.opensource.sectors.bungeecord.plugin.AbstractPlugin;
-import pl.inder00.opensource.sectors.bungeecord.protocol.DefaultServerAcceptor;
+import pl.inder00.opensource.sectors.bungeecord.protocol.AbstractMasterServerListener;
+import pl.inder00.opensource.sectors.commons.basic.impl.InternalServerImpl;
+import pl.inder00.opensource.sectors.commons.encryption.IKeyExchangeProvider;
+import pl.inder00.opensource.sectors.commons.encryption.impl.DefaultDiffieHellmanProvider;
 import pl.inder00.opensource.sectors.protocol.ISectorServer;
-import pl.inder00.opensource.sectors.protocol.handlers.stream.ServerStreamSubscriber;
 import pl.inder00.opensource.sectors.protocol.impl.DefaultSectorServer;
-import pl.inder00.opensource.sectors.protocol.packet.EPacket;
-import pl.inder00.opensource.sectors.protocol.packet.PacketManager;
+import pl.inder00.opensource.sectors.protocol.protobuf.ConfigurationPacket;
+import pl.inder00.opensource.sectors.protocol.protobuf.EncryptionPacket;
+import pl.inder00.opensource.sectors.protocol.protobuf.ServerPacket;
 
 import java.io.File;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.logging.Level;
 
 public class Sectors extends AbstractPlugin {
 
     /**
+     * Master server
+     */
+    private static ISectorServer masterServer;
+    /**
+     * Sector manager
+     */
+    private static ISectorManager sectorManager;
+    /**
+     * Encryption provider
+     */
+    private static IKeyExchangeProvider keyExchangeProvider;
+    /**
      * Plugin configurations
      */
     public PluginConfiguration pluginConfiguration;
     public MessagesConfiguration messagesConfiguration;
-
     /**
      * Configuration file
      */
     private File configurationFile;
-
     /**
      * Messages file
      */
     private File messagesFile;
 
     /**
-     * Master server
+     * Returns bungeecord's master server
+     *
+     * @return ISectorServer
      */
-    private static ISectorServer masterServer;
+    public static ISectorServer getMasterServer() {
+        return masterServer;
+    }
 
     /**
-     * Sector manager
+     * Returns sector manager
+     *
+     * @return ISectorManager
      */
-    private static ISectorManager sectorManager;
+    public static ISectorManager getSectorManager() {
+        return sectorManager;
+    }
+
+    /**
+     * Returns encryption provider
+     *
+     * @return IEncryptionProvider
+     */
+    public static IKeyExchangeProvider getKeyExchangeProvider() {
+        return keyExchangeProvider;
+    }
 
     @Override
     public void onEnable() {
@@ -74,29 +108,43 @@ public class Sectors extends AbstractPlugin {
             this.messagesConfiguration = new MessagesConfiguration(this, this.messagesFile);
             this.messagesConfiguration.loadConfiguration();
 
-            // create master server implementation and bind over tcp
-            masterServer = new DefaultSectorServer(this.pluginConfiguration.masterHostname, this.pluginConfiguration.masterPort, this.pluginConfiguration.masterPassword != null ? (this.pluginConfiguration.masterPassword.length() > 0 ? this.pluginConfiguration.masterPassword : null) : null, new DefaultServerAcceptor(), new ServerStreamSubscriber());
-            masterServer.bind()
-                    .doOnError(error -> {
+            // create encryption provider implementation
+            if (this.pluginConfiguration.encryptTraffic) {
 
-                        // log
-                        this.getLogger().log(Level.SEVERE, "Failed to bind master server. Stopping proxy...");
+                // create key exchange provider
+                keyExchangeProvider = new DefaultDiffieHellmanProvider(1024);
 
-                        // stop proxy
-                        this.getProxy().stop();
+                // test
+                try {
 
-                    })
-                    .doOnSuccess(success -> {
+                    // test key exchange provider
+                    assert keyExchangeProvider.generateKey(new BigInteger(1024, new SecureRandom())) != null;
 
-                        // log
-                        this.getLogger().info("Successfully bound master server.");
+                } catch (Throwable e) {
 
-                    })
-                    .subscribe();
+                    // log
+                    this.getLogger().log(Level.SEVERE, "Failed to setup encryption provider. Stopping proxy...");
 
-            // register masterserver packets
-            PacketManager.registerPacket(EPacket.CONFIGURATION_REQUEST, new ConfigurationPacket(this));
-            PacketManager.registerPacket(EPacket.SERVER_CHANGE, new ChangeServerPacket(this));
+                    // stop proxy
+                    this.getProxy().stop();
+
+                }
+
+            }
+
+            // create master server implementation
+            masterServer = new DefaultSectorServer(new AbstractMasterServerListener(this));
+
+            // register required prototypes listeners
+            masterServer.getPrototypeManager().registerPrototype(ConfigurationPacket.Request.class);
+            masterServer.getPrototypeManager().registerPrototype(ServerPacket.ChangeServerPacket.class);
+            masterServer.getPrototypeManager().registerListener(new EncryptionServerHelloPacket());
+            masterServer.getPrototypeManager().registerListener(new EncryptionFinishPacket(this));
+            masterServer.getPrototypeManager().registerListener(new ConfigurationRequestPacket(this));
+            masterServer.getPrototypeManager().registerListener(new ChangeServerPacket());
+
+            // bind over tcp
+            masterServer.bind(new InternalServerImpl(this.pluginConfiguration.masterHostname, this.pluginConfiguration.masterPort));
 
         } catch (Throwable e) {
 
@@ -109,21 +157,4 @@ public class Sectors extends AbstractPlugin {
         }
 
     }
-
-    /**
-     * Returns bungeecord's master server
-     * @return ISectorServer
-     */
-    public static ISectorServer getMasterServer() {
-        return masterServer;
-    }
-
-    /**
-     * Returns sector manager
-     * @return ISectorManager
-     */
-    public static ISectorManager getSectorManager() {
-        return sectorManager;
-    }
-
 }

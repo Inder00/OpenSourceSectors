@@ -2,7 +2,6 @@ package pl.inder00.opensource.sectors.spigot.basic;
 
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 import pl.inder00.opensource.sectors.protocol.ISectorClient;
 
 import java.util.UUID;
@@ -79,25 +78,6 @@ public interface ISector {
      * @return Logger
      */
     Logger getLogger();
-
-    /**
-     * Send player to sector
-     *
-     * @param masterserver Connection to the master server
-     * @param sectorUser   Sector user
-     * @param player       A reference to the player
-     */
-    void send(ISectorClient masterserver, ISectorUser sectorUser, Player player);
-
-    /**
-     * Send player to sector with specified location
-     *
-     * @param masterserver Connection to the master server
-     * @param location     Location
-     * @param sectorUser   Sector user
-     * @param player       A reference to the player
-     */
-    void send(ISectorClient masterserver, ISectorUser sectorUser, Player player, Location location);
 
     /**
      * Returning a boolean representing does location is in sector area

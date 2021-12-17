@@ -1,19 +1,15 @@
 package pl.inder00.opensource.sectors.bungeecord.configuration;
 
-import com.google.protobuf.Message;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.YamlConfiguration;
-import pl.inder00.opensource.sectors.bungeecord.api.ISectorsAPI;
 import pl.inder00.opensource.sectors.bungeecord.Sectors;
-import pl.inder00.opensource.sectors.bungeecord.api.SectorsAPI;
 import pl.inder00.opensource.sectors.bungeecord.basic.ISector;
-import pl.inder00.opensource.sectors.commons.basic.impl.InternalServerImpl;
 import pl.inder00.opensource.sectors.bungeecord.basic.impl.SectorImpl;
 import pl.inder00.opensource.sectors.bungeecord.configuration.exceptions.ConfigurationException;
 import pl.inder00.opensource.sectors.commons.basic.IInternalServer;
-import pl.inder00.opensource.sectors.protocol.ISectorsStream;
+import pl.inder00.opensource.sectors.commons.basic.impl.InternalServerImpl;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,18 +20,17 @@ import java.util.logging.Level;
 public class PluginConfiguration {
 
     /**
+     * Configuration
+     */
+    private final Sectors sectors;
+    /**
      * List of options
      */
     public int sectorChangeCooldown;
     public int protectionDistance;
     public String masterHostname;
     public int masterPort;
-    public String masterPassword;
-
-    /**
-     * Configuration
-     */
-    private final Sectors sectors;
+    public boolean encryptTraffic;
     private Configuration yamlConfiguration;
 
     /**
@@ -67,7 +62,7 @@ public class PluginConfiguration {
         this.protectionDistance = this.yamlConfiguration.getInt("protection_distance", 20);
         this.masterHostname = this.yamlConfiguration.getString("masterserver.hostname", "127.0.0.1");
         this.masterPort = this.yamlConfiguration.getInt("masterserver.port", 8180);
-        this.masterPassword = this.yamlConfiguration.getString("masterserver.password", "");
+        this.encryptTraffic = this.yamlConfiguration.getBoolean("masterserver.encrypt_traffic", true);
 
         // sectors
         for (String key : this.yamlConfiguration.getSection("sectors").getKeys()) {

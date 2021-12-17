@@ -42,18 +42,25 @@ public interface ISectorUser {
     Location getTargetLocation();
 
     /**
-     * Sets a target sector where player is moving
-     *
-     * @param value  ISector
-     * @param target Location where player should be moved
-     */
-    void setTargetSector(ISector value, Location target);
-
-    /**
      * Returns player sector join time in millis
-     * 
+     *
      * @return long
      */
     long getJoinTime();
+
+    /**
+     * Send player to sector
+     *
+     * @param sector Target sector
+     */
+    void send(ISector sector);
+
+    /**
+     * Send player to sector specified location
+     *
+     * @param sector   Target sector
+     * @param location Location
+     */
+    void send(ISector sector, Location location);
 
 }

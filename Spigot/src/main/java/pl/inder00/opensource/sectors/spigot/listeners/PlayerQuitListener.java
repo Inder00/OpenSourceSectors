@@ -8,7 +8,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import pl.inder00.opensource.sectors.spigot.Sectors;
 import pl.inder00.opensource.sectors.spigot.basic.ISector;
 import pl.inder00.opensource.sectors.spigot.basic.ISectorUser;
-import pl.inder00.opensource.sectors.spigot.utils.SpigotPayloadUtils;
+import pl.inder00.opensource.sectors.spigot.utils.SpigotPacketUtils;
 
 public class PlayerQuitListener implements Listener {
 
@@ -24,10 +24,10 @@ public class PlayerQuitListener implements Listener {
 
             // check does player is changing their sector
             ISector targetSector = sectorUser.getTargetSector();
-            if (targetSector != null) {
+            if (targetSector != null && targetSector.getEndpoint() != null && targetSector.getEndpoint().isConnected()) {
 
                 // send transfer data to target server
-                targetSector.getEndpoint().getRSocket().fireAndForget(SpigotPayloadUtils.createTransferDataPayload(player, sectorUser.getTargetLocation())).subscribe();
+                targetSector.getEndpoint().sendData(SpigotPacketUtils.createPlayerTransferPacket(player, sectorUser.getTargetLocation()));
 
             }
 

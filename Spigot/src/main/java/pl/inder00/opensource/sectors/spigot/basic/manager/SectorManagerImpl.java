@@ -15,16 +15,14 @@ public class SectorManagerImpl implements ISectorManager {
      * Current sector unique id (always is set)
      */
     private final UUID currentSectorUniqueId;
-
-    /**
-     * Current sector object refernece (may be null)
-     */
-    private ISector currentSector;
-
     /**
      * List of sectors
      */
     private final ConcurrentMap<UUID, ISector> sectorsData = new ConcurrentHashMap<>();
+    /**
+     * Current sector object refernece (may be null)
+     */
+    private ISector currentSector;
 
     /**
      * Implementation

@@ -1,6 +1,5 @@
 package pl.inder00.opensource.sectors.bungeecord.basic.impl;
 
-import io.rsocket.RSocket;
 import net.md_5.bungee.api.config.ServerInfo;
 import pl.inder00.opensource.sectors.bungeecord.basic.ISector;
 import pl.inder00.opensource.sectors.commons.basic.IInternalServer;
@@ -22,7 +21,6 @@ public class SectorImpl implements ISector {
     private final int maxX;
     private final int maxZ;
     private final ProtobufGeneric.ProtoSector protoSector;
-    private RSocket socket;
 
     /**
      * Implementation
@@ -41,6 +39,7 @@ public class SectorImpl implements ISector {
 
         // build protobuf implementation
         this.protoSector = ProtobufGeneric.ProtoSector.newBuilder().setUniqueId(ProtobufGeneric.ProtoUUID.newBuilder().setMostSig(this.uniqueId.getMostSignificantBits()).setLeastSig(this.uniqueId.getLeastSignificantBits()).build()).setInternalServer(ProtobufGeneric.ProtoInternalServer.newBuilder().setHostname(this.internalServer.getHostname()).setPort(this.internalServer.getPort()).build()).setWorldName(this.world).setMinX(this.minX).setMinZ(this.minZ).setMaxX(this.maxX).setMaxZ(this.maxZ).build();
+
     }
 
     @Override
@@ -88,13 +87,4 @@ public class SectorImpl implements ISector {
         return this.protoSector;
     }
 
-    @Override
-    public RSocket getSocket() {
-        return this.socket;
-    }
-
-    @Override
-    public void setSocket(RSocket socket) {
-        this.socket = socket;
-    }
 }
