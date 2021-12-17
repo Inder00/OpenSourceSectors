@@ -162,7 +162,7 @@ public class DefaultSectorServer implements ISectorServer {
 
     @Override
     public boolean isActive() {
-        return this.serverChannel != null && this.serverChannel.isActive();
+        return this.serverChannel != null && this.serverEventLoopGroup != null && !this.serverEventLoopGroup.isShutdown() && this.serverChannel.isActive();
     }
 
     @ChannelHandler.Sharable

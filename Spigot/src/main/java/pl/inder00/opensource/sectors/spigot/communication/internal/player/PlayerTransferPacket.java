@@ -1,4 +1,4 @@
-package pl.inder00.opensource.sectors.spigot.communication.p2p.player;
+package pl.inder00.opensource.sectors.spigot.communication.internal.player;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

@@ -1,7 +1,6 @@
 package pl.inder00.opensource.sectors.spigot.communication.configuration;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.WorldBorder;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,16 +20,15 @@ import pl.inder00.opensource.sectors.spigot.basic.impl.SectorImpl;
 import pl.inder00.opensource.sectors.spigot.communication.encryption.EncryptionClientHelloPacket;
 import pl.inder00.opensource.sectors.spigot.communication.encryption.EncryptionResponsePacket;
 import pl.inder00.opensource.sectors.spigot.communication.handshake.ServerHandshakePacket;
-import pl.inder00.opensource.sectors.spigot.communication.p2p.encryption.EncryptionFinishPacket;
-import pl.inder00.opensource.sectors.spigot.communication.p2p.encryption.EncryptionServerHelloPacket;
-import pl.inder00.opensource.sectors.spigot.communication.p2p.player.PlayerPositionPacket;
-import pl.inder00.opensource.sectors.spigot.communication.p2p.player.PlayerTransferPacket;
+import pl.inder00.opensource.sectors.spigot.communication.internal.encryption.EncryptionFinishPacket;
+import pl.inder00.opensource.sectors.spigot.communication.internal.encryption.EncryptionServerHelloPacket;
+import pl.inder00.opensource.sectors.spigot.communication.internal.player.PlayerPositionPacket;
+import pl.inder00.opensource.sectors.spigot.communication.internal.player.PlayerTransferPacket;
 import pl.inder00.opensource.sectors.spigot.i18n.I18nFactory;
 import pl.inder00.opensource.sectors.spigot.protocol.DefaultInternalServerListener;
 import pl.inder00.opensource.sectors.spigot.protocol.DefaultSectorEndpointListener;
 
 import java.util.UUID;
-import java.util.logging.Level;
 
 public class ConfigurationResponsePacket implements IPrototypeListener<ConfigurationPacket.Response> {
 

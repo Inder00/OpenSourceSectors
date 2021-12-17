@@ -1,4 +1,4 @@
-package pl.inder00.opensource.sectors.spigot.communication.p2p.encryption;
+package pl.inder00.opensource.sectors.spigot.communication.internal.encryption;
 
 import com.google.common.hash.Hashing;
 import com.google.protobuf.ByteString;

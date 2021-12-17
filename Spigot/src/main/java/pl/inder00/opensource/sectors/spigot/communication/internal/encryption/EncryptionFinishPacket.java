@@ -1,4 +1,4 @@
-package pl.inder00.opensource.sectors.spigot.communication.p2p.encryption;
+package pl.inder00.opensource.sectors.spigot.communication.internal.encryption;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.inder00.opensource.sectors.protocol.ISectorConnection;
