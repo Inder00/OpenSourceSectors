@@ -100,11 +100,6 @@ public class DefaultInternalServerListener extends AbstractSectorServerListener 
 
         } else {
 
-            // send handshake
-            connection.sendData(HandshakePacket.ServerHandshake.newBuilder()
-                    .setVersion(this.plugin.getDescription().getVersion())
-                    .build());
-
             // fire ready event
             server.getServerListener().onServerClientReady(server, connection);
 

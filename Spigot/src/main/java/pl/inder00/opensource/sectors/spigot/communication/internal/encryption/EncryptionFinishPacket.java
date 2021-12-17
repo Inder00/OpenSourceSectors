@@ -34,11 +34,6 @@ public class EncryptionFinishPacket implements IPrototypeListener<EncryptionPack
 
         }
 
-        // send handshake
-        connection.sendData(HandshakePacket.ServerHandshake.newBuilder()
-                .setVersion(this.plugin.getDescription().getVersion())
-                .build());
-
         // fire ready event
         this.server.getServerListener().onServerClientReady(this.server, connection);
 
