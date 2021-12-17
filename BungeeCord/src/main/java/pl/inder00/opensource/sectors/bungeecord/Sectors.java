@@ -16,6 +16,9 @@ import pl.inder00.opensource.sectors.commons.encryption.IKeyExchangeProvider;
 import pl.inder00.opensource.sectors.commons.encryption.impl.DefaultDiffieHellmanProvider;
 import pl.inder00.opensource.sectors.protocol.ISectorServer;
 import pl.inder00.opensource.sectors.protocol.impl.DefaultSectorServer;
+import pl.inder00.opensource.sectors.protocol.protobuf.ConfigurationPacket;
+import pl.inder00.opensource.sectors.protocol.protobuf.EncryptionPacket;
+import pl.inder00.opensource.sectors.protocol.protobuf.ServerPacket;
 
 import java.io.File;
 import java.math.BigInteger;
@@ -133,6 +136,10 @@ public class Sectors extends AbstractPlugin {
             masterServer = new DefaultSectorServer(new AbstractMasterServerListener(this));
 
             // register required prototypes listeners
+            masterServer.getPrototypeManager().registerPrototype(EncryptionPacket.ServerHello.class);
+            masterServer.getPrototypeManager().registerPrototype(EncryptionPacket.EncryptionFinish.class);
+            masterServer.getPrototypeManager().registerPrototype(ConfigurationPacket.Request.class);
+            masterServer.getPrototypeManager().registerPrototype(ServerPacket.ChangeServerPacket.class);
             masterServer.getPrototypeManager().registerListener(new EncryptionServerHelloPacket());
             masterServer.getPrototypeManager().registerListener(new EncryptionFinishPacket(this));
             masterServer.getPrototypeManager().registerListener(new ConfigurationRequestPacket(this));

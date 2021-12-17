@@ -8,6 +8,8 @@ import pl.inder00.opensource.sectors.protocol.IProtobufData;
 import pl.inder00.opensource.sectors.protocol.ISectorClient;
 import pl.inder00.opensource.sectors.protocol.ISectorServer;
 import pl.inder00.opensource.sectors.protocol.impl.DefaultSectorClient;
+import pl.inder00.opensource.sectors.protocol.protobuf.ConfigurationPacket;
+import pl.inder00.opensource.sectors.protocol.protobuf.EncryptionPacket;
 import pl.inder00.opensource.sectors.protocol.protobuf.PositionPacket;
 import pl.inder00.opensource.sectors.protocol.protobuf.TransferPacket;
 import pl.inder00.opensource.sectors.spigot.basic.ISectorManager;
@@ -166,6 +168,9 @@ public class Sectors extends JavaPlugin {
             masterServer = new DefaultSectorClient(new DefaultMasterServerListener(this));
 
             // Register master server prototypes
+            masterServer.getPrototypeManager().registerPrototype(EncryptionPacket.ClientHello.class);
+            masterServer.getPrototypeManager().registerPrototype(EncryptionPacket.EncryptionResponse.class);
+            masterServer.getPrototypeManager().registerPrototype(ConfigurationPacket.Response.class);
             masterServer.getPrototypeManager().registerListener(new EncryptionClientHelloPacket(masterServer));
             masterServer.getPrototypeManager().registerListener(new EncryptionResponsePacket(masterServer));
             masterServer.getPrototypeManager().registerListener(new ConfigurationResponsePacket(this));

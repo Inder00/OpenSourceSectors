@@ -12,6 +12,7 @@ import pl.inder00.opensource.sectors.protocol.exceptions.ProtocolException;
 import pl.inder00.opensource.sectors.protocol.impl.DefaultSectorClient;
 import pl.inder00.opensource.sectors.protocol.impl.DefaultSectorServer;
 import pl.inder00.opensource.sectors.protocol.protobuf.ConfigurationPacket;
+import pl.inder00.opensource.sectors.protocol.protobuf.EncryptionPacket;
 import pl.inder00.opensource.sectors.protocol.protobuf.ProtobufGeneric;
 import pl.inder00.opensource.sectors.protocol.prototype.IPrototypeListener;
 import pl.inder00.opensource.sectors.protocol.utils.ProtocolSerializationUtils;
@@ -112,6 +113,8 @@ public class ConfigurationResponsePacket implements IPrototypeListener<Configura
                     ISector sector = new SectorImpl(this.plugin, uniqueId, new DefaultSectorClient(new DefaultSectorEndpointListener(this.plugin)), null, protoSector.getMinX() - 3, protoSector.getMinZ() - 3, protoSector.getMaxX() + 3, protoSector.getMaxZ() + 3, message.getProtectionDistance(), message.getChangeSectorCooldown());
 
                     // register endpoints prototypes
+                    sector.getEndpoint().getPrototypeManager().registerPrototype(EncryptionPacket.ClientHello.class);
+                    sector.getEndpoint().getPrototypeManager().registerPrototype(EncryptionPacket.EncryptionResponse.class);
                     sector.getEndpoint().getPrototypeManager().registerListener(new EncryptionClientHelloPacket(sector.getEndpoint()));
                     sector.getEndpoint().getPrototypeManager().registerListener(new EncryptionResponsePacket(sector.getEndpoint()));
 
