@@ -49,6 +49,9 @@ public class ConfigurationResponsePacket implements IPrototypeListener<Configura
     @Override
     public void onReceivedData(ConfigurationPacket.Response message) throws Exception {
 
+        // shutdown internal server
+        if(Sectors.getInternalServer() != null) Sectors.getInternalServer().shutdown();
+
         // cleanup sectors
         Sectors.getSectorManager().getDataCollection().forEach(sector -> {
 
