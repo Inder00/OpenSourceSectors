@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.inder00.opensource.sectors.protocol.IProtobufData;
+import pl.inder00.opensource.sectors.protocol.ISectorConnection;
 import pl.inder00.opensource.sectors.protocol.protobuf.TransferPacket;
 import pl.inder00.opensource.sectors.protocol.prototype.IPrototypeListener;
 import pl.inder00.opensource.sectors.protocol.utils.ProtocolSerializationUtils;
@@ -25,7 +26,7 @@ public class PlayerTransferPacket implements IPrototypeListener<TransferPacket.P
     }
 
     @Override
-    public void onReceivedData(TransferPacket.PlayerTransferPacket message) throws Exception {
+    public void onReceivedData(ISectorConnection connection, TransferPacket.PlayerTransferPacket message) throws Exception {
 
         // insert data into cache
         IProtobufData<TransferPacket.PlayerTransferPacket, Player> transferData = new TransferDataImpl(message);
