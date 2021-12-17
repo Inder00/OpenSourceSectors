@@ -56,6 +56,10 @@
                                     <shadedPattern>pl.inder00.opensource.libs.metrics</shadedPattern>
                                     <includes>
                                         <include>org.bstats.**</include>
+                                    <pattern>com.google.gson</pattern>
+                                    <shadedPattern>pl.inder00.opensource.libs.gson</shadedPattern>
+                                    <includes>
+                                        <include>com.google.gson.**</include>
                                     </includes>
                                 </relocation>
                             </relocations>

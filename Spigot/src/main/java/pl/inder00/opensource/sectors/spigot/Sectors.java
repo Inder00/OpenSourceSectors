@@ -2,10 +2,12 @@ package pl.inder00.opensource.sectors.spigot;
 
 import org.bstats.bukkit.Metrics;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.inder00.opensource.sectors.commons.basic.IInternalServer;
 import pl.inder00.opensource.sectors.commons.basic.impl.InternalServerImpl;
 import pl.inder00.opensource.sectors.commons.managers.IManager;
+import pl.inder00.opensource.sectors.commons.utils.UpdateChecker;
 import pl.inder00.opensource.sectors.protocol.IProtobufData;
 import pl.inder00.opensource.sectors.protocol.ISectorClient;
 import pl.inder00.opensource.sectors.protocol.ISectorServer;
@@ -238,6 +240,26 @@ public class Sectors extends JavaPlugin {
             this.getServer().getPluginManager().registerEvents(new EntityChangeBlockListener(), this);
             this.getServer().getPluginManager().registerEvents(new PlayerBucketEmptyListener(), this);
             this.getServer().getPluginManager().registerEvents(new PlayerBucketFillListener(), this);
+
+            // check does is update available
+            PluginDescriptionFile pluginDescription = this.getDescription();
+            String pluginTagVersion = pluginDescription.getVersion().substring(0, Math.max(0, pluginDescription.getVersion().indexOf("-")));
+            UpdateChecker.getLatestVersion(pluginDescription.getAuthors().stream().findFirst().orElse("Unknown"), pluginDescription.getName(), latestVersion -> {
+                if(!latestVersion.equals(pluginTagVersion))
+                {
+                    this.getLogger().info("===================================");
+                    this.getLogger().info("New update is available!");
+                    this.getLogger().info("Current version: " + pluginTagVersion);
+                    this.getLogger().info("Available version: " + latestVersion);
+                    this.getLogger().info("");
+                    this.getLogger().info("Download at https://github.com/" + pluginDescription.getAuthors().stream().findFirst().orElse("Unknown") + "/" + pluginDescription.getName() + "/releases/latest");
+                    this.getLogger().info("===================================");
+                }
+                else if(latestVersion == null)
+                {
+                    this.getLogger().log(Level.SEVERE, "Failed to fetch latest plugin version");
+                }
+            });
 
         } catch (Throwable e) {
 
