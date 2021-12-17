@@ -52,6 +52,7 @@ below 🔥.
 
 - [oskarPLL 🥰](https://github.com/oskarPLL)
 - [shitzuu 🥰](https://github.com/shitzuu)
+- [arturekdev 🥰](https://github.com/arturekdev)
 
 # TODO 📓
 
