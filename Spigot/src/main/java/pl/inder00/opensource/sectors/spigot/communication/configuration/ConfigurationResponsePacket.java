@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldBorder;
 import org.bukkit.plugin.java.JavaPlugin;
+import pl.inder00.opensource.sectors.commons.basic.IInternalServer;
 import pl.inder00.opensource.sectors.commons.basic.impl.InternalServerImpl;
 import pl.inder00.opensource.sectors.commons.encryption.IKeyExchangeProvider;
 import pl.inder00.opensource.sectors.commons.encryption.impl.DefaultDiffieHellmanProvider;
@@ -111,7 +112,8 @@ public class ConfigurationResponsePacket implements IPrototypeListener<Configura
             } else {
 
                 // create socket implementation
-                ISector sector = new SectorImpl(this.plugin, uniqueId, new DefaultSectorClient(new DefaultSectorEndpointListener(this.plugin)), null, protoSector.getMinX() - 3, protoSector.getMinZ() - 3, protoSector.getMaxX() + 3, protoSector.getMaxZ() + 3, message.getProtectionDistance(), message.getChangeSectorCooldown());
+                IInternalServer sectorInternalServerEndpoint = new InternalServerImpl(protoSector.getInternalServer().getHostname(), protoSector.getInternalServer().getPort());
+                ISector sector = new SectorImpl(this.plugin, uniqueId, new DefaultSectorClient(new DefaultSectorEndpointListener(this.plugin,sectorInternalServerEndpoint)), null, protoSector.getMinX() - 3, protoSector.getMinZ() - 3, protoSector.getMaxX() + 3, protoSector.getMaxZ() + 3, message.getProtectionDistance(), message.getChangeSectorCooldown());
 
                 // register endpoints prototypes
                 sector.getEndpoint().getPrototypeManager().registerPrototype(HandshakePacket.ServerHandshake.class);
@@ -120,7 +122,7 @@ public class ConfigurationResponsePacket implements IPrototypeListener<Configura
                 sector.getEndpoint().getPrototypeManager().registerListener(new ServerHandshakePacket(sector.getEndpoint(),this.plugin));
 
                 // connect to sector endpoint
-                sector.getEndpoint().connect(new InternalServerImpl(protoSector.getInternalServer().getHostname(), protoSector.getInternalServer().getPort()));
+                sector.getEndpoint().connect(sectorInternalServerEndpoint);
 
                 // add sector to manager
                 Sectors.getSectorManager().save(sector, sector.getUniqueId());
