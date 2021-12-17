@@ -1,0 +1,10 @@
+// ProtoGeneric
+syntax = "proto2";
+package pl.inder00.opensource.sectors.protocol.protobuf;
+import "ProtoGeneric.proto";
+option java_outer_classname = "ServerPacket";
+
+message ChangeServerPacket {
+  required string playerName = 1;
+  required ProtoSector sector = 2;
+}

@@ -15,6 +15,3 @@ masterserver:
 
   # Port of master server
   port: 8180
-
-  # Type password to the master server or leave that field blank
-  password: ""

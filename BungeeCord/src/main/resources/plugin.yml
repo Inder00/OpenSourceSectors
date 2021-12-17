@@ -1,5 +1,5 @@
 name: OpenSourceSectors
-main: pl.inder00.opensource.sectors.Sectors
+main: pl.inder00.opensource.sectors.bungeecord.Sectors
 version: ${compile.version}
 author: Inder00
 website: https://github.com/Inder00/OpenSourceSectors

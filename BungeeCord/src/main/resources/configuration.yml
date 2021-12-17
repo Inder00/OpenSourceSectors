@@ -11,17 +11,25 @@ protection_distance: 20
 # Cooldown in seconds before player will be able to switch between sectors
 sector_change_cooldown: 20
 
+# Sends diagnostic statistic to bStats
+# Spigot: https://bstats.org/plugin/bukkit/OpenSource%20Sectors/13143
+# BungeeCord: https://bstats.org/plugin/bungeecord/OpenSource%20Sectors/13144
+metrics: true
+
 # Master server configuration (master server is using to configure all endpoints servers and some technical things...)
 masterserver:
 
   # Hostname/IP of master server (recommended using private ip address space - not available from public network)
+  # Master server implementation IS NOT SECURE to bind on public network!!!!!
   hostname: "127.0.0.1"
 
   # Port of master server
   port: 8180
 
-  # Type password to the master server or leave that field blank (recommended to set if master server is available from public network - length its limited to 255 characters)
-  password: ""
+  # Encrypt master server traffic (AES-128)
+  # Delays with sending/receiving data may be occurred due to processing encryption/decryption
+  # Recommended to keep that value on true to keep all data secure to prevent Man-in-the-middle attack
+  encrypt_traffic: true
 
 # List of sectors
 sectors:

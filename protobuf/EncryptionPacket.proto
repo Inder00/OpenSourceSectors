@@ -1,0 +1,38 @@
+// ProtoGeneric
+syntax = "proto2";
+package pl.inder00.opensource.sectors.protocol.protobuf;
+option java_outer_classname = "EncryptionPacket";
+
+// Encryption request [Server]
+message ClientHello {
+  optional EncryptionVersion version = 1 [default = V1_DH_AES128]; // TODO Implement many and more secure algorithms
+  required int32 keySize = 2;
+  required bytes prime = 3;
+  required bytes primeGenerator = 4;
+  required bytes publicKey = 5;
+}
+
+// Encryption response [Client]
+message ServerHello {
+  required bytes publicKey = 1;
+}
+
+// Encryption response [Server]
+message EncryptionResponse {
+  required string expectedTest = 1;
+  required bytes encryptedTest = 2;
+}
+
+// Encryption start [Client]
+message EncryptionFinish {
+  required EncryptionCode code = 1;
+}
+
+enum EncryptionVersion {
+  V1_DH_AES128 = 0;
+}
+
+enum EncryptionCode {
+  OK = 0;
+  ERROR = 1;
+}

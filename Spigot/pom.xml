@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
@@ -46,16 +46,23 @@
                             <relocations>
                                 <relocation>
                                     <pattern>io.netty</pattern>
-                                    <shadedPattern>io.rsocket.netty</shadedPattern>
+                                    <shadedPattern>pl.inder00.opensource.libs.netty</shadedPattern>
                                     <includes>
                                         <include>io.netty.**</include>
                                     </includes>
                                 </relocation>
                                 <relocation>
-                                    <pattern>com.google.protobuf</pattern>
-                                    <shadedPattern>io.rsocket.protobuf</shadedPattern>
+                                    <pattern>org.bstats</pattern>
+                                    <shadedPattern>pl.inder00.opensource.libs.metrics</shadedPattern>
                                     <includes>
-                                        <include>com.google.protobuf.**</include>
+                                        <include>org.bstats.**</include>
+                                    </includes>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.google.gson</pattern>
+                                    <shadedPattern>pl.inder00.opensource.libs.gson</shadedPattern>
+                                    <includes>
+                                        <include>com.google.gson.**</include>
                                     </includes>
                                 </relocation>
                             </relocations>
@@ -105,9 +112,25 @@
             <version>${compile.version}</version>
         </dependency>
         <dependency>
+            <groupId>pl.inder00.opensource.sectors.commons</groupId>
+            <artifactId>Sectors-Commons</artifactId>
+            <version>${compile.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.jodah</groupId>
+            <artifactId>typetools</artifactId>
+            <version>0.6.3</version>
+        </dependency>
+        <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>1.17.1-R0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>2.2.1</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

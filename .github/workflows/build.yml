@@ -1,7 +1,7 @@
 name: Build
 on: [ push, pull_request, workflow_dispatch ]
 env:
-  VERSION: "1.0.2"
+  VERSION: "1.1.0"
 jobs:
   build:
     strategy:
@@ -36,6 +36,11 @@ jobs:
       - name: 🥰 Compile protobuf files
         run: protoc -I=protobuf/ --java_out=Protocol/src/main/java/ protobuf/*.proto
 
+      - name: 💻 Build Commons
+        run: |
+          cd Commons
+          mvn clean install -Dcompile.java_version=${{ matrix.java }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e
+          mvn -Dcompile.java_version=${{ matrix.java }} -Dcompile.version=v${{ env.VERSION }}-${{ github.sha }} -B -e package --file pom.xml
 
       - name: 💻 Build Protocol
         run: |

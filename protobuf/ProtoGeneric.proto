@@ -1,6 +1,6 @@
 // ProtoGeneric
 syntax = "proto2";
-package pl.inder00.opensource.sectors.protobuf;
+package pl.inder00.opensource.sectors.protocol.protobuf;
 import "google/protobuf/any.proto";
 option java_outer_classname = "ProtobufGeneric";
 
@@ -43,6 +43,6 @@ message ProtoSector {
   optional uint32 maxZ = 7;
 }
 
-message EmptyMessage {
+message Empty {
 
 }
