@@ -7,6 +7,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 import pl.inder00.opensource.sectors.protocol.exceptions.ProtocolException;
 import pl.inder00.opensource.sectors.protocol.prototype.IPrototypeManager;
+import pl.inder00.opensource.sectors.protocol.utils.ProtocolSerializationUtils;
 
 import java.util.UUID;
 
@@ -31,8 +32,7 @@ public class ProtobufEncoder extends MessageToByteEncoder<MessageLiteOrBuilder> 
         if (msg instanceof MessageLite) {
 
             // calculate class hash
-            String className = msg.getClass().getName();
-            UUID classHash = UUID.fromString( className.substring(className.lastIndexOf(".") + 1) );
+            UUID classHash = ProtocolSerializationUtils.getClassHash(msg);
             out.writeLong(classHash.getMostSignificantBits());
             out.writeLong(classHash.getLeastSignificantBits());
 

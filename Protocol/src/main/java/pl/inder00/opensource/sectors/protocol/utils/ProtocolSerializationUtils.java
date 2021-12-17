@@ -29,5 +29,25 @@ public class ProtocolSerializationUtils {
                 .build();
     }
 
+    /**
+     * Gets pseudo-unique object hash
+     *
+     * @param object Object
+     * @return UUID
+     */
+    public static UUID getClassHash( Object object ){
+        return getClassHash(object.getClass());
+    }
+
+    /**
+     * Gets pseudo-unique class hash
+     *
+     * @param clazz Class
+     * @return UUID
+     */
+    public static UUID getClassHash( Class<?> clazz ){
+        return UUID.fromString( clazz.getName().substring(clazz.getName().lastIndexOf(".") + 1) );
+    }
+
 }
 
