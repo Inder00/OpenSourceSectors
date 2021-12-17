@@ -100,6 +100,7 @@ public class DefaultSectorServer implements ISectorServer {
                 this.serverBootstrap.channel(this.serverEventLoopGroup instanceof EpollEventLoopGroup ? EpollServerSocketChannel.class : NioServerSocketChannel.class);
                 this.serverBootstrap.option(ChannelOption.SO_BACKLOG, 128); //https://man7.org/linux/man-pages/man2/listen.2.html
                 this.serverBootstrap.childOption(ChannelOption.IP_TOS, 0x18); //https://students.mimuw.edu.pl/SO/Linux/Kod/include/linux/socket.h.html
+                this.serverBootstrap.childOption(ChannelOption.CONNECT_TIMEOUT_MILLIS, 1000);
                 this.serverBootstrap.childHandler(new BossChildHandler());
 
             }
@@ -175,7 +176,6 @@ public class DefaultSectorServer implements ISectorServer {
             ISectorConnection sectorConnection = new DefaultSectorConnection(UUID.randomUUID(), ctx.channel());
 
             // add pipelines
-            ctx.channel().pipeline().addLast("p-readTimeout", new ReadTimeoutHandler(5000, TimeUnit.MILLISECONDS));
             ctx.channel().pipeline().addLast("p-frameEncoder", new LengthFieldPrepender(8));
             ctx.channel().pipeline().addLast("p-frameDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 8, 0, 8));
             ctx.channel().pipeline().addLast("p-encryptionEncoder", new EncryptionEncoder(sectorConnection.getEncryptionProvider()));

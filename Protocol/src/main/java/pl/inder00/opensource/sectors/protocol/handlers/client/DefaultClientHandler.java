@@ -72,7 +72,7 @@ public class DefaultClientHandler extends SimpleChannelInboundHandler<MessageLit
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 
         // trigger exception
-        if(!(cause instanceof SocketException) && !(cause instanceof ReadTimeoutException)){
+        if(!(cause instanceof SocketException)){
 
             // log
             this.clientListener.onClientException(this.sectorClient, cause);

@@ -43,7 +43,7 @@ public class DefaultServerHandler extends SimpleChannelInboundHandler<MessageLit
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 
         // trigger exception
-        if(!(cause instanceof SocketException) && !(cause instanceof ReadTimeoutException)){
+        if(!(cause instanceof SocketException)){
 
             // log
             this.serverListener.onServerClientException(this.sectorServer, this.connection, cause);

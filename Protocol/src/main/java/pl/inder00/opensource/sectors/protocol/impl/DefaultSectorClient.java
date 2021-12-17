@@ -96,7 +96,6 @@ public class DefaultSectorClient implements ISectorClient {
                     protected void initChannel(SocketChannel ch) throws Exception {
 
                         // add pipelines
-                        ch.pipeline().addLast("p-idleHandler", new IdleStateHandler(0,0,4000, TimeUnit.MILLISECONDS));
                         ch.pipeline().addLast("p-frameEncoder", new LengthFieldPrepender(8));
                         ch.pipeline().addLast("p-frameDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 8, 0, 8));
                         ch.pipeline().addLast("p-encryptionEncoder", new EncryptionEncoder(encryptionProvider));
