@@ -2,6 +2,7 @@ package pl.inder00.opensource.sectors.protocol.utils;
 
 import pl.inder00.opensource.sectors.protocol.protobuf.ProtobufGeneric;
 
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 public class ProtocolSerializationUtils {
@@ -46,7 +47,7 @@ public class ProtocolSerializationUtils {
      * @return UUID
      */
     public static UUID getClassHash(Class<?> clazz) {
-        return UUID.fromString(clazz.getName().substring(clazz.getName().lastIndexOf(".") + 1));
+        return UUID.nameUUIDFromBytes( clazz.getName().substring(clazz.getName().lastIndexOf(".") + 1).getBytes(StandardCharsets.UTF_8) );
     }
 
 }
