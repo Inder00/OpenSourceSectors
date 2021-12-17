@@ -25,7 +25,7 @@ public class DefaultSectorEndpointListener extends AbstractSectorClientListener 
     public void onClientReady(ISectorClient client) {
 
         // log
-        this.plugin.getLogger().log(Level.INFO, "Connection is ready @ " + client.getChannel().remoteAddress().toString());
+        this.plugin.getLogger().log(Level.INFO, "Endpoint Connection is ready @ " + client.getChannel().remoteAddress().toString());
 
     }
 
@@ -41,7 +41,7 @@ public class DefaultSectorEndpointListener extends AbstractSectorClientListener 
     public void onClientException(ISectorClient client, Throwable throwable) {
 
         // log
-        this.plugin.getLogger().log(Level.SEVERE, "Connection to sector endpoint occurred an error.", throwable);
+        this.plugin.getLogger().log(Level.SEVERE, "Endpoint Connection to sector endpoint occurred an error.", throwable);
 
     }
 }

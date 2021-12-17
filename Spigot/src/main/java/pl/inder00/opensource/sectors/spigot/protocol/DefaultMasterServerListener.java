@@ -27,7 +27,7 @@ public class DefaultMasterServerListener extends AbstractSectorClientListener {
     public void onClientReady(ISectorClient client) {
 
         // log
-        this.plugin.getLogger().log(Level.INFO, "Connection is ready @ " + client.getChannel().remoteAddress().toString());
+        this.plugin.getLogger().log(Level.INFO, "Master Connection is ready @ " + client.getChannel().remoteAddress().toString());
 
         // request configuration
         client.sendData(ConfigurationPacket.Request.getDefaultInstance(), data -> this.plugin.getLogger().log(data.equals(IPacketStatus.OK) ? Level.INFO : Level.SEVERE, data.equals(IPacketStatus.OK) ? "Successfully requested master server for configuration." : "Failed to request master server for configuration."));
@@ -42,7 +42,6 @@ public class DefaultMasterServerListener extends AbstractSectorClientListener {
 
         // reconnect
         client.connect(Sectors.getMasterServerInternalServer());
-
 
     }
 

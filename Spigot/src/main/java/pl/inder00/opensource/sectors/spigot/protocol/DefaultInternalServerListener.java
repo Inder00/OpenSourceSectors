@@ -122,7 +122,7 @@ public class DefaultInternalServerListener extends AbstractSectorServerListener 
     public void onServerClientReady(ISectorServer server, ISectorConnection connection) {
 
         // log
-        this.plugin.getLogger().log(Level.INFO, "Connection is ready @ " + connection.getAddress().toString());
+        this.plugin.getLogger().log(Level.INFO, "Internal Connection is ready @ " + connection.getAddress().toString());
 
     }
 
