@@ -11,6 +11,7 @@ import pl.inder00.opensource.sectors.protocol.exceptions.ProtocolException;
 import pl.inder00.opensource.sectors.protocol.prototype.IPrototypeManager;
 
 import java.util.List;
+import java.util.UUID;
 
 public class ProtobufDecoder extends ByteToMessageDecoder {
 
@@ -32,8 +33,10 @@ public class ProtobufDecoder extends ByteToMessageDecoder {
         try {
 
             // message class
-            if(in.readableBytes() < 4) throw new InvalidProtobufMessageException("Invalid frame - missing hashcode");
-            int messageClass = in.readInt();
+            if(in.readableBytes() < 8) throw new InvalidProtobufMessageException("Invalid frame - missing hashcode");
+            long mostSigBits = in.readLong();
+            long leastSigBits = in.readLong();
+            UUID messageClass = new UUID(mostSigBits,leastSigBits);
 
             // message data
             if(in.readableBytes() < 1) throw new InvalidProtobufMessageException("Invalid frame - missing data");

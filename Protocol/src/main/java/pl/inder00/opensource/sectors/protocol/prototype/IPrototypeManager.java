@@ -7,6 +7,7 @@ import pl.inder00.opensource.sectors.protocol.exceptions.ProtocolException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.UUID;
 
 public interface IPrototypeManager {
 
@@ -22,18 +23,18 @@ public interface IPrototypeManager {
      * Returns prototype by class hash code
      * May return null if not exists
      *
-     * @param messageCode Integer
+     * @param messageCode UUID
      * @return MessageLiteOrBuilder
      */
-    MessageLiteOrBuilder getPrototypeByCode(int messageCode);
+    MessageLiteOrBuilder getPrototypeByCode(UUID messageCode);
 
     /**
      * Returns prototype code (class hash code) by prototype
      *
      * @param messageLiteOrBuilder Protobuf MessageLiteOrBuilder
-     * @return Integer
+     * @return UUID
      */
-    int getCodeByPrototype(MessageLiteOrBuilder messageLiteOrBuilder);
+    UUID getCodeByPrototype(MessageLiteOrBuilder messageLiteOrBuilder);
 
     /**
      * Register prototype listener

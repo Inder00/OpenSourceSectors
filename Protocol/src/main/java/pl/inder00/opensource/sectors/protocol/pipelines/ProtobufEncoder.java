@@ -8,6 +8,8 @@ import io.netty.handler.codec.MessageToByteEncoder;
 import pl.inder00.opensource.sectors.protocol.exceptions.ProtocolException;
 import pl.inder00.opensource.sectors.protocol.prototype.IPrototypeManager;
 
+import java.util.UUID;
+
 public class ProtobufEncoder extends MessageToByteEncoder<MessageLiteOrBuilder> {
 
     /**
@@ -28,8 +30,11 @@ public class ProtobufEncoder extends MessageToByteEncoder<MessageLiteOrBuilder> 
         // protobuf message
         if (msg instanceof MessageLite) {
 
-            // message class
-            out.writeInt( msg.getClass().hashCode() );
+            // calculate class hash
+            String className = msg.getClass().getName();
+            UUID classHash = UUID.fromString( className.substring(className.lastIndexOf(".") + 1) );
+            out.writeLong(classHash.getMostSignificantBits());
+            out.writeLong(classHash.getLeastSignificantBits());
 
             // data
             out.writeBytes( ((MessageLite) msg).toByteArray() );
