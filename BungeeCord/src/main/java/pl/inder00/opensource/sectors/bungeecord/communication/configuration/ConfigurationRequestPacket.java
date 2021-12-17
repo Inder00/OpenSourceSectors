@@ -28,6 +28,7 @@ public class ConfigurationRequestPacket implements IPrototypeListener<Configurat
         // write data
         configurationPacketOutput.setProtectionDistance(this.plugin.pluginConfiguration.protectionDistance);
         configurationPacketOutput.setChangeSectorCooldown(this.plugin.pluginConfiguration.sectorChangeCooldown);
+        configurationPacketOutput.setMetricsEnabled(this.plugin.pluginConfiguration.metrics);
         configurationPacketOutput.setDefaultLanguage(this.plugin.messagesConfiguration.defaultLocale);
 
         // aliases configuration

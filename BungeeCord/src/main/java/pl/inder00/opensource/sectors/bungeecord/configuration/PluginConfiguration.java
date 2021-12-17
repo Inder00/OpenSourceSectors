@@ -23,6 +23,8 @@ public class PluginConfiguration {
      * Configuration
      */
     private final Sectors sectors;
+    private Configuration yamlConfiguration;
+
     /**
      * List of options
      */
@@ -31,7 +33,7 @@ public class PluginConfiguration {
     public String masterHostname;
     public int masterPort;
     public boolean encryptTraffic;
-    private Configuration yamlConfiguration;
+    public boolean metrics;
 
     /**
      * Implementation
@@ -63,6 +65,7 @@ public class PluginConfiguration {
         this.masterHostname = this.yamlConfiguration.getString("masterserver.hostname", "127.0.0.1");
         this.masterPort = this.yamlConfiguration.getInt("masterserver.port", 8180);
         this.encryptTraffic = this.yamlConfiguration.getBoolean("masterserver.encrypt_traffic", true);
+        this.metrics = this.yamlConfiguration.getBoolean("metrics", true);
 
         // sectors
         for (String key : this.yamlConfiguration.getSection("sectors").getKeys()) {

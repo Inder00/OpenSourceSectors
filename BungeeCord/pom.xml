@@ -51,6 +51,13 @@
                                         <include>io.netty.**</include>
                                     </includes>
                                 </relocation>
+                                <relocation>
+                                    <pattern>org.bstats</pattern>
+                                    <shadedPattern>pl.inder00.opensource.libs.metrics</shadedPattern>
+                                    <includes>
+                                        <include>org.bstats.**</include>
+                                    </includes>
+                                </relocation>
                             </relocations>
                             <artifactSet>
                                 <excludes>
@@ -111,6 +118,12 @@
             <groupId>net.jodah</groupId>
             <artifactId>typetools</artifactId>
             <version>0.6.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bungeecord</artifactId>
+            <version>2.2.1</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

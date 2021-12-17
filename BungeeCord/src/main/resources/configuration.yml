@@ -11,6 +11,11 @@ protection_distance: 20
 # Cooldown in seconds before player will be able to switch between sectors
 sector_change_cooldown: 20
 
+# Sends diagnostic statistic to bStats
+# Spigot: https://bstats.org/plugin/bukkit/OpenSource%20Sectors/13143
+# BungeeCord: https://bstats.org/plugin/bungeecord/OpenSource%20Sectors/13144
+metrics: true
+
 # Master server configuration (master server is using to configure all endpoints servers and some technical things...)
 masterserver:
 
