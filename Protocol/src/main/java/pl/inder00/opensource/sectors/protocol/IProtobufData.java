@@ -1,6 +1,8 @@
 package pl.inder00.opensource.sectors.protocol;
 
-public interface IProtobufData<T, Y> {
+import com.google.protobuf.MessageLite;
+
+public interface IProtobufData<T extends MessageLite, Y> {
 
     /**
      * Returns a protobuf data
