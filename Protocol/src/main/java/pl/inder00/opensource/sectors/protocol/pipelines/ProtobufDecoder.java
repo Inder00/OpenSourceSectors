@@ -27,35 +27,25 @@ public class ProtobufDecoder extends ByteToMessageDecoder {
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 
-        try {
+        // message class
+        if (in.readableBytes() < 8) throw new InvalidProtobufMessageException("Invalid packet frame");
+        long mostSigBits = in.readLong();
+        long leastSigBits = in.readLong();
+        UUID messageClass = new UUID(mostSigBits, leastSigBits);
 
-            // message class
-            if (in.readableBytes() < 8) throw new InvalidProtobufMessageException("Invalid frame - missing hashcode");
-            long mostSigBits = in.readLong();
-            long leastSigBits = in.readLong();
-            UUID messageClass = new UUID(mostSigBits, leastSigBits);
+        // read message data
+        byte[] messageData = new byte[in.readableBytes()];
 
-            // message data
-            if (in.readableBytes() < 1) throw new InvalidProtobufMessageException("Invalid frame - missing data");
-            byte[] messageData = new byte[in.readableBytes()];
+        // read message data
+        in.readBytes(messageData);
 
-            // read message data
-            in.readBytes(messageData);
+        // process prototype
+        MessageLiteOrBuilder messageLiteOrBuilder = this.prototypeManager.getPrototypeByCode(messageClass);
+        if (messageLiteOrBuilder == null)
+            throw new InvalidProtobufMessageException("Invalid protobuf message (" + messageClass + ")");
 
-            // process prototype
-            MessageLiteOrBuilder messageLiteOrBuilder = this.prototypeManager.getPrototypeByCode(messageClass);
-            if (messageLiteOrBuilder == null)
-                throw new InvalidProtobufMessageException("Invalid protobuf message (" + messageClass + ")");
-
-            // push object
-            out.add(messageLiteOrBuilder.getDefaultInstanceForType().getParserForType().parseFrom(messageData));
-
-        } catch (Throwable e) {
-
-            // throw exception
-            throw e;
-
-        }
+        // push object
+        out.add(messageLiteOrBuilder.getDefaultInstanceForType().getParserForType().parseFrom(messageData));
 
     }
 

@@ -43,7 +43,7 @@ public class EncryptionServerHelloPacket implements IPrototypeListener<Encryptio
             connection.getEncryptionProvider().setupKey(encryptionKey);
 
             // generate random test
-            String randomTest = Hashing.hmacSha512(encryptionKey).toString();
+            String randomTest = Hashing.sha256().hashBytes(encryptionKey.getEncoded()).toString();
 
             // send encryption response
             connection.sendData(EncryptionPacket.EncryptionResponse.newBuilder()

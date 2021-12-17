@@ -11,6 +11,9 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
+import io.netty.handler.timeout.IdleStateHandler;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 import pl.inder00.opensource.sectors.commons.basic.IInternalServer;
 import pl.inder00.opensource.sectors.commons.concurrent.FutureCallback;
 import pl.inder00.opensource.sectors.commons.encryption.IEncryptionProvider;
@@ -26,6 +29,8 @@ import pl.inder00.opensource.sectors.protocol.pipelines.ProtobufDecoder;
 import pl.inder00.opensource.sectors.protocol.pipelines.ProtobufEncoder;
 import pl.inder00.opensource.sectors.protocol.prototype.IPrototypeManager;
 import pl.inder00.opensource.sectors.protocol.prototype.impl.PrototypeManagerImpl;
+
+import java.util.concurrent.TimeUnit;
 
 public class DefaultSectorClient implements ISectorClient {
 
@@ -85,13 +90,13 @@ public class DefaultSectorClient implements ISectorClient {
                 this.clientBootstrap.group(this.clientEventLoopGroup);
                 this.clientBootstrap.channel(this.clientEventLoopGroup instanceof EpollEventLoopGroup ? EpollSocketChannel.class : NioSocketChannel.class);
                 this.clientBootstrap.option(ChannelOption.IP_TOS, 0x18); //https://students.mimuw.edu.pl/SO/Linux/Kod/include/linux/socket.h.html
-                this.clientBootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 1000);
                 this.clientBootstrap.handler(new ChannelInitializer<SocketChannel>() {
 
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
 
                         // add pipelines
+                        ch.pipeline().addLast("p-idleHandler", new IdleStateHandler(0,0,4000, TimeUnit.MILLISECONDS));
                         ch.pipeline().addLast("p-frameEncoder", new LengthFieldPrepender(8));
                         ch.pipeline().addLast("p-frameDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 8, 0, 8));
                         ch.pipeline().addLast("p-encryptionEncoder", new EncryptionEncoder(encryptionProvider));
@@ -110,29 +115,30 @@ public class DefaultSectorClient implements ISectorClient {
             try {
 
                 // connect to server
-                ChannelFuture channelFuture = this.clientBootstrap.connect(internalServer.getHostname(), internalServer.getPort()).syncUninterruptibly();
-                if (channelFuture.isSuccess() && channelFuture.channel() != null) {
+                this.clientBootstrap.connect(internalServer.getHostname(), internalServer.getPort()).addListener((GenericFutureListener<ChannelFuture>) callback ->
+                {
 
-                    // update channel
-                    this.channel = channelFuture.channel();
+                    // check does connected successfully
+                    if(callback.isSuccess())
+                    {
 
-                } else {
+                        // update channel
+                        this.channel = callback.channel();
 
-                    // sleep 100 millis
-                    Thread.sleep(100L);
+                    }
+                    else
+                    {
 
-                    // reconnect
-                    this.connect(internalServer);
+                        // reconnect after 100 millis
+                        callback.channel().eventLoop().schedule(() -> this.connect(internalServer), 100, TimeUnit.MILLISECONDS);
 
-                }
+                    }
+
+                });
 
             } catch (Throwable ex) {
 
-                // sleep 100 millis
-                Thread.sleep(100L);
-
-                // reconnect
-                this.connect(internalServer);
+                throw ex;
 
             }
 
@@ -206,6 +212,27 @@ public class DefaultSectorClient implements ISectorClient {
 
     @Override
     public void disconnect() {
-        this.channel.close().syncUninterruptibly();
+
+        // check does client is connected
+        if(this.channel == null || this.clientEventLoopGroup == null) return;
+
+        try {
+
+            // close channel
+            this.channel.close().syncUninterruptibly();
+
+            // shutdown client
+            this.clientEventLoopGroup.shutdownGracefully().syncUninterruptibly();
+
+            // trigger event
+            this.clientListener.onClientDisconnected(this);
+
+        } catch (Throwable e) {
+
+            // trigger listener
+            this.clientListener.onClientException(this, e);
+
+        }
+
     }
 }

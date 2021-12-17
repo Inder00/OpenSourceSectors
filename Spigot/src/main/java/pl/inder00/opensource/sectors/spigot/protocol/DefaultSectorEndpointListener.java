@@ -3,6 +3,7 @@ package pl.inder00.opensource.sectors.spigot.protocol;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.inder00.opensource.sectors.protocol.ISectorClient;
 import pl.inder00.opensource.sectors.protocol.listeners.AbstractSectorClientListener;
+import pl.inder00.opensource.sectors.spigot.Sectors;
 
 import java.util.logging.Level;
 
@@ -29,10 +30,18 @@ public class DefaultSectorEndpointListener extends AbstractSectorClientListener 
     }
 
     @Override
+    public void onClientDisconnected(ISectorClient client) {
+
+        // disable encryption
+        client.getEncryptionProvider().setEncryptionEnabled( false );
+
+    }
+
+    @Override
     public void onClientException(ISectorClient client, Throwable throwable) {
 
         // log
-        this.plugin.getLogger().log(Level.SEVERE, "Connection to sector endpoint @ " + client.getChannel().remoteAddress().toString() + " occurred an error.", throwable);
+        this.plugin.getLogger().log(Level.SEVERE, "Connection to sector endpoint occurred an error.", throwable);
 
     }
 }

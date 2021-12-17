@@ -4,6 +4,8 @@ import com.google.protobuf.MessageLite;
 import com.google.protobuf.MessageLiteOrBuilder;
 import net.jodah.typetools.TypeResolver;
 import pl.inder00.opensource.sectors.protocol.exceptions.ProtocolException;
+import pl.inder00.opensource.sectors.protocol.protobuf.EncryptionPacket;
+import pl.inder00.opensource.sectors.protocol.protobuf.ProtobufGeneric;
 import pl.inder00.opensource.sectors.protocol.prototype.IPrototypeListener;
 import pl.inder00.opensource.sectors.protocol.prototype.IPrototypeManager;
 import pl.inder00.opensource.sectors.protocol.utils.ProtocolSerializationUtils;
@@ -17,8 +19,38 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PrototypeManagerImpl implements IPrototypeManager {
 
     // List of prototypes
-    private Map<UUID, MessageLite> prototypeList = new ConcurrentHashMap<>();
-    private Map<IPrototypeListener, UUID> listenersList = new ConcurrentHashMap<>();
+    private Map<UUID, MessageLite> prototypeList;
+    private Map<IPrototypeListener, UUID> listenersList;
+
+
+    /**
+     * Implementation
+     */
+    public PrototypeManagerImpl() {
+
+        // data
+        this.prototypeList = new ConcurrentHashMap<>();
+        this.listenersList = new ConcurrentHashMap<>();
+
+        // try to register primary prototypes
+        try {
+
+            // register primary prototypes
+            this.registerPrototype(EncryptionPacket.ServerHello.class);
+            this.registerPrototype(EncryptionPacket.ClientHello.class);
+            this.registerPrototype(EncryptionPacket.EncryptionResponse.class);
+            this.registerPrototype(EncryptionPacket.EncryptionFinish.class);
+            this.registerPrototype(ProtobufGeneric.Empty.class);
+
+        } catch (Throwable e){
+
+            // throw error
+            e.printStackTrace();
+
+        }
+
+    }
+
 
     @Override
     public void registerPrototype(Class<? extends MessageLite> messageLite) throws Exception {
@@ -51,7 +83,7 @@ public class PrototypeManagerImpl implements IPrototypeManager {
             throw new ProtocolException("Invalid protobuf listener");
 
         // add listener to the list
-        this.listenersList.put(listener, ProtocolSerializationUtils.getClassHash(listener));
+        this.listenersList.put(listener, ProtocolSerializationUtils.getClassHash(protobufTypeClass));
 
     }
 

@@ -115,6 +115,9 @@ public class DefaultInternalServerListener extends AbstractSectorServerListener 
         // log
         this.plugin.getLogger().log(Level.INFO, "Disconnected from internal server @ " + connection.getAddress().toString());
 
+        // disable encryption
+        connection.getEncryptionProvider().setEncryptionEnabled( false );
+
     }
 
     @Override

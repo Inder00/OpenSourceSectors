@@ -3,9 +3,14 @@ package pl.inder00.opensource.sectors.protocol.handlers.client;
 import com.google.protobuf.MessageLite;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.timeout.IdleStateEvent;
+import io.netty.handler.timeout.ReadTimeoutException;
 import pl.inder00.opensource.sectors.protocol.ISectorClient;
 import pl.inder00.opensource.sectors.protocol.listeners.ISectorClientListener;
+import pl.inder00.opensource.sectors.protocol.protobuf.ProtobufGeneric;
 import pl.inder00.opensource.sectors.protocol.prototype.IPrototypeListener;
+
+import java.net.SocketException;
 
 public class DefaultClientHandler extends SimpleChannelInboundHandler<MessageLite> {
 
@@ -50,10 +55,34 @@ public class DefaultClientHandler extends SimpleChannelInboundHandler<MessageLit
     }
 
     @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+
+        // idle event
+        if(evt instanceof IdleStateEvent)
+        {
+
+            // send ping to server
+            this.sectorClient.sendData(ProtobufGeneric.Empty.getDefaultInstance());
+
+        }
+
+    }
+
+    @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 
-        // trigger listener
-        this.clientListener.onClientException(this.sectorClient, cause);
+        // trigger exception
+        if(!(cause instanceof SocketException) && !(cause instanceof ReadTimeoutException)){
+
+            // log
+            this.clientListener.onClientException(this.sectorClient, cause);
+
+        } else {
+
+            // close
+            ctx.close();
+
+        }
 
     }
 

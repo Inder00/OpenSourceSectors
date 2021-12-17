@@ -2,16 +2,14 @@ package pl.inder00.opensource.sectors.spigot;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import pl.inder00.opensource.sectors.commons.basic.IInternalServer;
 import pl.inder00.opensource.sectors.commons.basic.impl.InternalServerImpl;
 import pl.inder00.opensource.sectors.commons.managers.IManager;
 import pl.inder00.opensource.sectors.protocol.IProtobufData;
 import pl.inder00.opensource.sectors.protocol.ISectorClient;
 import pl.inder00.opensource.sectors.protocol.ISectorServer;
 import pl.inder00.opensource.sectors.protocol.impl.DefaultSectorClient;
-import pl.inder00.opensource.sectors.protocol.protobuf.ConfigurationPacket;
-import pl.inder00.opensource.sectors.protocol.protobuf.EncryptionPacket;
-import pl.inder00.opensource.sectors.protocol.protobuf.PositionPacket;
-import pl.inder00.opensource.sectors.protocol.protobuf.TransferPacket;
+import pl.inder00.opensource.sectors.protocol.protobuf.*;
 import pl.inder00.opensource.sectors.spigot.basic.ISectorManager;
 import pl.inder00.opensource.sectors.spigot.basic.ISectorUser;
 import pl.inder00.opensource.sectors.spigot.basic.manager.PositionDataManagerImpl;
@@ -21,6 +19,7 @@ import pl.inder00.opensource.sectors.spigot.basic.manager.TransferDataManagerImp
 import pl.inder00.opensource.sectors.spigot.communication.configuration.ConfigurationResponsePacket;
 import pl.inder00.opensource.sectors.spigot.communication.encryption.EncryptionClientHelloPacket;
 import pl.inder00.opensource.sectors.spigot.communication.encryption.EncryptionResponsePacket;
+import pl.inder00.opensource.sectors.spigot.communication.handshake.ServerHandshakePacket;
 import pl.inder00.opensource.sectors.spigot.configuration.PluginConfiguration;
 import pl.inder00.opensource.sectors.spigot.i18n.I18n;
 import pl.inder00.opensource.sectors.spigot.listeners.*;
@@ -41,6 +40,7 @@ public class Sectors extends JavaPlugin {
     /**
      * Master server
      */
+    private static IInternalServer masterServerInternalServer;
     private static ISectorClient masterServer;
 
     /**
@@ -87,6 +87,15 @@ public class Sectors extends JavaPlugin {
      */
     public static ISectorClient getMasterServer() {
         return masterServer;
+    }
+
+    /**
+     * Returns master server internal server implementation
+     *
+     * @return IInternalServer
+     */
+    public static IInternalServer getMasterServerInternalServer(){
+        return masterServerInternalServer;
     }
 
     /**
@@ -166,17 +175,18 @@ public class Sectors extends JavaPlugin {
 
             // Create master server implementation
             masterServer = new DefaultSectorClient(new DefaultMasterServerListener(this));
+            masterServerInternalServer = new InternalServerImpl(this.pluginConfiguration.masterHostname, this.pluginConfiguration.masterPort);
 
             // Register master server prototypes
-            masterServer.getPrototypeManager().registerPrototype(EncryptionPacket.ClientHello.class);
-            masterServer.getPrototypeManager().registerPrototype(EncryptionPacket.EncryptionResponse.class);
             masterServer.getPrototypeManager().registerPrototype(ConfigurationPacket.Response.class);
+            masterServer.getPrototypeManager().registerPrototype(HandshakePacket.ServerHandshake.class);
             masterServer.getPrototypeManager().registerListener(new EncryptionClientHelloPacket(masterServer));
             masterServer.getPrototypeManager().registerListener(new EncryptionResponsePacket(masterServer));
+            masterServer.getPrototypeManager().registerListener(new ServerHandshakePacket(masterServer,this));
             masterServer.getPrototypeManager().registerListener(new ConfigurationResponsePacket(this));
 
             // Connect to master server
-            masterServer.connect(new InternalServerImpl(this.pluginConfiguration.masterHostname, this.pluginConfiguration.masterPort));
+            masterServer.connect(masterServerInternalServer);
 
             // block server until load all sectors and connects to them
             boolean serverReady = false;
@@ -189,6 +199,7 @@ public class Sectors extends JavaPlugin {
             }
 
             // register plugin listeners
+            this.getServer().getPluginManager().registerEvents(new AsyncPlayerPreLoginListener(), this);
             this.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
             this.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
             this.getServer().getPluginManager().registerEvents(new PlayerRespawnListener(), this);
@@ -221,6 +232,20 @@ public class Sectors extends JavaPlugin {
 
         // stop internal server
         if (internalServer != null) internalServer.shutdown();
+
+        // cleanup sectors
+        sectorManager.getDataCollection().forEach(sector -> {
+
+            // disconnect with endpoint
+            sector.getEndpoint().disconnect();
+
+            // remove from list
+            Sectors.getSectorManager().delete(sector.getUniqueId());
+
+        });
+
+        // disconnect from master server
+        masterServer.disconnect();
 
     }
 

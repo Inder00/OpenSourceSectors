@@ -43,8 +43,6 @@ message ProtoSector {
   optional uint32 maxZ = 7;
 }
 
-message EmptyMessage {
-  message AnotherEmptyMessage {
+message Empty {
 
-  }
 }

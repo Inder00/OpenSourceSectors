@@ -136,8 +136,6 @@ public class Sectors extends AbstractPlugin {
             masterServer = new DefaultSectorServer(new AbstractMasterServerListener(this));
 
             // register required prototypes listeners
-            masterServer.getPrototypeManager().registerPrototype(EncryptionPacket.ServerHello.class);
-            masterServer.getPrototypeManager().registerPrototype(EncryptionPacket.EncryptionFinish.class);
             masterServer.getPrototypeManager().registerPrototype(ConfigurationPacket.Request.class);
             masterServer.getPrototypeManager().registerPrototype(ServerPacket.ChangeServerPacket.class);
             masterServer.getPrototypeManager().registerListener(new EncryptionServerHelloPacket());

@@ -3,10 +3,13 @@ package pl.inder00.opensource.sectors.protocol.handlers.server;
 import com.google.protobuf.MessageLite;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.timeout.ReadTimeoutException;
 import pl.inder00.opensource.sectors.protocol.ISectorConnection;
 import pl.inder00.opensource.sectors.protocol.ISectorServer;
 import pl.inder00.opensource.sectors.protocol.listeners.ISectorServerListener;
 import pl.inder00.opensource.sectors.protocol.prototype.IPrototypeListener;
+
+import java.net.SocketException;
 
 public class DefaultServerHandler extends SimpleChannelInboundHandler<MessageLite> {
 
@@ -40,7 +43,17 @@ public class DefaultServerHandler extends SimpleChannelInboundHandler<MessageLit
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 
         // trigger exception
-        this.serverListener.onServerClientException(this.sectorServer, this.connection, cause);
+        if(!(cause instanceof SocketException) && !(cause instanceof ReadTimeoutException)){
+
+            // log
+            this.serverListener.onServerClientException(this.sectorServer, this.connection, cause);
+
+        } else {
+
+            // close
+            ctx.close();
+
+        }
 
     }
 
