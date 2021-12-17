@@ -53,7 +53,7 @@ public class Sectors extends AbstractPlugin {
     /**
      * Encryption provider
      */
-    private static IKeyExchangeProvider encryptionProvider;
+    private static IKeyExchangeProvider keyExchangeProvider;
 
     @Override
     public void onEnable() {
@@ -86,14 +86,14 @@ public class Sectors extends AbstractPlugin {
             // create encryption provider implementation
             if(this.pluginConfiguration.encryptTraffic){
 
-                // create encryption provider
-                encryptionProvider = new DefaultDiffieHellmanProvider( 1024 );
+                // create key exchange provider
+                keyExchangeProvider = new DefaultDiffieHellmanProvider( 1024 );
 
                 // test
                 try {
 
-                    // test encryption provider
-                    assert encryptionProvider.generateKey( new BigInteger( 1024, new SecureRandom() )) != null;
+                    // test key exchange provider
+                    assert keyExchangeProvider.generateKey( new BigInteger( 1024, new SecureRandom() )) != null;
 
                 } catch (Throwable e){
 
@@ -153,6 +153,6 @@ public class Sectors extends AbstractPlugin {
      * @return IEncryptionProvider
      */
     public static IKeyExchangeProvider getKeyExchangeProvider() {
-        return encryptionProvider;
+        return keyExchangeProvider;
     }
 }
