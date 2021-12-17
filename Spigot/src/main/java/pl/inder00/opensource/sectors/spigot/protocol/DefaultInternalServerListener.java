@@ -105,6 +105,9 @@ public class DefaultInternalServerListener extends AbstractSectorServerListener 
                     .setVersion(this.plugin.getDescription().getVersion())
                     .build());
 
+            // fire ready event
+            server.getServerListener().onServerClientReady(server, connection);
+
         }
 
     }
