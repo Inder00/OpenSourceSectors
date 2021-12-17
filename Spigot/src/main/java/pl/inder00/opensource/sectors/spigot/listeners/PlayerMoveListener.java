@@ -53,7 +53,7 @@ public class PlayerMoveListener implements Listener {
                     if (targetSector != null && targetSector != currentSector) {
 
                         // check does target server is online
-                        if (sectorUser.getTargetSector() == null && targetSector.getEndpoint() != null && targetSector.getEndpoint() != null && !targetSector.getEndpoint().isConnected()) {
+                        if (sectorUser.getTargetSector() == null && targetSector.getEndpoint() != null && targetSector.getEndpoint().isConnected()) {
 
                             // send player to target sector
                             sectorUser.send(targetSector);
