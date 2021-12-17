@@ -1,6 +1,7 @@
 package pl.inder00.opensource.sectors.spigot.protocol;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import pl.inder00.opensource.sectors.commons.basic.IInternalServer;
 import pl.inder00.opensource.sectors.protocol.ISectorClient;
 import pl.inder00.opensource.sectors.protocol.listeners.AbstractSectorClientListener;
 import pl.inder00.opensource.sectors.spigot.Sectors;
@@ -13,12 +14,14 @@ public class DefaultSectorEndpointListener extends AbstractSectorClientListener 
      * Data
      */
     private final JavaPlugin plugin;
+    private final IInternalServer internalServer;
 
     /**
      * Implementation
      */
-    public DefaultSectorEndpointListener(JavaPlugin plugin) {
+    public DefaultSectorEndpointListener(JavaPlugin plugin, IInternalServer internalServer) {
         this.plugin = plugin;
+        this.internalServer = internalServer;
     }
 
     @Override
@@ -34,6 +37,9 @@ public class DefaultSectorEndpointListener extends AbstractSectorClientListener 
 
         // disable encryption
         client.getEncryptionProvider().setEncryptionEnabled( false );
+
+        // reconnect to endpoint
+        client.connect(this.internalServer);
 
     }
 
