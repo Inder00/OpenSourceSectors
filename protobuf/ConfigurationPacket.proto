@@ -14,9 +14,10 @@ message Response {
   required uint32 protectionDistance = 1;
   required uint32 changeSectorCooldown = 2;
   required string defaultLanguage = 3;
-  repeated ConfigurationMessage messages = 4;
-  repeated ConfigurationAlias aliases = 5;
-  repeated ProtoSector sectors = 6;
+  required bool metricsEnabled = 4;
+  repeated ConfigurationMessage messages = 5;
+  repeated ConfigurationAlias aliases = 6;
+  repeated ProtoSector sectors = 7;
 }
 
 // Message

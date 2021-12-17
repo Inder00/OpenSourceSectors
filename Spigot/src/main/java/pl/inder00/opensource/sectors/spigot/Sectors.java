@@ -1,5 +1,6 @@
 package pl.inder00.opensource.sectors.spigot;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -49,6 +50,11 @@ public class Sectors extends JavaPlugin {
      * Internal server
      */
     private static ISectorServer internalServer;
+
+    /**
+     * Metrics provider
+     */
+    private static Metrics metricsProvider;
 
     /**
      * Managers
@@ -152,6 +158,24 @@ public class Sectors extends JavaPlugin {
      */
     public static IManager<IProtobufData<TransferPacket.PlayerTransferPacket, Player>, UUID> getTransferDataManager() {
         return transferDataManager;
+    }
+
+    /**
+     * Returns metrics provider
+     *
+     * @return Metrics
+     */
+    public static Metrics getMetricsProvider() {
+        return metricsProvider;
+    }
+
+    /**
+     * Sets metrics provider
+     *
+     * @param metricsProvider Metrics
+     */
+    public static void setMetricsProvider(Metrics metricsProvider) {
+        Sectors.metricsProvider = metricsProvider;
     }
 
     @Override

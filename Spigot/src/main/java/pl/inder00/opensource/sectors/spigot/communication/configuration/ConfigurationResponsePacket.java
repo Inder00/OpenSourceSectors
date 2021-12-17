@@ -1,5 +1,6 @@
 package pl.inder00.opensource.sectors.spigot.communication.configuration;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldBorder;
@@ -131,6 +132,9 @@ public class ConfigurationResponsePacket implements IPrototypeListener<Configura
 
         // default language
         Sectors.setLanguageProvider(new I18nFactory(message.getDefaultLanguage()));
+
+        // metrics provider
+        if(Sectors.getMetricsProvider() == null && message.getMetricsEnabled()) Sectors.setMetricsProvider(new Metrics(this.plugin, 13143));
 
         // aliases
         for (ConfigurationPacket.ConfigurationAlias langMap : message.getAliasesList()) {

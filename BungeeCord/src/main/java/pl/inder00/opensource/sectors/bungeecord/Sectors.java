@@ -1,6 +1,7 @@
 package pl.inder00.opensource.sectors.bungeecord;
 
 import net.md_5.bungee.api.ProxyServer;
+import org.bstats.bungeecord.Metrics;
 import net.md_5.bungee.api.plugin.PluginDescription;
 import pl.inder00.opensource.sectors.bungeecord.basic.ISectorManager;
 import pl.inder00.opensource.sectors.bungeecord.basic.manager.SectorManagerImpl;
@@ -54,6 +55,10 @@ public class Sectors extends AbstractPlugin {
      * Messages file
      */
     private File messagesFile;
+    /**
+     * Metrics provider
+     */
+    private Metrics metrics;
 
     /**
      * Returns bungeecord's master server
@@ -109,6 +114,9 @@ public class Sectors extends AbstractPlugin {
             // Load messages configuration
             this.messagesConfiguration = new MessagesConfiguration(this, this.messagesFile);
             this.messagesConfiguration.loadConfiguration();
+
+            // create metrics provider
+            if(this.pluginConfiguration.metrics) this.metrics = new Metrics(this, 13144);
 
             // create encryption provider implementation
             if (this.pluginConfiguration.encryptTraffic) {
