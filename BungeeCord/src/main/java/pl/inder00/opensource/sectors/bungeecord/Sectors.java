@@ -1,6 +1,7 @@
 package pl.inder00.opensource.sectors.bungeecord;
 
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.plugin.PluginDescription;
 import pl.inder00.opensource.sectors.bungeecord.basic.ISectorManager;
 import pl.inder00.opensource.sectors.bungeecord.basic.manager.SectorManagerImpl;
 import pl.inder00.opensource.sectors.bungeecord.communication.configuration.ConfigurationRequestPacket;
@@ -14,6 +15,7 @@ import pl.inder00.opensource.sectors.bungeecord.protocol.AbstractMasterServerLis
 import pl.inder00.opensource.sectors.commons.basic.impl.InternalServerImpl;
 import pl.inder00.opensource.sectors.commons.encryption.IKeyExchangeProvider;
 import pl.inder00.opensource.sectors.commons.encryption.impl.DefaultDiffieHellmanProvider;
+import pl.inder00.opensource.sectors.commons.utils.UpdateChecker;
 import pl.inder00.opensource.sectors.protocol.ISectorServer;
 import pl.inder00.opensource.sectors.protocol.impl.DefaultSectorServer;
 import pl.inder00.opensource.sectors.protocol.protobuf.ConfigurationPacket;
@@ -145,6 +147,26 @@ public class Sectors extends AbstractPlugin {
 
             // bind over tcp
             masterServer.bind(new InternalServerImpl(this.pluginConfiguration.masterHostname, this.pluginConfiguration.masterPort));
+
+            // check does is update available
+            PluginDescription pluginDescription = this.getDescription();
+            String pluginTagVersion = pluginDescription.getVersion().substring(0, Math.max(0, pluginDescription.getVersion().indexOf("-")));
+            UpdateChecker.getLatestVersion(pluginDescription.getAuthor(), pluginDescription.getName(), latestVersion -> {
+                if(!latestVersion.equals(pluginTagVersion))
+                {
+                    this.getLogger().info("===================================");
+                    this.getLogger().info("New update is available!");
+                    this.getLogger().info("Current version: " + pluginTagVersion);
+                    this.getLogger().info("Available version: " + latestVersion);
+                    this.getLogger().info("");
+                    this.getLogger().info("Download at https://github.com/" + pluginDescription.getAuthor() + "/" + pluginDescription.getName() + "/releases/latest");
+                    this.getLogger().info("===================================");
+                }
+                else if(latestVersion == null)
+                {
+                    this.getLogger().log(Level.SEVERE, "Failed to fetch latest plugin version");
+                }
+            });
 
         } catch (Throwable e) {
 
