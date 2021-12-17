@@ -9,6 +9,7 @@ import pl.inder00.opensource.sectors.protocol.listeners.AbstractSectorServerList
 import pl.inder00.opensource.sectors.protocol.protobuf.EncryptionPacket;
 import pl.inder00.opensource.sectors.protocol.protobuf.HandshakePacket;
 
+import java.net.SocketException;
 import java.util.logging.Level;
 
 public class AbstractMasterServerListener extends AbstractSectorServerListener {
@@ -72,7 +73,7 @@ public class AbstractMasterServerListener extends AbstractSectorServerListener {
     public void onServerClientException(ISectorServer server, ISectorConnection connection, Throwable throwable) {
 
         // log
-        this.plugin.getLogger().log(Level.SEVERE, "Connection to master server occurred an error.", throwable);
+        if(!(throwable instanceof SocketException)) this.plugin.getLogger().log(Level.SEVERE, "Connection to master server occurred an error.", throwable);
 
     }
 
