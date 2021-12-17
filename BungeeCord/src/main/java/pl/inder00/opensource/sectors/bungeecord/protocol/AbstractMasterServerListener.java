@@ -80,7 +80,7 @@ public class AbstractMasterServerListener extends AbstractSectorServerListener {
     public void onServerClientConnect(ISectorServer server, ISectorConnection connection) {
 
         // log
-        this.plugin.getLogger().log(Level.INFO, "Connected to master server @ " + connection.getAddress().toString());
+        this.plugin.getLogger().log(Level.INFO, "Connection @ " + connection.getAddress().toString());
 
         // check does encryption is enabled
         if (Sectors.getKeyExchangeProvider() != null) {
@@ -114,7 +114,7 @@ public class AbstractMasterServerListener extends AbstractSectorServerListener {
     public void onServerClientDisconnect(ISectorServer server, ISectorConnection connection) {
 
         // log
-        this.plugin.getLogger().log(Level.INFO, "Disconnected from master server @ " + connection.getAddress().toString());
+        this.plugin.getLogger().log(Level.INFO, "Disconnected @ " + connection.getAddress().toString());
 
     }
 
