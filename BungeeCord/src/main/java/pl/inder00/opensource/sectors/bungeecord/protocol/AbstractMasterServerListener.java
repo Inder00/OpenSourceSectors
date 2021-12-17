@@ -73,7 +73,7 @@ public class AbstractMasterServerListener extends AbstractSectorServerListener {
     public void onServerClientException(ISectorServer server, ISectorConnection connection, Throwable throwable) {
 
         // log
-        if(!(throwable instanceof SocketException)) this.plugin.getLogger().log(Level.SEVERE, "Connection to master server occurred an error.", throwable);
+        this.plugin.getLogger().log(Level.SEVERE, "Connection to master server occurred an error.", throwable);
 
     }
 
