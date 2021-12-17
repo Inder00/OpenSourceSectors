@@ -47,6 +47,7 @@ public class ProtocolSerializationUtils {
      * @return UUID
      */
     public static UUID getClassHash(Class<?> clazz) {
+        // TODO Change that bump class identification
         return UUID.nameUUIDFromBytes( clazz.getName().substring(clazz.getName().lastIndexOf(".") + 1).getBytes(StandardCharsets.UTF_8) );
     }
 
