@@ -116,10 +116,8 @@ public class ConfigurationResponsePacket implements IPrototypeListener<Configura
                 ISector sector = new SectorImpl(this.plugin, uniqueId, new DefaultSectorClient(new DefaultSectorEndpointListener(this.plugin,sectorInternalServerEndpoint)), null, protoSector.getMinX() - 3, protoSector.getMinZ() - 3, protoSector.getMaxX() + 3, protoSector.getMaxZ() + 3, message.getProtectionDistance(), message.getChangeSectorCooldown());
 
                 // register endpoints prototypes
-                sector.getEndpoint().getPrototypeManager().registerPrototype(HandshakePacket.ServerHandshake.class);
                 sector.getEndpoint().getPrototypeManager().registerListener(new EncryptionClientHelloPacket(sector.getEndpoint()));
                 sector.getEndpoint().getPrototypeManager().registerListener(new EncryptionResponsePacket(sector.getEndpoint()));
-                sector.getEndpoint().getPrototypeManager().registerListener(new ServerHandshakePacket(sector.getEndpoint(),this.plugin));
 
                 // connect to sector endpoint
                 sector.getEndpoint().connect(sectorInternalServerEndpoint);
