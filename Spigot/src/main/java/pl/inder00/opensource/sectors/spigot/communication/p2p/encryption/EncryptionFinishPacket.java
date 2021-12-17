@@ -1,7 +1,6 @@
 package pl.inder00.opensource.sectors.spigot.communication.p2p.encryption;
 
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.inder00.opensource.sectors.commons.encryption.IKeyExchangeProvider;
 import pl.inder00.opensource.sectors.protocol.ISectorConnection;
 import pl.inder00.opensource.sectors.protocol.ISectorServer;
 import pl.inder00.opensource.sectors.protocol.protobuf.EncryptionPacket;
@@ -28,8 +27,7 @@ public class EncryptionFinishPacket implements IPrototypeListener<EncryptionPack
     public void onReceivedData(ISectorConnection connection, EncryptionPacket.EncryptionFinish message) throws Exception {
 
         // check status
-        if(message.getCode() == EncryptionPacket.EncryptionCode.OK)
-        {
+        if (message.getCode() == EncryptionPacket.EncryptionCode.OK) {
 
             // enable encryption
             connection.getEncryptionProvider().setEncryptionEnabled(true);
@@ -38,11 +36,11 @@ public class EncryptionFinishPacket implements IPrototypeListener<EncryptionPack
 
         // send handshake
         connection.sendData(HandshakePacket.ServerHandshake.newBuilder()
-                        .setVersion(this.plugin.getDescription().getVersion())
+                .setVersion(this.plugin.getDescription().getVersion())
                 .build());
 
         // fire ready event
-        this.server.getServerListener().onServerClientReady( this.server, connection );
+        this.server.getServerListener().onServerClientReady(this.server, connection);
 
 
     }

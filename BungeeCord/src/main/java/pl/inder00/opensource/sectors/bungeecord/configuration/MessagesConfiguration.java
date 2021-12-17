@@ -14,16 +14,15 @@ import java.util.logging.Level;
 public class MessagesConfiguration {
 
     /**
+     * Configuration
+     */
+    private final Plugin plugin;
+    /**
      * List of messages
      */
     public String defaultLocale;
     public HashMap<String, String> localeAliases = new HashMap<String, String>();
     public HashMap<String, String> messagesList = new HashMap<String, String>();
-
-    /**
-     * Configuration
-     */
-    private final Plugin plugin;
     private Configuration yamlConfiguration;
 
     /**

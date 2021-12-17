@@ -15,12 +15,12 @@ import java.security.Key;
 
 public class EncryptionServerHelloPacket implements IPrototypeListener<EncryptionPacket.ServerHello> {
 
+    private final IKeyExchangeProvider keyExchangeProvider;
     /**
      * Data
      */
     private JavaPlugin plugin;
     private ISectorServer server;
-    private final IKeyExchangeProvider keyExchangeProvider;
 
     /**
      * Implementation
@@ -36,8 +36,7 @@ public class EncryptionServerHelloPacket implements IPrototypeListener<Encryptio
     public void onReceivedData(ISectorConnection connection, EncryptionPacket.ServerHello message) throws Exception {
 
         // check message
-        if( this.keyExchangeProvider != null && message.hasPublicKey() )
-        {
+        if (this.keyExchangeProvider != null && message.hasPublicKey()) {
 
             // set encryption key
             Key encryptionKey = this.keyExchangeProvider.generateKey(new BigInteger(message.getPublicKey().toByteArray()));
@@ -48,8 +47,8 @@ public class EncryptionServerHelloPacket implements IPrototypeListener<Encryptio
 
             // send encryption response
             connection.sendData(EncryptionPacket.EncryptionResponse.newBuilder()
-                            .setExpectedTest(randomTest)
-                            .setEncryptedTest(ByteString.copyFrom(connection.getEncryptionProvider().encryptData(randomTest.getBytes(StandardCharsets.UTF_8))))
+                    .setExpectedTest(randomTest)
+                    .setEncryptedTest(ByteString.copyFrom(connection.getEncryptionProvider().encryptData(randomTest.getBytes(StandardCharsets.UTF_8))))
                     .build());
 
 

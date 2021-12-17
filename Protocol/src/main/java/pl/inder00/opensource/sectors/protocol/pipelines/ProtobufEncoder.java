@@ -37,7 +37,7 @@ public class ProtobufEncoder extends MessageToByteEncoder<MessageLiteOrBuilder> 
             out.writeLong(classHash.getLeastSignificantBits());
 
             // data
-            out.writeBytes( ((MessageLite) msg).toByteArray() );
+            out.writeBytes(((MessageLite) msg).toByteArray());
             return;
         }
 

@@ -26,7 +26,7 @@ public class DefaultDiffieHellmanProvider implements IKeyExchangeProvider {
     /**
      * Implementation
      */
-    public DefaultDiffieHellmanProvider( int keysize ) throws Exception {
+    public DefaultDiffieHellmanProvider(int keysize) throws Exception {
 
         // create random implementation
         this.random = new SecureRandom();
@@ -39,10 +39,10 @@ public class DefaultDiffieHellmanProvider implements IKeyExchangeProvider {
 
         // set data
         this.keysize = keysize;
-        this.secretKey = new BigInteger( keysize, this.random );
+        this.secretKey = new BigInteger(keysize, this.random);
         this.prime = dhParameterSpec.getP();
         this.primeGenerator = dhParameterSpec.getG();
-        this.publicKey = this.primeGenerator.modPow( this.secretKey, this.prime );
+        this.publicKey = this.primeGenerator.modPow(this.secretKey, this.prime);
 
     }
 
@@ -56,10 +56,10 @@ public class DefaultDiffieHellmanProvider implements IKeyExchangeProvider {
 
         // set data
         this.keysize = keysize;
-        this.secretKey = new BigInteger( keysize, this.random );
+        this.secretKey = new BigInteger(keysize, this.random);
         this.prime = prime;
         this.primeGenerator = primeGenerator;
-        this.publicKey = this.primeGenerator.modPow( this.secretKey, this.prime );
+        this.publicKey = this.primeGenerator.modPow(this.secretKey, this.prime);
 
     }
 
@@ -87,7 +87,7 @@ public class DefaultDiffieHellmanProvider implements IKeyExchangeProvider {
     public Key generateKey(BigInteger publicKey) throws Exception {
 
         // calculate shared key
-        byte[] sharedKey = publicKey.modPow( this.secretKey, this.prime ).toByteArray();
+        byte[] sharedKey = publicKey.modPow(this.secretKey, this.prime).toByteArray();
 
         // generate AES-Key
         return new SecretKeySpec(Arrays.copyOf(sharedKey, 16), "AES");

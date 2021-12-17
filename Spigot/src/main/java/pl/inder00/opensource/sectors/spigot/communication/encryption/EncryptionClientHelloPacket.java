@@ -31,7 +31,7 @@ public class EncryptionClientHelloPacket implements IPrototypeListener<Encryptio
         IKeyExchangeProvider keyExchangeProvider = new DefaultDiffieHellmanProvider(message.getKeySize(), new BigInteger(message.getPrime().toByteArray()), new BigInteger(message.getPrimeGenerator().toByteArray()));
 
         // generate key for encryption
-        Key encryptionKey = keyExchangeProvider.generateKey( new BigInteger(message.getPublicKey().toByteArray()) );
+        Key encryptionKey = keyExchangeProvider.generateKey(new BigInteger(message.getPublicKey().toByteArray()));
 
         // setup key for encryption on client connection
         this.sectorClient.getEncryptionProvider().setupKey(encryptionKey);

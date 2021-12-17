@@ -8,8 +8,6 @@ import pl.inder00.opensource.sectors.protocol.ISectorServer;
 import pl.inder00.opensource.sectors.protocol.listeners.ISectorServerListener;
 import pl.inder00.opensource.sectors.protocol.prototype.IPrototypeListener;
 
-import java.util.UUID;
-
 public class DefaultServerHandler extends SimpleChannelInboundHandler<MessageLite> {
 
     /**
@@ -33,7 +31,7 @@ public class DefaultServerHandler extends SimpleChannelInboundHandler<MessageLit
 
         // push message to listeners
         for (IPrototypeListener<MessageLite> listener : this.sectorServer.getPrototypeManager().getListenersByPrototype(msg)) {
-            listener.onReceivedData(this.connection,msg);
+            listener.onReceivedData(this.connection, msg);
         }
 
     }

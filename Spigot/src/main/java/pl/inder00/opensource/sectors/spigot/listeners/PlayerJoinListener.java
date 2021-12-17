@@ -4,11 +4,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import pl.inder00.opensource.sectors.protocol.IProtobufData;
 import pl.inder00.opensource.sectors.protocol.protobuf.PositionPacket;
 import pl.inder00.opensource.sectors.protocol.protobuf.TransferPacket;
 import pl.inder00.opensource.sectors.spigot.Sectors;
 import pl.inder00.opensource.sectors.spigot.basic.impl.SectorUserImpl;
-import pl.inder00.opensource.sectors.protocol.IProtobufData;
 
 public class PlayerJoinListener implements Listener {
     @EventHandler

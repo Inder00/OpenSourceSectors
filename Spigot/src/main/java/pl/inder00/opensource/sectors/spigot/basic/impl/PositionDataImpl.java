@@ -1,11 +1,11 @@
 package pl.inder00.opensource.sectors.spigot.basic.impl;
 
 import org.bukkit.entity.Player;
+import pl.inder00.opensource.sectors.protocol.IProtobufData;
 import pl.inder00.opensource.sectors.protocol.protobuf.PositionPacket;
 import pl.inder00.opensource.sectors.protocol.utils.ProtocolSerializationUtils;
 import pl.inder00.opensource.sectors.spigot.Sectors;
 import pl.inder00.opensource.sectors.spigot.utils.SpigotSerializationUtils;
-import pl.inder00.opensource.sectors.protocol.IProtobufData;
 
 public class PositionDataImpl implements IProtobufData<PositionPacket.PlayerPositionPacket, Player> {
 

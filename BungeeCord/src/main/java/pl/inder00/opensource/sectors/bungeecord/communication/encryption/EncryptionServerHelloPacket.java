@@ -17,8 +17,7 @@ public class EncryptionServerHelloPacket implements IPrototypeListener<Encryptio
     public void onReceivedData(ISectorConnection connection, EncryptionPacket.ServerHello message) throws Exception {
 
         // check message
-        if( message.hasPublicKey() )
-        {
+        if (message.hasPublicKey()) {
 
             // set encryption key
             Key encryptionKey = Sectors.getKeyExchangeProvider().generateKey(new BigInteger(message.getPublicKey().toByteArray()));
@@ -29,8 +28,8 @@ public class EncryptionServerHelloPacket implements IPrototypeListener<Encryptio
 
             // send encryption response
             connection.sendData(EncryptionPacket.EncryptionResponse.newBuilder()
-                            .setExpectedTest(randomTest)
-                            .setEncryptedTest(ByteString.copyFrom(connection.getEncryptionProvider().encryptData(randomTest.getBytes(StandardCharsets.UTF_8))))
+                    .setExpectedTest(randomTest)
+                    .setEncryptedTest(ByteString.copyFrom(connection.getEncryptionProvider().encryptData(randomTest.getBytes(StandardCharsets.UTF_8))))
                     .build());
 
 

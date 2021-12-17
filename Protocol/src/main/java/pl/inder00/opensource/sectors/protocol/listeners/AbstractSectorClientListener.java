@@ -1,7 +1,6 @@
 package pl.inder00.opensource.sectors.protocol.listeners;
 
 import pl.inder00.opensource.sectors.protocol.ISectorClient;
-import pl.inder00.opensource.sectors.protocol.listeners.ISectorClientListener;
 
 public abstract class AbstractSectorClientListener implements ISectorClientListener {
 

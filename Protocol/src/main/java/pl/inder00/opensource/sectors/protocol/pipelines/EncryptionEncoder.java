@@ -4,7 +4,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 import pl.inder00.opensource.sectors.commons.encryption.IEncryptionProvider;
-import pl.inder00.opensource.sectors.protocol.ISectorConnection;
 import pl.inder00.opensource.sectors.protocol.exceptions.ProtocolException;
 
 public class EncryptionEncoder extends MessageToByteEncoder<ByteBuf> {
@@ -25,11 +24,10 @@ public class EncryptionEncoder extends MessageToByteEncoder<ByteBuf> {
     protected void encode(ChannelHandlerContext ctx, ByteBuf msg, ByteBuf out) throws Exception {
 
         // check frame
-        if(msg.readableBytes() == 0) throw new ProtocolException("Invalid message frame - frame is empty");
+        if (msg.readableBytes() == 0) throw new ProtocolException("Invalid message frame - frame is empty");
 
         // check does traffic is encrypted
-        if( this.encryptionProvider.isEncryptionEnabled() )
-        {
+        if (this.encryptionProvider.isEncryptionEnabled()) {
 
             // read frame
             byte[] frameData = new byte[msg.readableBytes()];
@@ -38,9 +36,7 @@ public class EncryptionEncoder extends MessageToByteEncoder<ByteBuf> {
             // return encrypted data
             out.writeBytes(this.encryptionProvider.encryptData(frameData));
 
-        }
-        else
-        {
+        } else {
 
             // return data
             out.writeBytes(msg);

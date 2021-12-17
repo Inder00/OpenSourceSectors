@@ -5,7 +5,6 @@ import com.google.protobuf.MessageLiteOrBuilder;
 import pl.inder00.opensource.sectors.protocol.exceptions.InvalidProtobufMessageException;
 import pl.inder00.opensource.sectors.protocol.exceptions.ProtocolException;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.UUID;
 

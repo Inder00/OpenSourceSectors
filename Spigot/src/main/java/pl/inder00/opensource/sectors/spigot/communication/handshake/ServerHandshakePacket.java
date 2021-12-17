@@ -27,8 +27,7 @@ public class ServerHandshakePacket implements IPrototypeListener<HandshakePacket
     public void onReceivedData(HandshakePacket.ServerHandshake message) throws Exception {
 
         // compare versions
-        if(!message.getVersion().equals(this.plugin.getDescription().getVersion()))
-        {
+        if (!message.getVersion().equals(this.plugin.getDescription().getVersion())) {
 
             // log
             this.plugin.getLogger().log(Level.SEVERE, "Plugin version mismatch. Stopping server.");

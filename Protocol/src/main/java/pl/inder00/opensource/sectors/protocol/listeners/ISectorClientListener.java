@@ -35,7 +35,7 @@ public interface ISectorClientListener {
     /**
      * Triggered when client occurred exception
      *
-     * @param client ISectorClient
+     * @param client    ISectorClient
      * @param throwable Throwable
      */
     void onClientException(ISectorClient client, Throwable throwable);

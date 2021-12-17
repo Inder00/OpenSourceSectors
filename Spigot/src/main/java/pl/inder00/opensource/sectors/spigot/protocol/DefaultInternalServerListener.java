@@ -88,8 +88,7 @@ public class DefaultInternalServerListener extends AbstractSectorServerListener 
         this.plugin.getLogger().log(Level.INFO, "Connected to internal server @ " + connection.getAddress().toString());
 
         // check does encryption is enabled
-        if(this.keyExchangeProvider != null)
-        {
+        if (this.keyExchangeProvider != null) {
 
             // send client hello
             connection.sendData(EncryptionPacket.ClientHello.newBuilder()
@@ -99,9 +98,7 @@ public class DefaultInternalServerListener extends AbstractSectorServerListener 
                     .setPublicKey(ByteString.copyFrom(this.keyExchangeProvider.getPublicKey().toByteArray()))
                     .build());
 
-        }
-        else
-        {
+        } else {
 
             // send handshake
             connection.sendData(HandshakePacket.ServerHandshake.newBuilder()

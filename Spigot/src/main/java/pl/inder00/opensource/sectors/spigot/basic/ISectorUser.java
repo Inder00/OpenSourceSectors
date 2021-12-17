@@ -43,7 +43,7 @@ public interface ISectorUser {
 
     /**
      * Returns player sector join time in millis
-     * 
+     *
      * @return long
      */
     long getJoinTime();
@@ -58,8 +58,8 @@ public interface ISectorUser {
     /**
      * Send player to sector specified location
      *
-     * @param sector Target sector
-     * @param location     Location
+     * @param sector   Target sector
+     * @param location Location
      */
     void send(ISector sector, Location location);
 

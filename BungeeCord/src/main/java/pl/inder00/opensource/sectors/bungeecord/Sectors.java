@@ -9,11 +9,11 @@ import pl.inder00.opensource.sectors.bungeecord.communication.encryption.Encrypt
 import pl.inder00.opensource.sectors.bungeecord.communication.server.ChangeServerPacket;
 import pl.inder00.opensource.sectors.bungeecord.configuration.MessagesConfiguration;
 import pl.inder00.opensource.sectors.bungeecord.configuration.PluginConfiguration;
+import pl.inder00.opensource.sectors.bungeecord.plugin.AbstractPlugin;
 import pl.inder00.opensource.sectors.bungeecord.protocol.AbstractMasterServerListener;
 import pl.inder00.opensource.sectors.commons.basic.impl.InternalServerImpl;
 import pl.inder00.opensource.sectors.commons.encryption.IKeyExchangeProvider;
 import pl.inder00.opensource.sectors.commons.encryption.impl.DefaultDiffieHellmanProvider;
-import pl.inder00.opensource.sectors.bungeecord.plugin.AbstractPlugin;
 import pl.inder00.opensource.sectors.protocol.ISectorServer;
 import pl.inder00.opensource.sectors.protocol.impl.DefaultSectorServer;
 
@@ -25,35 +25,57 @@ import java.util.logging.Level;
 public class Sectors extends AbstractPlugin {
 
     /**
+     * Master server
+     */
+    private static ISectorServer masterServer;
+    /**
+     * Sector manager
+     */
+    private static ISectorManager sectorManager;
+    /**
+     * Encryption provider
+     */
+    private static IKeyExchangeProvider keyExchangeProvider;
+    /**
      * Plugin configurations
      */
     public PluginConfiguration pluginConfiguration;
     public MessagesConfiguration messagesConfiguration;
-
     /**
      * Configuration file
      */
     private File configurationFile;
-
     /**
      * Messages file
      */
     private File messagesFile;
 
     /**
-     * Master server
+     * Returns bungeecord's master server
+     *
+     * @return ISectorServer
      */
-    private static ISectorServer masterServer;
+    public static ISectorServer getMasterServer() {
+        return masterServer;
+    }
 
     /**
-     * Sector manager
+     * Returns sector manager
+     *
+     * @return ISectorManager
      */
-    private static ISectorManager sectorManager;
+    public static ISectorManager getSectorManager() {
+        return sectorManager;
+    }
 
     /**
-     * Encryption provider
+     * Returns encryption provider
+     *
+     * @return IEncryptionProvider
      */
-    private static IKeyExchangeProvider keyExchangeProvider;
+    public static IKeyExchangeProvider getKeyExchangeProvider() {
+        return keyExchangeProvider;
+    }
 
     @Override
     public void onEnable() {
@@ -84,18 +106,18 @@ public class Sectors extends AbstractPlugin {
             this.messagesConfiguration.loadConfiguration();
 
             // create encryption provider implementation
-            if(this.pluginConfiguration.encryptTraffic){
+            if (this.pluginConfiguration.encryptTraffic) {
 
                 // create key exchange provider
-                keyExchangeProvider = new DefaultDiffieHellmanProvider( 1024 );
+                keyExchangeProvider = new DefaultDiffieHellmanProvider(1024);
 
                 // test
                 try {
 
                     // test key exchange provider
-                    assert keyExchangeProvider.generateKey( new BigInteger( 1024, new SecureRandom() )) != null;
+                    assert keyExchangeProvider.generateKey(new BigInteger(1024, new SecureRandom())) != null;
 
-                } catch (Throwable e){
+                } catch (Throwable e) {
 
                     // log
                     this.getLogger().log(Level.SEVERE, "Failed to setup encryption provider. Stopping proxy...");
@@ -129,30 +151,5 @@ public class Sectors extends AbstractPlugin {
 
         }
 
-    }
-
-    /**
-     * Returns bungeecord's master server
-     * @return ISectorServer
-     */
-    public static ISectorServer getMasterServer() {
-        return masterServer;
-    }
-
-    /**
-     * Returns sector manager
-     * @return ISectorManager
-     */
-    public static ISectorManager getSectorManager() {
-        return sectorManager;
-    }
-
-    /**
-     * Returns encryption provider
-     *
-     * @return IEncryptionProvider
-     */
-    public static IKeyExchangeProvider getKeyExchangeProvider() {
-        return keyExchangeProvider;
     }
 }

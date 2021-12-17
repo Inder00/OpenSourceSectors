@@ -1,6 +1,5 @@
 package pl.inder00.opensource.sectors.protocol.prototype.impl;
 
-import com.google.common.io.BaseEncoding;
 import com.google.protobuf.MessageLite;
 import com.google.protobuf.MessageLiteOrBuilder;
 import net.jodah.typetools.TypeResolver;
@@ -9,8 +8,6 @@ import pl.inder00.opensource.sectors.protocol.prototype.IPrototypeListener;
 import pl.inder00.opensource.sectors.protocol.prototype.IPrototypeManager;
 import pl.inder00.opensource.sectors.protocol.utils.ProtocolSerializationUtils;
 
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,16 +24,17 @@ public class PrototypeManagerImpl implements IPrototypeManager {
     public void registerPrototype(Class<? extends MessageLite> messageLite) throws Exception {
 
         // protobuf messages
-        if(!MessageLite.class.isAssignableFrom(messageLite) || messageLite.getMethod("newBuilder").invoke(messageLite) == null || messageLite.getMethod("getDefaultInstance").invoke(null) == null) throw new ProtocolException("Invalid prototype");
+        if (!MessageLite.class.isAssignableFrom(messageLite) || messageLite.getMethod("newBuilder").invoke(messageLite) == null || messageLite.getMethod("getDefaultInstance").invoke(null) == null)
+            throw new ProtocolException("Invalid prototype");
 
         // add prototype to the list
-        this.prototypeList.put(ProtocolSerializationUtils.getClassHash(messageLite), (MessageLite) messageLite.getMethod("getDefaultInstance").invoke(null) );
+        this.prototypeList.put(ProtocolSerializationUtils.getClassHash(messageLite), (MessageLite) messageLite.getMethod("getDefaultInstance").invoke(null));
 
     }
 
     @Override
     public MessageLiteOrBuilder getPrototypeByCode(UUID messageCode) {
-        return this.prototypeList.get( messageCode );
+        return this.prototypeList.get(messageCode);
     }
 
     @Override
@@ -49,10 +47,11 @@ public class PrototypeManagerImpl implements IPrototypeManager {
 
         // protobuf messages
         Class<?> protobufTypeClass = TypeResolver.resolveRawArgument(IPrototypeListener.class, listener.getClass());
-        if(!MessageLite.class.isAssignableFrom(protobufTypeClass) || protobufTypeClass.getMethod("newBuilder").invoke(protobufTypeClass) == null || protobufTypeClass.getMethod("getDefaultInstance").invoke(null) == null) throw new ProtocolException("Invalid protobuf listener");
+        if (!MessageLite.class.isAssignableFrom(protobufTypeClass) || protobufTypeClass.getMethod("newBuilder").invoke(protobufTypeClass) == null || protobufTypeClass.getMethod("getDefaultInstance").invoke(null) == null)
+            throw new ProtocolException("Invalid protobuf listener");
 
         // add listener to the list
-        this.listenersList.put( listener, ProtocolSerializationUtils.getClassHash(listener) );
+        this.listenersList.put(listener, ProtocolSerializationUtils.getClassHash(listener));
 
     }
 
@@ -61,10 +60,11 @@ public class PrototypeManagerImpl implements IPrototypeManager {
 
         // protobuf type class
         Class<?> protobufTypeClass = TypeResolver.resolveRawArgument(IPrototypeListener.class, listener.getClass());
-        if(!MessageLite.class.isAssignableFrom(protobufTypeClass) || protobufTypeClass.getMethod("newBuilder").invoke(protobufTypeClass) == null || protobufTypeClass.getMethod("getDefaultInstance").invoke(null) == null) throw new ProtocolException("Invalid protobuf listener");
+        if (!MessageLite.class.isAssignableFrom(protobufTypeClass) || protobufTypeClass.getMethod("newBuilder").invoke(protobufTypeClass) == null || protobufTypeClass.getMethod("getDefaultInstance").invoke(null) == null)
+            throw new ProtocolException("Invalid protobuf listener");
 
         // add listener to the list
-        this.listenersList.remove( listener );
+        this.listenersList.remove(listener);
 
     }
 
@@ -72,7 +72,8 @@ public class PrototypeManagerImpl implements IPrototypeManager {
     public <T extends MessageLite> List<IPrototypeListener<T>> getListenersByPrototype(T prototype) throws Exception {
 
         // protobuf type class
-        if(prototype.getClass().getMethod("getDefaultInstance").invoke(null) == null) throw new ProtocolException("Invalid prototype class");
+        if (prototype.getClass().getMethod("getDefaultInstance").invoke(null) == null)
+            throw new ProtocolException("Invalid prototype class");
 
         // calculate class hash
         UUID classHash = ProtocolSerializationUtils.getClassHash(prototype);
@@ -82,9 +83,8 @@ public class PrototypeManagerImpl implements IPrototypeManager {
 
         // loop all listeners
         this.listenersList.forEach((listener, code) -> {
-            if(classHash.equals(code))
-            {
-                listenerList.add( listener );
+            if (classHash.equals(code)) {
+                listenerList.add(listener);
             }
         });
 

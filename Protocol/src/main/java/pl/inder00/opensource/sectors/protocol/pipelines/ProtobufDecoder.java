@@ -2,12 +2,9 @@ package pl.inder00.opensource.sectors.protocol.pipelines;
 
 import com.google.protobuf.MessageLiteOrBuilder;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import pl.inder00.opensource.sectors.protocol.exceptions.InvalidProtobufMessageException;
-import pl.inder00.opensource.sectors.protocol.exceptions.ProtocolException;
 import pl.inder00.opensource.sectors.protocol.prototype.IPrototypeManager;
 
 import java.util.List;
@@ -33,26 +30,27 @@ public class ProtobufDecoder extends ByteToMessageDecoder {
         try {
 
             // message class
-            if(in.readableBytes() < 8) throw new InvalidProtobufMessageException("Invalid frame - missing hashcode");
+            if (in.readableBytes() < 8) throw new InvalidProtobufMessageException("Invalid frame - missing hashcode");
             long mostSigBits = in.readLong();
             long leastSigBits = in.readLong();
-            UUID messageClass = new UUID(mostSigBits,leastSigBits);
+            UUID messageClass = new UUID(mostSigBits, leastSigBits);
 
             // message data
-            if(in.readableBytes() < 1) throw new InvalidProtobufMessageException("Invalid frame - missing data");
+            if (in.readableBytes() < 1) throw new InvalidProtobufMessageException("Invalid frame - missing data");
             byte[] messageData = new byte[in.readableBytes()];
 
             // read message data
             in.readBytes(messageData);
 
             // process prototype
-            MessageLiteOrBuilder messageLiteOrBuilder = this.prototypeManager.getPrototypeByCode( messageClass );
-            if(messageLiteOrBuilder == null) throw new InvalidProtobufMessageException("Invalid protobuf message (" + messageClass + ")");
+            MessageLiteOrBuilder messageLiteOrBuilder = this.prototypeManager.getPrototypeByCode(messageClass);
+            if (messageLiteOrBuilder == null)
+                throw new InvalidProtobufMessageException("Invalid protobuf message (" + messageClass + ")");
 
             // push object
-            out.add( messageLiteOrBuilder.getDefaultInstanceForType().getParserForType().parseFrom( messageData ) );
+            out.add(messageLiteOrBuilder.getDefaultInstanceForType().getParserForType().parseFrom(messageData));
 
-        } catch (Throwable e){
+        } catch (Throwable e) {
 
             // throw exception
             throw e;

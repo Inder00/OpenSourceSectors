@@ -3,9 +3,9 @@ package pl.inder00.opensource.sectors.spigot.basic.impl;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
+import pl.inder00.opensource.sectors.protocol.ISectorClient;
 import pl.inder00.opensource.sectors.spigot.basic.ISector;
 import pl.inder00.opensource.sectors.spigot.logging.SectorLogger;
-import pl.inder00.opensource.sectors.protocol.ISectorClient;
 
 import java.util.UUID;
 import java.util.logging.Logger;

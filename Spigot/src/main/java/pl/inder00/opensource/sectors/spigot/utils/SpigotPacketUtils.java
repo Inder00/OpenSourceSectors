@@ -5,12 +5,12 @@ import com.google.protobuf.MessageLite;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import pl.inder00.opensource.sectors.protocol.protobuf.PositionPacket;
+import pl.inder00.opensource.sectors.protocol.protobuf.ProtobufGeneric;
 import pl.inder00.opensource.sectors.protocol.protobuf.ServerPacket;
 import pl.inder00.opensource.sectors.protocol.protobuf.TransferPacket;
 import pl.inder00.opensource.sectors.protocol.utils.ProtocolSerializationUtils;
 import pl.inder00.opensource.sectors.spigot.basic.ISector;
 import pl.inder00.opensource.sectors.spigot.reflections.Reflection;
-import pl.inder00.opensource.sectors.protocol.protobuf.ProtobufGeneric;
 
 public class SpigotPacketUtils {
 

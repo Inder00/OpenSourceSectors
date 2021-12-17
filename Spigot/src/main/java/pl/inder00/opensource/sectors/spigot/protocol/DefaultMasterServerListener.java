@@ -1,7 +1,6 @@
 package pl.inder00.opensource.sectors.spigot.protocol;
 
 import org.bukkit.plugin.java.JavaPlugin;
-import pl.inder00.opensource.sectors.commons.concurrent.FutureCallback;
 import pl.inder00.opensource.sectors.protocol.IPacketStatus;
 import pl.inder00.opensource.sectors.protocol.ISectorClient;
 import pl.inder00.opensource.sectors.protocol.listeners.AbstractSectorClientListener;

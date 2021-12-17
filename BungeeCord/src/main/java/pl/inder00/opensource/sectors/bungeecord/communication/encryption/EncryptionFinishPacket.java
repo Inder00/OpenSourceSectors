@@ -25,8 +25,7 @@ public class EncryptionFinishPacket implements IPrototypeListener<EncryptionPack
     public void onReceivedData(ISectorConnection connection, EncryptionPacket.EncryptionFinish message) throws Exception {
 
         // check status
-        if(message.getCode() == EncryptionPacket.EncryptionCode.OK)
-        {
+        if (message.getCode() == EncryptionPacket.EncryptionCode.OK) {
 
             // enable encryption
             connection.getEncryptionProvider().setEncryptionEnabled(true);
@@ -35,11 +34,11 @@ public class EncryptionFinishPacket implements IPrototypeListener<EncryptionPack
 
         // send handshake
         connection.sendData(HandshakePacket.ServerHandshake.newBuilder()
-                        .setVersion(this.plugin.getDescription().getVersion())
+                .setVersion(this.plugin.getDescription().getVersion())
                 .build());
 
         // fire ready event
-        Sectors.getMasterServer().getServerListener().onServerClientReady( Sectors.getMasterServer(), connection );
+        Sectors.getMasterServer().getServerListener().onServerClientReady(Sectors.getMasterServer(), connection);
 
 
     }

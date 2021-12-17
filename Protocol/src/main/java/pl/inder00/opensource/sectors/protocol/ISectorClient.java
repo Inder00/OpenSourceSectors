@@ -1,15 +1,12 @@
 package pl.inder00.opensource.sectors.protocol;
 
-import com.google.protobuf.Message;
 import com.google.protobuf.MessageLite;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelPipeline;
 import pl.inder00.opensource.sectors.commons.basic.IInternalServer;
 import pl.inder00.opensource.sectors.commons.concurrent.FutureCallback;
 import pl.inder00.opensource.sectors.commons.encryption.IEncryptionProvider;
-import pl.inder00.opensource.sectors.commons.managers.IManager;
 import pl.inder00.opensource.sectors.protocol.listeners.ISectorClientListener;
-import pl.inder00.opensource.sectors.protocol.listeners.ISectorServerListener;
 import pl.inder00.opensource.sectors.protocol.prototype.IPrototypeManager;
 
 public interface ISectorClient {
@@ -78,7 +75,7 @@ public interface ISectorClient {
     /**
      * Sends protobuf message to server
      *
-     * @param message Protobuf message
+     * @param message      Protobuf message
      * @param packetStatus Future packet status callback
      */
     void sendData(MessageLite message, FutureCallback<IPacketStatus> packetStatus);

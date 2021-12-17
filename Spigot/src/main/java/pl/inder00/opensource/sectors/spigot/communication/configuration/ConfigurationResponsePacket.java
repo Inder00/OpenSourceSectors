@@ -1,6 +1,5 @@
 package pl.inder00.opensource.sectors.spigot.communication.configuration;
 
-import com.google.protobuf.ByteString;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldBorder;
@@ -12,7 +11,6 @@ import pl.inder00.opensource.sectors.protocol.ISectorServer;
 import pl.inder00.opensource.sectors.protocol.exceptions.ProtocolException;
 import pl.inder00.opensource.sectors.protocol.impl.DefaultSectorClient;
 import pl.inder00.opensource.sectors.protocol.impl.DefaultSectorServer;
-import pl.inder00.opensource.sectors.protocol.listeners.AbstractSectorServerListener;
 import pl.inder00.opensource.sectors.protocol.protobuf.ConfigurationPacket;
 import pl.inder00.opensource.sectors.protocol.protobuf.ProtobufGeneric;
 import pl.inder00.opensource.sectors.protocol.prototype.IPrototypeListener;
@@ -59,7 +57,7 @@ public class ConfigurationResponsePacket implements IPrototypeListener<Configura
                 sector.getEndpoint().disconnect();
 
                 // remove from list
-                Sectors.getSectorManager().delete( sector.getUniqueId() );
+                Sectors.getSectorManager().delete(sector.getUniqueId());
 
             });
 
@@ -85,12 +83,11 @@ public class ConfigurationResponsePacket implements IPrototypeListener<Configura
                     ISector sector = new SectorImpl(this.plugin, uniqueId, null, world, protoSector.getMinX(), protoSector.getMinZ(), protoSector.getMaxX(), protoSector.getMaxZ(), message.getProtectionDistance(), message.getChangeSectorCooldown());
 
                     // check does internal server exists
-                    if(Sectors.getInternalServer() == null || !Sectors.getInternalServer().isActive())
-                    {
+                    if (Sectors.getInternalServer() == null || !Sectors.getInternalServer().isActive()) {
 
                         // create internal server
-                        IKeyExchangeProvider keyExchangeProvider = Sectors.getMasterServer().getEncryptionProvider().isEncryptionEnabled() ? new DefaultDiffieHellmanProvider( 1024 ) : null;
-                        ISectorServer internalServer = new DefaultSectorServer(new DefaultInternalServerListener(sector,this.plugin,keyExchangeProvider));
+                        IKeyExchangeProvider keyExchangeProvider = Sectors.getMasterServer().getEncryptionProvider().isEncryptionEnabled() ? new DefaultDiffieHellmanProvider(1024) : null;
+                        ISectorServer internalServer = new DefaultSectorServer(new DefaultInternalServerListener(sector, this.plugin, keyExchangeProvider));
 
                         // register internal server prototypes
                         internalServer.getPrototypeManager().registerListener(new EncryptionServerHelloPacket(this.plugin, internalServer, keyExchangeProvider));
@@ -172,7 +169,7 @@ public class ConfigurationResponsePacket implements IPrototypeListener<Configura
 
             }
 
-        } catch (Throwable e){
+        } catch (Throwable e) {
 
             // log
             this.plugin.getLogger().log(Level.SEVERE, "Failed to process configuration response.", e);

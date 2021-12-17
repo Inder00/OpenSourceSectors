@@ -1,11 +1,7 @@
 package pl.inder00.opensource.sectors.protocol;
 
-import com.google.protobuf.Message;
-import com.google.protobuf.MessageLite;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
 import pl.inder00.opensource.sectors.commons.basic.IInternalServer;
-import pl.inder00.opensource.sectors.commons.managers.IManager;
 import pl.inder00.opensource.sectors.protocol.exceptions.ProtocolException;
 import pl.inder00.opensource.sectors.protocol.listeners.ISectorServerListener;
 import pl.inder00.opensource.sectors.protocol.prototype.IPrototypeManager;

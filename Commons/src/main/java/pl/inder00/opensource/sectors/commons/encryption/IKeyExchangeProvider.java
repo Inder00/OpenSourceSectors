@@ -40,6 +40,6 @@ public interface IKeyExchangeProvider {
      * @return AES Key
      * @throws Exception
      */
-    Key generateKey( BigInteger publicKey ) throws Exception;
+    Key generateKey(BigInteger publicKey) throws Exception;
 
 }

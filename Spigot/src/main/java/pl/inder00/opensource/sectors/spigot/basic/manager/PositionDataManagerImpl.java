@@ -4,8 +4,8 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.bukkit.entity.Player;
 import pl.inder00.opensource.sectors.commons.managers.IManager;
-import pl.inder00.opensource.sectors.protocol.protobuf.PositionPacket;
 import pl.inder00.opensource.sectors.protocol.IProtobufData;
+import pl.inder00.opensource.sectors.protocol.protobuf.PositionPacket;
 
 import java.util.Collection;
 import java.util.UUID;

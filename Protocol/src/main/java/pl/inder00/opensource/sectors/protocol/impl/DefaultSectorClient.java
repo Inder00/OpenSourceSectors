@@ -74,10 +74,10 @@ public class DefaultSectorClient implements ISectorClient {
         try {
 
             // check does client is already connected
-            if(this.isConnected()) throw new ProtocolException("Client is already connected");
+            if (this.isConnected()) throw new ProtocolException("Client is already connected");
 
             // client boostrap
-            if(this.clientBootstrap == null){
+            if (this.clientBootstrap == null) {
 
                 // create bootstrap
                 this.clientEventLoopGroup = Epoll.isAvailable() ? new EpollEventLoopGroup(0) : new NioEventLoopGroup(0);
@@ -98,7 +98,7 @@ public class DefaultSectorClient implements ISectorClient {
                         ch.pipeline().addLast("p-encryptionDecoder", new EncryptionDecoder(encryptionProvider));
                         ch.pipeline().addLast("p-protoEncoder", new ProtobufEncoder(DefaultSectorClient.this.getPrototypeManager()));
                         ch.pipeline().addLast("p-protoDecoder", new ProtobufDecoder(DefaultSectorClient.this.getPrototypeManager()));
-                        ch.pipeline().addLast("p-handler", new DefaultClientHandler(DefaultSectorClient.this,clientListener));
+                        ch.pipeline().addLast("p-handler", new DefaultClientHandler(DefaultSectorClient.this, clientListener));
 
                     }
 
@@ -111,7 +111,7 @@ public class DefaultSectorClient implements ISectorClient {
 
                 // connect to server
                 ChannelFuture channelFuture = this.clientBootstrap.connect(internalServer.getHostname(), internalServer.getPort()).syncUninterruptibly();
-                if(channelFuture.isSuccess() && channelFuture.channel() != null){
+                if (channelFuture.isSuccess() && channelFuture.channel() != null) {
 
                     // update channel
                     this.channel = channelFuture.channel();
@@ -126,7 +126,7 @@ public class DefaultSectorClient implements ISectorClient {
 
                 }
 
-            } catch (Throwable ex){
+            } catch (Throwable ex) {
 
                 // sleep 100 millis
                 Thread.sleep(100L);
@@ -164,16 +164,16 @@ public class DefaultSectorClient implements ISectorClient {
     public synchronized void sendData(MessageLite message) {
 
         // send synchronized data
-        synchronized (this){
+        synchronized (this) {
             try {
 
                 // check does client is already connected
-                if(!this.isConnected()) throw new ProtocolException("Client is not connected.");
+                if (!this.isConnected()) throw new ProtocolException("Client is not connected.");
 
                 // write and flush data
                 this.channel.writeAndFlush(message);
 
-            } catch (Throwable e){
+            } catch (Throwable e) {
 
                 // trigger listener
                 this.clientListener.onClientException(this, e);
@@ -187,10 +187,10 @@ public class DefaultSectorClient implements ISectorClient {
     public synchronized void sendData(MessageLite message, FutureCallback<IPacketStatus> packetStatus) {
 
         // send synchronized data
-        synchronized (this){
+        synchronized (this) {
 
             // check does client is already connected
-            if(!this.isConnected()) packetStatus.execute(IPacketStatus.ERROR);
+            if (!this.isConnected()) packetStatus.execute(IPacketStatus.ERROR);
 
             // write and flush data
             this.channel.writeAndFlush(message).addListener(status -> packetStatus.execute(status.isSuccess() ? IPacketStatus.OK : IPacketStatus.ERROR));

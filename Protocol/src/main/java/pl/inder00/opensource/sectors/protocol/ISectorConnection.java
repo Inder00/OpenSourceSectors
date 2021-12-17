@@ -31,18 +31,18 @@ public interface ISectorConnection {
     IEncryptionProvider getEncryptionProvider();
 
     /**
-     * Returns boolean representing does connection is alive
-     *
-     * @return boolean
-     */
-    boolean isConnected();
-
-    /**
      * Sets traffic encryption provider
      *
      * @param encryptionProvider IEncryptionProvider
      */
     void setEncryptionProvider(IEncryptionProvider encryptionProvider);
+
+    /**
+     * Returns boolean representing does connection is alive
+     *
+     * @return boolean
+     */
+    boolean isConnected();
 
     /**
      * Sends data to client
@@ -54,7 +54,7 @@ public interface ISectorConnection {
     /**
      * Sends protobuf message to server
      *
-     * @param message Protobuf message
+     * @param message      Protobuf message
      * @param packetStatus Future packet status callback
      */
     void sendData(MessageLite message, FutureCallback<IPacketStatus> packetStatus);

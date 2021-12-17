@@ -2,7 +2,6 @@ package pl.inder00.opensource.sectors.spigot.basic;
 
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 import pl.inder00.opensource.sectors.protocol.ISectorClient;
 
 import java.util.UUID;

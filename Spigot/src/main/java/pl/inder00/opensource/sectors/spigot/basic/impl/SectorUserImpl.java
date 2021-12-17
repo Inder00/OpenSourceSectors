@@ -98,12 +98,10 @@ public class SectorUserImpl implements ISectorUser {
             this.targetLocation = location;
 
             // send position data to target server
-            try
-            {
+            try {
 
                 // check does target server is online
-                if(sector.getEndpoint() == null || !sector.getEndpoint().isConnected())
-                {
+                if (sector.getEndpoint() == null || !sector.getEndpoint().isConnected()) {
 
                     // send message
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', Sectors.getLanguageProvider().getLocalizedMessage(this.locale, "sector.offline")));
@@ -112,11 +110,10 @@ public class SectorUserImpl implements ISectorUser {
                 }
 
                 // send position data to target server
-                sector.getEndpoint().sendData(SpigotPacketUtils.createPlayerPositionPacket(this.player,location), status -> {
+                sector.getEndpoint().sendData(SpigotPacketUtils.createPlayerPositionPacket(this.player, location), status -> {
 
                     // check does packet has been successfully send
-                    if(!status.equals(IPacketStatus.OK))
-                    {
+                    if (!status.equals(IPacketStatus.OK)) {
 
                         // send message
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&', String.format(Sectors.getLanguageProvider().getLocalizedMessage(this.locale, "failed.connect"), "Packet can't reach the destination server.")));
@@ -125,14 +122,12 @@ public class SectorUserImpl implements ISectorUser {
                     }
 
                     // send change server packet to master server
-                    Sectors.getMasterServer().sendData(SpigotPacketUtils.createChangeServerPacket(this.player,sector));
+                    Sectors.getMasterServer().sendData(SpigotPacketUtils.createChangeServerPacket(this.player, sector));
 
 
                 });
 
-            }
-            catch (Throwable e)
-            {
+            } catch (Throwable e) {
 
                 // print error
                 e.printStackTrace();

@@ -1,16 +1,15 @@
 package pl.inder00.opensource.sectors.bungeecord.configuration;
 
-import com.google.protobuf.Message;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.YamlConfiguration;
 import pl.inder00.opensource.sectors.bungeecord.Sectors;
 import pl.inder00.opensource.sectors.bungeecord.basic.ISector;
-import pl.inder00.opensource.sectors.commons.basic.impl.InternalServerImpl;
 import pl.inder00.opensource.sectors.bungeecord.basic.impl.SectorImpl;
 import pl.inder00.opensource.sectors.bungeecord.configuration.exceptions.ConfigurationException;
 import pl.inder00.opensource.sectors.commons.basic.IInternalServer;
+import pl.inder00.opensource.sectors.commons.basic.impl.InternalServerImpl;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +20,10 @@ import java.util.logging.Level;
 public class PluginConfiguration {
 
     /**
+     * Configuration
+     */
+    private final Sectors sectors;
+    /**
      * List of options
      */
     public int sectorChangeCooldown;
@@ -28,11 +31,6 @@ public class PluginConfiguration {
     public String masterHostname;
     public int masterPort;
     public boolean encryptTraffic;
-
-    /**
-     * Configuration
-     */
-    private final Sectors sectors;
     private Configuration yamlConfiguration;
 
     /**

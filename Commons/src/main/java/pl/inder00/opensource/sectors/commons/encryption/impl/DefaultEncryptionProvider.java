@@ -42,13 +42,13 @@ public class DefaultEncryptionProvider implements IEncryptionProvider {
         this.encryptionEnabled = encryptionEnabled;
 
         // setup key
-        this.setupKey( this.key, this.key.getAlgorithm() );
+        this.setupKey(this.key, this.key.getAlgorithm());
 
     }
 
     @Override
     public void setupKey(Key key) throws Exception {
-        this.setupKey(key,key.getAlgorithm());
+        this.setupKey(key, key.getAlgorithm());
     }
 
     @Override

@@ -1,7 +1,7 @@
 package pl.inder00.opensource.sectors.spigot.basic.manager;
 
-import pl.inder00.opensource.sectors.spigot.basic.ISectorUser;
 import pl.inder00.opensource.sectors.commons.managers.IManager;
+import pl.inder00.opensource.sectors.spigot.basic.ISectorUser;
 
 import java.util.Collection;
 import java.util.UUID;

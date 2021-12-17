@@ -35,7 +35,7 @@ public class ProtocolSerializationUtils {
      * @param object Object
      * @return UUID
      */
-    public static UUID getClassHash( Object object ){
+    public static UUID getClassHash(Object object) {
         return getClassHash(object.getClass());
     }
 
@@ -45,8 +45,8 @@ public class ProtocolSerializationUtils {
      * @param clazz Class
      * @return UUID
      */
-    public static UUID getClassHash( Class<?> clazz ){
-        return UUID.fromString( clazz.getName().substring(clazz.getName().lastIndexOf(".") + 1) );
+    public static UUID getClassHash(Class<?> clazz) {
+        return UUID.fromString(clazz.getName().substring(clazz.getName().lastIndexOf(".") + 1));
     }
 
 }

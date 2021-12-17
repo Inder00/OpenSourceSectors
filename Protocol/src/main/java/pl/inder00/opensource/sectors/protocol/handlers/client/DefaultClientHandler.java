@@ -1,6 +1,5 @@
 package pl.inder00.opensource.sectors.protocol.handlers.client;
 
-import com.google.protobuf.Message;
 import com.google.protobuf.MessageLite;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

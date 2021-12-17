@@ -2,7 +2,6 @@ package pl.inder00.opensource.sectors.bungeecord.basic;
 
 import net.md_5.bungee.api.config.ServerInfo;
 import pl.inder00.opensource.sectors.commons.basic.IInternalServer;
-import pl.inder00.opensource.sectors.protocol.ISectorClient;
 import pl.inder00.opensource.sectors.protocol.protobuf.ProtobufGeneric;
 
 import java.util.UUID;

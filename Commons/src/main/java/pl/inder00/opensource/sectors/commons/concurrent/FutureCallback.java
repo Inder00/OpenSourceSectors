@@ -4,9 +4,9 @@ public interface FutureCallback<T> {
 
     /**
      * Future callback
-     * 
+     *
      * @param data Mixed data
      */
     void execute(T data);
-    
+
 }

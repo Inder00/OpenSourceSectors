@@ -6,7 +6,6 @@ import pl.inder00.opensource.sectors.commons.encryption.IKeyExchangeProvider;
 import pl.inder00.opensource.sectors.protocol.ISectorConnection;
 import pl.inder00.opensource.sectors.protocol.ISectorServer;
 import pl.inder00.opensource.sectors.protocol.listeners.AbstractSectorServerListener;
-import pl.inder00.opensource.sectors.protocol.listeners.ISectorServerListener;
 import pl.inder00.opensource.sectors.protocol.protobuf.EncryptionPacket;
 import pl.inder00.opensource.sectors.protocol.protobuf.HandshakePacket;
 
@@ -84,23 +83,20 @@ public class AbstractMasterServerListener extends AbstractSectorServerListener {
         this.plugin.getLogger().log(Level.INFO, "Connected to master server @ " + connection.getAddress().toString());
 
         // check does encryption is enabled
-        if(Sectors.getKeyExchangeProvider() != null)
-        {
+        if (Sectors.getKeyExchangeProvider() != null) {
 
             // key exchange provider
             IKeyExchangeProvider keyExchangeProvider = Sectors.getKeyExchangeProvider();
 
             // send client hello
             connection.sendData(EncryptionPacket.ClientHello.newBuilder()
-                            .setKeySize(keyExchangeProvider.getKeysize())
-                            .setPrime(ByteString.copyFrom(keyExchangeProvider.getPrime().toByteArray()))
-                            .setPrimeGenerator(ByteString.copyFrom(keyExchangeProvider.getPrimeGenerator().toByteArray()))
-                            .setPublicKey(ByteString.copyFrom(keyExchangeProvider.getPublicKey().toByteArray()))
+                    .setKeySize(keyExchangeProvider.getKeysize())
+                    .setPrime(ByteString.copyFrom(keyExchangeProvider.getPrime().toByteArray()))
+                    .setPrimeGenerator(ByteString.copyFrom(keyExchangeProvider.getPrimeGenerator().toByteArray()))
+                    .setPublicKey(ByteString.copyFrom(keyExchangeProvider.getPublicKey().toByteArray()))
                     .build());
 
-        }
-        else
-        {
+        } else {
 
             // send handshake
             connection.sendData(HandshakePacket.ServerHandshake.newBuilder()
@@ -108,7 +104,7 @@ public class AbstractMasterServerListener extends AbstractSectorServerListener {
                     .build());
 
             // fire ready event
-            server.getServerListener().onServerClientReady( server, connection );
+            server.getServerListener().onServerClientReady(server, connection);
 
         }
 

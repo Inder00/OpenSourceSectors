@@ -24,7 +24,7 @@ public class DefaultSectorConnection implements ISectorConnection {
      * Implementation
      */
     public DefaultSectorConnection(UUID uniqueId, Channel channel) {
-        this(uniqueId,channel,new DefaultEncryptionProvider());
+        this(uniqueId, channel, new DefaultEncryptionProvider());
     }
 
     /**
@@ -65,7 +65,7 @@ public class DefaultSectorConnection implements ISectorConnection {
     public synchronized void sendData(MessageLite message) {
 
         // send synchronized data
-        synchronized (this){
+        synchronized (this) {
 
             // write and flush data
             this.channel.writeAndFlush(message);
@@ -78,10 +78,10 @@ public class DefaultSectorConnection implements ISectorConnection {
     public synchronized void sendData(MessageLite message, FutureCallback<IPacketStatus> packetStatus) {
 
         // send synchronized data
-        synchronized (this){
+        synchronized (this) {
 
             // check does client is already connected
-            if(!this.isConnected()) packetStatus.execute(IPacketStatus.ERROR);
+            if (!this.isConnected()) packetStatus.execute(IPacketStatus.ERROR);
 
             // write and flush data
             this.channel.writeAndFlush(message).addListener(status -> packetStatus.execute(status.isSuccess() ? IPacketStatus.OK : IPacketStatus.ERROR));

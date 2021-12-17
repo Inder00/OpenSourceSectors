@@ -7,17 +7,16 @@ import java.io.File;
 public class PluginConfiguration {
 
     /**
+     * Configuration file
+     */
+    private final YamlConfiguration yamlConfiguration;
+    /**
      * List of options
      */
     public String sectorId;
     public String masterHostname;
     public int masterPort;
     public String masterPassword;
-
-    /**
-     * Configuration file
-     */
-    private final YamlConfiguration yamlConfiguration;
 
     /**
      * Implementation

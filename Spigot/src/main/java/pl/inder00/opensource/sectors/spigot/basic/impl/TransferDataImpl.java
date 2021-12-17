@@ -4,10 +4,10 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.potion.PotionEffect;
+import pl.inder00.opensource.sectors.protocol.IProtobufData;
 import pl.inder00.opensource.sectors.protocol.protobuf.TransferPacket;
 import pl.inder00.opensource.sectors.protocol.utils.ProtocolSerializationUtils;
 import pl.inder00.opensource.sectors.spigot.Sectors;
-import pl.inder00.opensource.sectors.protocol.IProtobufData;
 import pl.inder00.opensource.sectors.spigot.utils.SpigotSerializationUtils;
 
 import java.util.Collection;

@@ -7,7 +7,7 @@ public interface IEncryptionProvider {
     /**
      * Setups encryption key
      *
-     * @param key Key
+     * @param key            Key
      * @param transformation Transformation
      */
     void setupKey(Key key, String transformation) throws Exception;

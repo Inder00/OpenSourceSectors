@@ -24,7 +24,7 @@ public class EncryptionResponsePacket implements IPrototypeListener<EncryptionPa
     public void onReceivedData(EncryptionPacket.EncryptionResponse message) throws Exception {
 
         // process test
-        String decryptedTest = new String(this.sectorClient.getEncryptionProvider().decryptData( message.getEncryptedTest().toByteArray() ), StandardCharsets.UTF_8);
+        String decryptedTest = new String(this.sectorClient.getEncryptionProvider().decryptData(message.getEncryptedTest().toByteArray()), StandardCharsets.UTF_8);
         boolean testPassed = decryptedTest.equals(message.getExpectedTest());
 
         // send response to server
@@ -33,11 +33,10 @@ public class EncryptionResponsePacket implements IPrototypeListener<EncryptionPa
                 .build());
 
         // check does encryption has been initialized
-        if(testPassed)
-        {
+        if (testPassed) {
 
             // enable encryption
-            this.sectorClient.getEncryptionProvider().setEncryptionEnabled( true );
+            this.sectorClient.getEncryptionProvider().setEncryptionEnabled(true);
 
         }
 

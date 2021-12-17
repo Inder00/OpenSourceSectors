@@ -1,22 +1,20 @@
 package pl.inder00.opensource.sectors.protocol.impl;
 
-import com.google.protobuf.MessageLite;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import pl.inder00.opensource.sectors.commons.basic.IInternalServer;
 import pl.inder00.opensource.sectors.protocol.ISectorConnection;
 import pl.inder00.opensource.sectors.protocol.ISectorServer;
+import pl.inder00.opensource.sectors.protocol.exceptions.ProtocolException;
 import pl.inder00.opensource.sectors.protocol.handlers.server.DefaultServerHandler;
 import pl.inder00.opensource.sectors.protocol.listeners.ISectorServerListener;
-import pl.inder00.opensource.sectors.protocol.exceptions.ProtocolException;
 import pl.inder00.opensource.sectors.protocol.pipelines.EncryptionDecoder;
 import pl.inder00.opensource.sectors.protocol.pipelines.EncryptionEncoder;
 import pl.inder00.opensource.sectors.protocol.pipelines.ProtobufDecoder;
@@ -24,25 +22,26 @@ import pl.inder00.opensource.sectors.protocol.pipelines.ProtobufEncoder;
 import pl.inder00.opensource.sectors.protocol.prototype.IPrototypeManager;
 import pl.inder00.opensource.sectors.protocol.prototype.impl.PrototypeManagerImpl;
 
-import java.net.SocketAddress;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DefaultSectorServer implements ISectorServer {
 
+    private final ISectorServerListener serverListener;
+    /**
+     * Connection list
+     */
+    private final Map<Channel, ISectorConnection> connectionList = new ConcurrentHashMap();
     /**
      * Server data
      */
     private Channel serverChannel;
     private ServerBootstrap serverBootstrap;
     private EventLoopGroup serverEventLoopGroup;
-    private final ISectorServerListener serverListener;
     private IPrototypeManager prototypeManager;
-
-    /**
-     * Connection list
-     */
-    private final Map<Channel, ISectorConnection> connectionList = new ConcurrentHashMap();
 
     /**
      * Implementation
@@ -86,10 +85,11 @@ public class DefaultSectorServer implements ISectorServer {
         try {
 
             // check does server is already bound
-            if(this.serverChannel != null && this.serverChannel.isActive()) throw new ProtocolException("Server is already bound");
+            if (this.serverChannel != null && this.serverChannel.isActive())
+                throw new ProtocolException("Server is already bound");
 
             // server boostrap
-            if(this.serverBootstrap == null){
+            if (this.serverBootstrap == null) {
 
                 // create bootstrap
                 this.serverEventLoopGroup = Epoll.isAvailable() ? new EpollEventLoopGroup(0) : new NioEventLoopGroup(0);
@@ -108,7 +108,7 @@ public class DefaultSectorServer implements ISectorServer {
 
                 // bind server
                 ChannelFuture channelFuture = this.serverBootstrap.bind(internalServer.getHostname(), internalServer.getPort()).syncUninterruptibly();
-                if(channelFuture.isSuccess() && channelFuture.channel() != null){
+                if (channelFuture.isSuccess() && channelFuture.channel() != null) {
 
                     // update server channel
                     this.serverChannel = channelFuture.channel();
@@ -123,7 +123,7 @@ public class DefaultSectorServer implements ISectorServer {
 
                 }
 
-            } catch (Throwable ex){
+            } catch (Throwable ex) {
 
                 // trigger listeners
                 this.serverListener.onServerBoundFailed(this);
@@ -131,7 +131,7 @@ public class DefaultSectorServer implements ISectorServer {
 
             }
 
-        } catch (Throwable e){
+        } catch (Throwable e) {
 
             // trigger listener
             this.serverListener.onServerException(this, e);
@@ -151,7 +151,7 @@ public class DefaultSectorServer implements ISectorServer {
             // trigger event
             this.serverListener.onServerClosed(this);
 
-        } catch (Throwable e){
+        } catch (Throwable e) {
 
             // trigger listener
             this.serverListener.onServerException(this, e);
@@ -172,7 +172,7 @@ public class DefaultSectorServer implements ISectorServer {
         public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
 
             // create sector connection implementation
-            ISectorConnection sectorConnection = new DefaultSectorConnection(UUID.randomUUID(),ctx.channel());
+            ISectorConnection sectorConnection = new DefaultSectorConnection(UUID.randomUUID(), ctx.channel());
 
             // add pipelines
             ctx.channel().pipeline().addLast("p-frameEncoder", new LengthFieldPrepender(8));
@@ -181,10 +181,10 @@ public class DefaultSectorServer implements ISectorServer {
             ctx.channel().pipeline().addLast("p-encryptionDecoder", new EncryptionDecoder(sectorConnection.getEncryptionProvider()));
             ctx.channel().pipeline().addLast("p-protoEncoder", new ProtobufEncoder(DefaultSectorServer.this.getPrototypeManager()));
             ctx.channel().pipeline().addLast("p-protoDecoder", new ProtobufDecoder(DefaultSectorServer.this.getPrototypeManager()));
-            ctx.channel().pipeline().addLast("p-handler", new DefaultServerHandler(sectorConnection,DefaultSectorServer.this,serverListener));
+            ctx.channel().pipeline().addLast("p-handler", new DefaultServerHandler(sectorConnection, DefaultSectorServer.this, serverListener));
 
             // add connection to list
-            connectionList.put( ctx.channel(), sectorConnection );
+            connectionList.put(ctx.channel(), sectorConnection);
 
             // fire listener event
             serverListener.onServerClientConnect(DefaultSectorServer.this, sectorConnection);
@@ -201,7 +201,7 @@ public class DefaultSectorServer implements ISectorServer {
             serverListener.onServerClientDisconnect(DefaultSectorServer.this, connectionList.get(ctx.channel()));
 
             // remove connection from list
-            connectionList.remove( ctx.channel() );
+            connectionList.remove(ctx.channel());
 
             // fire event
             ctx.fireChannelUnregistered();

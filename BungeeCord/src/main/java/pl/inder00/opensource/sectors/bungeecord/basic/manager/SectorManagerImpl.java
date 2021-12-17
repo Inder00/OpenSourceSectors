@@ -49,7 +49,7 @@ public class SectorManagerImpl implements ISectorManager {
 
     @Override
     public void save(ISector data, UUID key) {
-        this.sectorsData.put(key,data);
+        this.sectorsData.put(key, data);
     }
 
     @Override
