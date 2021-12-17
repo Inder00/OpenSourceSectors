@@ -17,7 +17,7 @@ public class AsyncPlayerPreLoginListener implements Listener {
         {
 
             // disallow
-            e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, ChatColor.RED + "Sectors are not loaded yet. Contact with server administrator.");
+            e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, ChatColor.RED + "Sectors are not initialized correctly. Contact with server administrator.");
 
         }
 
