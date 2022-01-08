@@ -99,7 +99,7 @@ public class SectorImpl implements ISector {
 
     @Override
     public int getDistanceToBorder(Location location) {
-        return (int) Math.min(Math.min(Math.abs(location.getX() - this.minX), Math.abs(location.getX() - this.maxX)), Math.min(Math.abs(location.getZ() - this.maxZ), Math.abs(location.getZ() - this.minZ)));
+        return (int) Math.min(Math.min(Math.abs(location.getX() - this.minX + 3), Math.abs(location.getX() - this.maxX - 3)), Math.min(Math.abs(location.getZ() - this.maxZ - 3), Math.abs(location.getZ() + this.minZ - 3)));
     }
 
 }
