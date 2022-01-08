@@ -1,6 +1,6 @@
 # OpenSourceSectors 😎
 
-🗒️This is a plugin for [Minecraft Server (Spigot API)](https://spigotmc.org/) introduces a sector system which connects
+🗒️This is a plugin for [Minecraft Server (Spigot API)](https://spigotmc.org/) which introduces a sector system that connects
 a single world across multiple servers.
 
 🍎The reason why I released this plugin is because I would like to make combining servers into one to spread out load
@@ -13,8 +13,8 @@ please [create a issue](https://github.com/Inder00/OpenSourceSectors/issues).
 # Requirements 📗
 
 - [Bungeecord](https://ci.md-5.net/job/BungeeCord/)
-- [Spigot servers 1.8 - 1.17.1](https://hub.spigotmc.org/jenkins/job/BuildTools/) (as many you want)
-- Private address space (to internal communication between servers) (eg. 127.0.0.1, 172.16.0.0, etc...)
+- [Spigot servers 1.8 - 1.17.1](https://hub.spigotmc.org/jenkins/job/BuildTools/) (as many as you want)
+- Private address space (for internal communication between servers) (eg. 127.0.0.1, 172.16.0.0, etc...)
 
 # Usage ✔️
 
@@ -47,16 +47,16 @@ public class PlayerChangeSectorListener implements Listener {
 
 # Contribution ❤️
 
-The most powerful feature of open source projects is developers community❤️. Everyone is welcome and will be written
+The most powerful feature of open source projects is the developers community❤️. Everyone is welcome and will be written
 below 🔥.
 
-- [oskarPLL 🥰](https://github.com/oskarPLL)
+- [oskarscot 🥰](https://github.com/oskarscot)
 - [shitzuu 🥰](https://github.com/shitzuu)
 - [arturekdev 🥰](https://github.com/arturekdev)
 
 # TODO 📓
 
-- Make a Easy-To-Use API to write compatible plugins with OpenSourceSectors. 📖
+- Make an Easy-To-Use API to write compatible plugins with OpenSourceSectors. 📖
 
 # Known Issues 🐛
 
